@@ -1,0 +1,17 @@
+syntax = "proto3";
+package joltify.joltifychain.invoice;
+
+option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+
+message PlaceOrder {
+  bytes creator = 1  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string placeOrderIndex= 2;
+  string sellOrderID = 3; 
+  bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  int32 OrderStatus = 5    [(gogoproto.customtype) ="Status", (gogoproto.nullable) = false];
+  google.protobuf.Timestamp createdTime = 6 [(gogoproto.stdtime) = true,(gogoproto.nullable)=false];
+}

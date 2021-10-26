@@ -1,8 +1,12 @@
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    coins: ["20000token", "200000000stake", "2000000000000000000000VUSD"]
+    mnemonic: "image excuse arrow garment put exist coral focus service enact size list reunion kite creek blouse scheme people honey scare pigeon casino chest ensure"
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    coins: ["10000token", "100000000stake","20000000000000000000000VUSD"]
+    mnemonic: "draw knee bench turtle member nerve note napkin gas oil sausage wing ribbon tray fire educate reopen current sell aware busy exotic seminar just"
+  - name: community
+    mnemonic: "glide reduce evidence twice quit salt tray script useless gallery cake retreat much occur road current zone muscle capital mystery alpha uphold dynamic marriage"
 validator:
   name: alice
   staked: "100000000stake"
@@ -14,3 +18,20 @@ client:
 faucet:
   name: bob
   coins: ["5token", "100000stake"]
+init:
+  app:
+    minimum-gas-prices: 10VUSD
+genesis:
+  # app_state:
+  #   distribution:
+  #     fee_pool:
+  #       community_pool: ["inv1d4mfa0zvwavw9wjq00xr34rj02xytr39uz753n"]
+  app_state:
+    staking:
+      params:
+        max_validators: 11
+    distribution:
+        params:
+          community_tax: "0.0"
+
+

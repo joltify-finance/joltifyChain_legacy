@@ -1,0 +1,57 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+// this line is used by starport scaffolding # 1
+import "vault/create_pool.proto";
+
+option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+
+// Query defines the gRPC querier service.
+service Query {
+    // this line is used by starport scaffolding # 2
+
+	// Queries a createPool by index.
+	rpc CreatePool(QueryGetCreatePoolRequest) returns (QueryGetCreatePoolResponse) {
+		option (google.api.http).get = "/joltify/joltifyChain/vault/createPool/{index}";
+	}
+
+	// Queries a list of createPool items.
+	rpc CreatePoolAll(QueryAllCreatePoolRequest) returns (QueryAllCreatePoolResponse) {
+		option (google.api.http).get = "/joltify/joltifyChain/vault/createPool";
+	}
+
+	// Queries a createPool by index.
+	rpc GetLastPool(QueryLatestPoolRequest) returns (QueryLastPoolResponse) {
+		option (google.api.http).get = "/joltify/joltifyChain/vault/getLastPool";
+	}
+
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetCreatePoolRequest {
+	string index = 1;
+}
+
+message QueryGetCreatePoolResponse {
+	PoolProposal CreatePool = 1;
+}
+
+message QueryLastPoolResponse {
+	string BlockHeight=1;
+	PoolProposal CreatePool = 2;
+}
+
+message QueryAllCreatePoolRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryLatestPoolRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllCreatePoolResponse {
+	repeated PoolProposal CreatePool = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

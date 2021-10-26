@@ -1,0 +1,20 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "vault/create_pool.proto";
+import "vault/staking.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+
+// GenesisState defines the vault module's genesis state.
+message GenesisState {
+	// params defines all the paramaters of related to deposit.
+	 Params params = 1 [(gogoproto.nullable) = false];
+	// this line is used by starport scaffolding # genesis/proto/state
+		repeated CreatePool createPoolList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
+    // this line is used by starport scaffolding # ibc/genesis/proto
+
+	bool exported = 3;
+}

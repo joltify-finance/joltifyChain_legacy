@@ -1,0 +1,17 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+
+import "gogoproto/gogo.proto";
+
+message PoolProposal {
+  string poolPubKey = 1 ;
+  repeated bytes nodes = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
+
+message CreatePool {
+  string blockHeight = 1;
+  repeated bytes validators = 2  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/x/staking/types.Validator", (gogoproto.nullable) = false];
+  repeated PoolProposal proposal = 3;
+}

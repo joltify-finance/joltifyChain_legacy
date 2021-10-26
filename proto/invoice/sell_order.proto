@@ -1,0 +1,20 @@
+syntax = "proto3";
+package joltify.joltifychain.invoice;
+option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+message SellOrder {
+  bytes creator = 1  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string sellOrderID = 2;
+  string invoiceID = 3;
+  bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  bytes price = 5  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  bytes leftAmount = 6  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  string priceRatio = 7;
+  google.protobuf.Duration sellDuration = 8 [(gogoproto.stdduration) = true,(gogoproto.nullable)=false];
+  google.protobuf.Timestamp createdTime = 9 [(gogoproto.stdtime) = true,(gogoproto.nullable)=false];
+  bool isDeleted = 10;
+}

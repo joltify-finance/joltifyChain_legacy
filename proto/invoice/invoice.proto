@@ -1,0 +1,38 @@
+syntax = "proto3";
+package joltify.joltifychain.invoice;
+
+option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
+import "gogoproto/gogo.proto";
+
+message InvoiceBase{
+  bytes creator = 1  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string name = 2;
+  string url = 3;
+  string data = 4;
+  bytes origOwner = 5  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
+
+message InvoiceFinance{
+  string denom = 2;
+  bytes amount = 3  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  bytes amountLocked = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  float apy = 5 ;
+}
+
+message InvoiceMember{
+  string invoiceID=1;
+  bytes share= 2  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  bytes invoiceHolder = 3  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
+
+message Invoice {
+  string invoiceID = 1;
+  InvoiceBase invoiceBase = 2;
+  InvoiceFinance invoiceFinance = 3;
+  bytes currentOwner = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  repeated InvoiceMember invoiceMembers= 5 [(gogoproto.nullable)=false];
+  bool rootOwner = 6;
+  bool deleted = 7;
+  bool isListedForSell=8;
+}

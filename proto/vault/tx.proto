@@ -1,0 +1,24 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+// this line is used by starport scaffolding # proto/tx/import
+//import "vault/create_pool.proto";
+
+option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+
+import "gogoproto/gogo.proto";
+// Msg defines the Msg service.
+service Msg {
+    // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateCreatePool(MsgCreateCreatePool) returns (MsgCreateCreatePoolResponse);
+}
+
+// this line is used by starport scaffolding # proto/tx/message
+message MsgCreateCreatePool {
+  bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string poolPubKey = 2;
+  string blockHeight = 3;
+}
+message MsgCreateCreatePoolResponse {
+  bool successful = 1;
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+package joltify.joltifychain.invoice;
+
+// this line is used by starport scaffolding # genesis/proto/import
+import "invoice/place_order.proto";
+import "invoice/sell_order.proto";
+import "invoice/invoice.proto";
+
+option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
+// GenesisState defines the invoice module's genesis state.
+message GenesisState {
+    // this line is used by starport scaffolding # genesis/proto/state
+		repeated PlaceOrder placeOrderList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
+		repeated SellOrder sellOrderList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
+		repeated Invoice invoiceList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
+    // this line is used by starport scaffolding # ibc/genesis/proto
+}

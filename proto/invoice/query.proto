@@ -1,0 +1,99 @@
+syntax = "proto3";
+package joltify.joltifychain.invoice;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+// this line is used by starport scaffolding # 1
+import "invoice/place_order.proto";
+import "invoice/sell_order.proto";
+import "invoice/invoice.proto";
+
+option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
+// Query defines the gRPC querier service.
+service Query {
+    // this line is used by starport scaffolding # 2
+
+	// Queries a placeOrder by index.
+	rpc PlaceOrder(QueryGetPlaceOrderRequest) returns (QueryGetPlaceOrderResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/placeOrder/{index}";
+	}
+
+	// Queries a list of placeOrder items.
+	rpc PlaceOrderAll(QueryAllPlaceOrderRequest) returns (QueryAllPlaceOrderResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/placeOrder";
+	}
+
+
+	// Queries a sellOrder by index.
+	rpc SellOrder(QueryGetSellOrderRequest) returns (QueryGetSellOrderResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/sellOrder/{index}";
+	}
+
+	// Queries a list of sellOrder items.
+	rpc SellOrderAll(QueryAllSellOrderRequest) returns (QueryAllSellOrderResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/sellOrder";
+	}
+
+
+	// Queries a invoice by index.
+	rpc Invoice(QueryGetInvoiceRequest) returns (QueryGetInvoiceResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/invoice/{index}";
+	}
+
+	// Queries a list of invoice items.
+	rpc InvoiceAll(QueryAllInvoiceRequest) returns (QueryAllInvoiceResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/invoice/invoice";
+	}
+
+}
+
+// this line is used by starport scaffolding # 3
+message QueryGetPlaceOrderRequest {
+	string index = 1;
+}
+
+message QueryGetPlaceOrderResponse {
+	PlaceOrder PlaceOrder = 1;
+}
+
+message QueryAllPlaceOrderRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPlaceOrderResponse {
+	repeated PlaceOrder PlaceOrder = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetSellOrderRequest {
+	string index = 1;
+}
+
+message QueryGetSellOrderResponse {
+	SellOrder SellOrder = 1;
+}
+
+message QueryAllSellOrderRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllSellOrderResponse {
+	repeated SellOrder SellOrder = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetInvoiceRequest {
+	string index = 1;
+}
+
+message QueryGetInvoiceResponse {
+	Invoice Invoice = 1;
+}
+
+message QueryAllInvoiceRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllInvoiceResponse {
+	repeated Invoice Invoice = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

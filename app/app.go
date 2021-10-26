@@ -83,7 +83,17 @@ import (
 	"github.com/joltify/joltifyChain/docs"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
+	invoicemodule "github.com/joltify/joltifyChain/x/invoice"
+	invoicemodulekeeper "github.com/joltify/joltifyChain/x/invoice/keeper"
+	invoicemoduletypes "github.com/joltify/joltifyChain/x/invoice/types"
+	parammanagermodule "github.com/joltify/joltifyChain/x/parammanager"
+	parammanagermodulekeeper "github.com/joltify/joltifyChain/x/parammanager/keeper"
+	parammanagermoduletypes "github.com/joltify/joltifyChain/x/parammanager/types"
+	vaultmodule "github.com/joltify/joltifyChain/x/vault"
+	vaultmodulekeeper "github.com/joltify/joltifyChain/x/vault/keeper"
+	vaultmoduletypes "github.com/joltify/joltifyChain/x/vault/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
@@ -135,6 +145,9 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		vaultmodule.AppModuleBasic{},
+		parammanagermodule.AppModuleBasic{},
+		invoicemodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -147,6 +160,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
+		invoicemoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 	}
 )
 
@@ -203,6 +217,12 @@ type App struct {
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
+	VaultKeeper vaultmodulekeeper.Keeper
+
+	ParammanagerKeeper parammanagermodulekeeper.Keeper
+
+	InvoiceKeeper invoicemodulekeeper.Keeper
+
 	// the module manager
 	mm *module.Manager
 }
@@ -220,7 +240,6 @@ func New(
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) cosmoscmd.App {
-
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -236,6 +255,9 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		vaultmoduletypes.StoreKey,
+		parammanagermoduletypes.StoreKey,
+		invoicemoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -274,6 +296,7 @@ func New(
 	stakingKeeper := stakingkeeper.NewKeeper(
 		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName),
 	)
+	stakingKeeper.GetValidatorSet()
 	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec, keys[minttypes.StoreKey], app.GetSubspace(minttypes.ModuleName), &stakingKeeper,
 		app.AccountKeeper, app.BankKeeper, authtypes.FeeCollectorName,
@@ -331,6 +354,37 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
+	app.InvoiceKeeper = *invoicemodulekeeper.NewKeeper(
+		appCodec,
+		keys[invoicemoduletypes.StoreKey],
+		keys[invoicemoduletypes.MemStoreKey],
+
+		app.BankKeeper,
+	)
+	invoiceModule := invoicemodule.NewAppModule(appCodec, app.InvoiceKeeper)
+
+	app.ParammanagerKeeper = *parammanagermodulekeeper.NewKeeper(
+		appCodec,
+		keys[parammanagermoduletypes.StoreKey],
+		keys[parammanagermoduletypes.MemStoreKey],
+		app.MintKeeper,
+	)
+	parammanagerModule := parammanagermodule.NewAppModule(appCodec, app.ParammanagerKeeper)
+	err := parammanagerModule.LoadConfig(DefaultNodeHome)
+	if err != nil {
+		panic("fail to inint the params manager module")
+	}
+
+	app.VaultKeeper = *vaultmodulekeeper.NewKeeper(
+		appCodec,
+		keys[vaultmoduletypes.StoreKey],
+		keys[vaultmoduletypes.MemStoreKey],
+		app.StakingKeeper,
+		app.BankKeeper,
+		app.GetSubspace(vaultmoduletypes.ModuleName),
+	)
+	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -343,7 +397,7 @@ func New(
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
-	var skipGenesisInvariants = cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
+	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
@@ -369,6 +423,9 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
+		vaultModule,
+		parammanagerModule,
+		invoiceModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -377,16 +434,17 @@ func New(
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
-		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
+		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName, invoicemoduletypes.ModuleName,
+		vaultmoduletypes.ModuleName,
 	)
 
-	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName)
+	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, vaultmoduletypes.ModuleName, parammanagermoduletypes.ModuleName)
 
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
 	// NOTE: Capability module must occur first so that it can initialize any capabilities
-	// so that other modules that want to create or claim capabilities afterwards in InitChain
 	// can do so safely.
+	// so that other modules that want to create or claim capabilities afterwards in InitChain
 	app.mm.SetOrderInitGenesis(
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
@@ -402,6 +460,9 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		vaultmoduletypes.ModuleName,
+		parammanagermoduletypes.ModuleName,
+		invoicemoduletypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -589,6 +650,9 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(vaultmoduletypes.ModuleName)
+	paramsKeeper.Subspace(parammanagermoduletypes.ModuleName)
+	paramsKeeper.Subspace(invoicemoduletypes.ModuleName)
 
 	return paramsKeeper
 }
