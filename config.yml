@@ -20,7 +20,7 @@ faucet:
   coins: ["5token", "100000stake"]
 init:
   app:
-    minimum-gas-prices: 10VUSD
+    minimum-gas-prices: 0.000000001VUSD
 genesis:
   # app_state:
   #   distribution:
@@ -33,5 +33,7 @@ genesis:
     distribution:
         params:
           community_tax: "0.0"
-
+    mint:
+      minter:
+        inflation: "0.0"
 
