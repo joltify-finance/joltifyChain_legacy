@@ -29,21 +29,10 @@ func (k Keeper) CreatePoolAll(c context.Context, req *types.QueryAllCreatePoolRe
 			return err
 		}
 
-		// since 2/3 nodes are honest, so we will not have 5/5 situation
-		maxLength := 0
-		proposalIndex := 0
-		for index, proposal := range createPool.Proposal {
-			length := len(proposal.Nodes)
-			if maxLength > length {
-				proposalIndex = index
-				maxLength = length
-			}
-		}
-
-		proposals = append(proposals, createPool.Proposal[proposalIndex])
+		proposal := getProposal(createPool.Proposal)
+		proposals = append(proposals, proposal)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -61,23 +50,12 @@ func (k Keeper) CreatePool(c context.Context, req *types.QueryGetCreatePoolReque
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
-
-	// since 2/3 nodes are honest, so we will not have 5/5 situation
-	maxLength := 0
-	proposalIndex := 0
-	for index, proposal := range val.Proposal {
-		length := len(proposal.Nodes)
-		if maxLength > length {
-			proposalIndex = index
-			maxLength = length
-		}
-	}
-
-	return &types.QueryGetCreatePoolResponse{CreatePool: val.Proposal[proposalIndex]}, nil
+	proposal := getProposal(val.Proposal)
+	return &types.QueryGetCreatePoolResponse{CreatePool: proposal}, nil
 }
 
 func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest) (*types.QueryLastPoolResponse, error) {
-
+	var allProposal []*types.PoolInfo
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -94,22 +72,44 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 	}
 	height := strconv.FormatInt(poolBlock+1, 10)
 
-	val, found := k.GetCreatePool(ctx, height)
+	valLatest, found := k.GetCreatePool(ctx, height)
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
+	proposalLast := getProposal(valLatest.Proposal)
+	lastProposal := types.PoolInfo{
+		BlockHeight: height,
+		CreatePool:  proposalLast,
+	}
+
+	allProposal = append(allProposal, &lastProposal)
+
+	height = strconv.FormatInt(poolBlock+1-10, 10)
+
+	valLatest2, found := k.GetCreatePool(ctx, height)
+	if found {
+		proposalLast2 := getProposal(valLatest2.Proposal)
+		lastProposal := types.PoolInfo{
+			BlockHeight: height,
+			CreatePool:  proposalLast2,
+		}
+		allProposal = append(allProposal, &lastProposal)
+	}
+
+	return &types.QueryLastPoolResponse{Pools: allProposal}, nil
+}
+
+func getProposal(proposals []*types.PoolProposal) *types.PoolProposal {
 	// since 2/3 nodes are honest, so we will not have 5/5 situation
 	maxLength := 0
 	proposalIndex := 0
-	for index, proposal := range val.Proposal {
+	for index, proposal := range proposals {
 		length := len(proposal.Nodes)
 		if maxLength > length {
 			proposalIndex = index
 			maxLength = length
 		}
 	}
-
-	return &types.QueryLastPoolResponse{BlockHeight: height, CreatePool: val.Proposal[proposalIndex]}, nil
-
+	return proposals[proposalIndex]
 }

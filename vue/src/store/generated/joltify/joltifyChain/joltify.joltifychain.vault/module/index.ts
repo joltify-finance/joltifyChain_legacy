@@ -4,10 +4,12 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateIssueToken } from "./types/vault/tx";
 import { MsgCreateCreatePool } from "./types/vault/tx";
 
 
 const types = [
+  ["/joltify.joltifychain.vault.MsgCreateIssueToken", MsgCreateIssueToken],
   ["/joltify.joltifychain.vault.MsgCreateCreatePool", MsgCreateCreatePool],
   
 ];
@@ -37,6 +39,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgCreateIssueToken: (data: MsgCreateIssueToken): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateIssueToken", value: data }),
     msgCreateCreatePool: (data: MsgCreateCreatePool): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateCreatePool", value: data }),
     
   };

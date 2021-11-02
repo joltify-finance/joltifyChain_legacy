@@ -19,9 +19,10 @@ import (
 func setupBech32Prefix() {
 	config := sdk.GetConfig()
 	// thorchain will import go-tss as a library , thus this is not needed, we copy the prefix here to avoid go-tss to import thorchain
-	config.SetBech32PrefixForAccount("inv", "invpub")
-	config.SetBech32PrefixForValidator("invvaloper", "invvpub")
-	config.SetBech32PrefixForConsensusNode("invc", "invcpub")
+
+	config.SetBech32PrefixForAccount("jolt", "joltpub")
+	config.SetBech32PrefixForValidator("joltval", "joltvpub")
+	config.SetBech32PrefixForConsensusNode("joltvalcons", "joltcpub")
 }
 
 func TestCreateCreatePool(t *testing.T) {

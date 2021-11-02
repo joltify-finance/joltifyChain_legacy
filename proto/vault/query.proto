@@ -4,6 +4,7 @@ package joltify.joltifychain.vault;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "vault/issue_token.proto";
 import "vault/create_pool.proto";
 
 option go_package = "github.com/joltify/joltifyChain/x/vault/types";
@@ -11,6 +12,17 @@ option go_package = "github.com/joltify/joltifyChain/x/vault/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a issueToken by index.
+	rpc IssueToken(QueryGetIssueTokenRequest) returns (QueryGetIssueTokenResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/issueToken/{index}";
+	}
+
+	// Queries a list of issueToken items.
+	rpc IssueTokenAll(QueryAllIssueTokenRequest) returns (QueryAllIssueTokenResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/issueToken";
+	}
+
 
 	// Queries a createPool by index.
 	rpc CreatePool(QueryGetCreatePoolRequest) returns (QueryGetCreatePoolResponse) {
@@ -30,6 +42,22 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetIssueTokenRequest {
+	string index = 1;
+}
+
+message QueryGetIssueTokenResponse {
+	IssueToken IssueToken = 1;
+}
+
+message QueryAllIssueTokenRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllIssueTokenResponse {
+	repeated IssueToken IssueToken = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
 message QueryGetCreatePoolRequest {
 	string index = 1;
 }
@@ -38,9 +66,13 @@ message QueryGetCreatePoolResponse {
 	PoolProposal CreatePool = 1;
 }
 
-message QueryLastPoolResponse {
+message poolInfo {
 	string BlockHeight=1;
 	PoolProposal CreatePool = 2;
+}
+
+message QueryLastPoolResponse {
+	repeated poolInfo pools = 1;
 }
 
 message QueryAllCreatePoolRequest {

@@ -159,8 +159,9 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		vaultmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
-		invoicemoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		invoicemoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	}
 )
 

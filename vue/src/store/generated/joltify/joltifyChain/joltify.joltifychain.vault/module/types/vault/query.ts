@@ -1,11 +1,29 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal'
-import { PoolProposal } from '../vault/create_pool'
+import { IssueToken } from '../vault/issue_token'
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
+import { PoolProposal } from '../vault/create_pool'
 
 export const protobufPackage = 'joltify.joltifychain.vault'
 
 /** this line is used by starport scaffolding # 3 */
+export interface QueryGetIssueTokenRequest {
+  index: string
+}
+
+export interface QueryGetIssueTokenResponse {
+  IssueToken: IssueToken | undefined
+}
+
+export interface QueryAllIssueTokenRequest {
+  pagination: PageRequest | undefined
+}
+
+export interface QueryAllIssueTokenResponse {
+  IssueToken: IssueToken[]
+  pagination: PageResponse | undefined
+}
+
 export interface QueryGetCreatePoolRequest {
   index: string
 }
@@ -14,9 +32,13 @@ export interface QueryGetCreatePoolResponse {
   CreatePool: PoolProposal | undefined
 }
 
-export interface QueryLastPoolResponse {
+export interface poolInfo {
   BlockHeight: string
   CreatePool: PoolProposal | undefined
+}
+
+export interface QueryLastPoolResponse {
+  pools: poolInfo[]
 }
 
 export interface QueryAllCreatePoolRequest {
@@ -30,6 +52,250 @@ export interface QueryLatestPoolRequest {
 export interface QueryAllCreatePoolResponse {
   CreatePool: PoolProposal[]
   pagination: PageResponse | undefined
+}
+
+const baseQueryGetIssueTokenRequest: object = { index: '' }
+
+export const QueryGetIssueTokenRequest = {
+  encode(message: QueryGetIssueTokenRequest, writer: Writer = Writer.create()): Writer {
+    if (message.index !== '') {
+      writer.uint32(10).string(message.index)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetIssueTokenRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetIssueTokenRequest } as QueryGetIssueTokenRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string()
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetIssueTokenRequest {
+    const message = { ...baseQueryGetIssueTokenRequest } as QueryGetIssueTokenRequest
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index)
+    } else {
+      message.index = ''
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetIssueTokenRequest): unknown {
+    const obj: any = {}
+    message.index !== undefined && (obj.index = message.index)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetIssueTokenRequest>): QueryGetIssueTokenRequest {
+    const message = { ...baseQueryGetIssueTokenRequest } as QueryGetIssueTokenRequest
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index
+    } else {
+      message.index = ''
+    }
+    return message
+  }
+}
+
+const baseQueryGetIssueTokenResponse: object = {}
+
+export const QueryGetIssueTokenResponse = {
+  encode(message: QueryGetIssueTokenResponse, writer: Writer = Writer.create()): Writer {
+    if (message.IssueToken !== undefined) {
+      IssueToken.encode(message.IssueToken, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetIssueTokenResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetIssueTokenResponse } as QueryGetIssueTokenResponse
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.IssueToken = IssueToken.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetIssueTokenResponse {
+    const message = { ...baseQueryGetIssueTokenResponse } as QueryGetIssueTokenResponse
+    if (object.IssueToken !== undefined && object.IssueToken !== null) {
+      message.IssueToken = IssueToken.fromJSON(object.IssueToken)
+    } else {
+      message.IssueToken = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetIssueTokenResponse): unknown {
+    const obj: any = {}
+    message.IssueToken !== undefined && (obj.IssueToken = message.IssueToken ? IssueToken.toJSON(message.IssueToken) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetIssueTokenResponse>): QueryGetIssueTokenResponse {
+    const message = { ...baseQueryGetIssueTokenResponse } as QueryGetIssueTokenResponse
+    if (object.IssueToken !== undefined && object.IssueToken !== null) {
+      message.IssueToken = IssueToken.fromPartial(object.IssueToken)
+    } else {
+      message.IssueToken = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllIssueTokenRequest: object = {}
+
+export const QueryAllIssueTokenRequest = {
+  encode(message: QueryAllIssueTokenRequest, writer: Writer = Writer.create()): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllIssueTokenRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllIssueTokenRequest } as QueryAllIssueTokenRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllIssueTokenRequest {
+    const message = { ...baseQueryAllIssueTokenRequest } as QueryAllIssueTokenRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllIssueTokenRequest): unknown {
+    const obj: any = {}
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllIssueTokenRequest>): QueryAllIssueTokenRequest {
+    const message = { ...baseQueryAllIssueTokenRequest } as QueryAllIssueTokenRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllIssueTokenResponse: object = {}
+
+export const QueryAllIssueTokenResponse = {
+  encode(message: QueryAllIssueTokenResponse, writer: Writer = Writer.create()): Writer {
+    for (const v of message.IssueToken) {
+      IssueToken.encode(v!, writer.uint32(10).fork()).ldelim()
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllIssueTokenResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllIssueTokenResponse } as QueryAllIssueTokenResponse
+    message.IssueToken = []
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.IssueToken.push(IssueToken.decode(reader, reader.uint32()))
+          break
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllIssueTokenResponse {
+    const message = { ...baseQueryAllIssueTokenResponse } as QueryAllIssueTokenResponse
+    message.IssueToken = []
+    if (object.IssueToken !== undefined && object.IssueToken !== null) {
+      for (const e of object.IssueToken) {
+        message.IssueToken.push(IssueToken.fromJSON(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllIssueTokenResponse): unknown {
+    const obj: any = {}
+    if (message.IssueToken) {
+      obj.IssueToken = message.IssueToken.map((e) => (e ? IssueToken.toJSON(e) : undefined))
+    } else {
+      obj.IssueToken = []
+    }
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllIssueTokenResponse>): QueryAllIssueTokenResponse {
+    const message = { ...baseQueryAllIssueTokenResponse } as QueryAllIssueTokenResponse
+    message.IssueToken = []
+    if (object.IssueToken !== undefined && object.IssueToken !== null) {
+      for (const e of object.IssueToken) {
+        message.IssueToken.push(IssueToken.fromPartial(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
 }
 
 const baseQueryGetCreatePoolRequest: object = { index: '' }
@@ -142,10 +408,10 @@ export const QueryGetCreatePoolResponse = {
   }
 }
 
-const baseQueryLastPoolResponse: object = { BlockHeight: '' }
+const basepoolInfo: object = { BlockHeight: '' }
 
-export const QueryLastPoolResponse = {
-  encode(message: QueryLastPoolResponse, writer: Writer = Writer.create()): Writer {
+export const poolInfo = {
+  encode(message: poolInfo, writer: Writer = Writer.create()): Writer {
     if (message.BlockHeight !== '') {
       writer.uint32(10).string(message.BlockHeight)
     }
@@ -155,10 +421,10 @@ export const QueryLastPoolResponse = {
     return writer
   },
 
-  decode(input: Reader | Uint8Array, length?: number): QueryLastPoolResponse {
+  decode(input: Reader | Uint8Array, length?: number): poolInfo {
     const reader = input instanceof Uint8Array ? new Reader(input) : input
     let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+    const message = { ...basepoolInfo } as poolInfo
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
@@ -176,8 +442,8 @@ export const QueryLastPoolResponse = {
     return message
   },
 
-  fromJSON(object: any): QueryLastPoolResponse {
-    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+  fromJSON(object: any): poolInfo {
+    const message = { ...basepoolInfo } as poolInfo
     if (object.BlockHeight !== undefined && object.BlockHeight !== null) {
       message.BlockHeight = String(object.BlockHeight)
     } else {
@@ -191,15 +457,15 @@ export const QueryLastPoolResponse = {
     return message
   },
 
-  toJSON(message: QueryLastPoolResponse): unknown {
+  toJSON(message: poolInfo): unknown {
     const obj: any = {}
     message.BlockHeight !== undefined && (obj.BlockHeight = message.BlockHeight)
     message.CreatePool !== undefined && (obj.CreatePool = message.CreatePool ? PoolProposal.toJSON(message.CreatePool) : undefined)
     return obj
   },
 
-  fromPartial(object: DeepPartial<QueryLastPoolResponse>): QueryLastPoolResponse {
-    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+  fromPartial(object: DeepPartial<poolInfo>): poolInfo {
+    const message = { ...basepoolInfo } as poolInfo
     if (object.BlockHeight !== undefined && object.BlockHeight !== null) {
       message.BlockHeight = object.BlockHeight
     } else {
@@ -209,6 +475,68 @@ export const QueryLastPoolResponse = {
       message.CreatePool = PoolProposal.fromPartial(object.CreatePool)
     } else {
       message.CreatePool = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryLastPoolResponse: object = {}
+
+export const QueryLastPoolResponse = {
+  encode(message: QueryLastPoolResponse, writer: Writer = Writer.create()): Writer {
+    for (const v of message.pools) {
+      poolInfo.encode(v!, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryLastPoolResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+    message.pools = []
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.pools.push(poolInfo.decode(reader, reader.uint32()))
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryLastPoolResponse {
+    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+    message.pools = []
+    if (object.pools !== undefined && object.pools !== null) {
+      for (const e of object.pools) {
+        message.pools.push(poolInfo.fromJSON(e))
+      }
+    }
+    return message
+  },
+
+  toJSON(message: QueryLastPoolResponse): unknown {
+    const obj: any = {}
+    if (message.pools) {
+      obj.pools = message.pools.map((e) => (e ? poolInfo.toJSON(e) : undefined))
+    } else {
+      obj.pools = []
+    }
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryLastPoolResponse>): QueryLastPoolResponse {
+    const message = { ...baseQueryLastPoolResponse } as QueryLastPoolResponse
+    message.pools = []
+    if (object.pools !== undefined && object.pools !== null) {
+      for (const e of object.pools) {
+        message.pools.push(poolInfo.fromPartial(e))
+      }
     }
     return message
   }
@@ -405,6 +733,10 @@ export const QueryAllCreatePoolResponse = {
 
 /** Query defines the gRPC querier service. */
 export interface Query {
+  /** Queries a issueToken by index. */
+  IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>
+  /** Queries a list of issueToken items. */
+  IssueTokenAll(request: QueryAllIssueTokenRequest): Promise<QueryAllIssueTokenResponse>
   /** Queries a createPool by index. */
   CreatePool(request: QueryGetCreatePoolRequest): Promise<QueryGetCreatePoolResponse>
   /** Queries a list of createPool items. */
@@ -418,6 +750,18 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
+  IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse> {
+    const data = QueryGetIssueTokenRequest.encode(request).finish()
+    const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'IssueToken', data)
+    return promise.then((data) => QueryGetIssueTokenResponse.decode(new Reader(data)))
+  }
+
+  IssueTokenAll(request: QueryAllIssueTokenRequest): Promise<QueryAllIssueTokenResponse> {
+    const data = QueryAllIssueTokenRequest.encode(request).finish()
+    const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'IssueTokenAll', data)
+    return promise.then((data) => QueryAllIssueTokenResponse.decode(new Reader(data)))
+  }
+
   CreatePool(request: QueryGetCreatePoolRequest): Promise<QueryGetCreatePoolResponse> {
     const data = QueryGetCreatePoolRequest.encode(request).finish()
     const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'CreatePool', data)

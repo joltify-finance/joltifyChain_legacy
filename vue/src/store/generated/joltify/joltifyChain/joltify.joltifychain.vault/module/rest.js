@@ -180,5 +180,34 @@ export class Api extends HttpClient {
             format: "json",
             ...params,
         });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryIssueTokenAll
+         * @summary Queries a list of issueToken items.
+         * @request GET:/joltify/joltifychain/vault/issueToken
+         */
+        this.queryIssueTokenAll = (query, params = {}) => this.request({
+            path: `/joltify/joltifychain/vault/issueToken`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryIssueToken
+         * @summary Queries a issueToken by index.
+         * @request GET:/joltify/joltifychain/vault/issueToken/{index}
+         */
+        this.queryIssueToken = (index, params = {}) => this.request({
+            path: `/joltify/joltifychain/vault/issueToken/${index}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
     }
 }

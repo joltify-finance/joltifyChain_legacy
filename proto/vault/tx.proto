@@ -10,10 +10,24 @@ import "gogoproto/gogo.proto";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateIssueToken(MsgCreateIssueToken) returns (MsgCreateIssueTokenResponse);
   rpc CreateCreatePool(MsgCreateCreatePool) returns (MsgCreateCreatePoolResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateIssueToken {
+  bytes creator = 1  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string index = 2;
+  bytes coin = 3  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false];
+  bytes receiver = 4  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
+message MsgCreateIssueTokenResponse {
+  bool successful = 1;
+}
+
+
+
+
 message MsgCreateCreatePool {
   bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string poolPubKey = 2;

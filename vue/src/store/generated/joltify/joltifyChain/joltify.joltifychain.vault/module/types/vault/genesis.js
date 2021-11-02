@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Params } from '../vault/staking';
+import { IssueToken } from '../vault/issue_token';
 import { CreatePool } from '../vault/create_pool';
 import { Writer, Reader } from 'protobufjs/minimal';
 export const protobufPackage = 'joltify.joltifychain.vault';
@@ -9,11 +10,14 @@ export const GenesisState = {
         if (message.params !== undefined) {
             Params.encode(message.params, writer.uint32(10).fork()).ldelim();
         }
+        for (const v of message.issueTokenList) {
+            IssueToken.encode(v, writer.uint32(18).fork()).ldelim();
+        }
         for (const v of message.createPoolList) {
-            CreatePool.encode(v, writer.uint32(18).fork()).ldelim();
+            CreatePool.encode(v, writer.uint32(26).fork()).ldelim();
         }
         if (message.exported === true) {
-            writer.uint32(24).bool(message.exported);
+            writer.uint32(32).bool(message.exported);
         }
         return writer;
     },
@@ -21,6 +25,7 @@ export const GenesisState = {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = { ...baseGenesisState };
+        message.issueTokenList = [];
         message.createPoolList = [];
         while (reader.pos < end) {
             const tag = reader.uint32();
@@ -29,9 +34,12 @@ export const GenesisState = {
                     message.params = Params.decode(reader, reader.uint32());
                     break;
                 case 2:
-                    message.createPoolList.push(CreatePool.decode(reader, reader.uint32()));
+                    message.issueTokenList.push(IssueToken.decode(reader, reader.uint32()));
                     break;
                 case 3:
+                    message.createPoolList.push(CreatePool.decode(reader, reader.uint32()));
+                    break;
+                case 4:
                     message.exported = reader.bool();
                     break;
                 default:
@@ -43,12 +51,18 @@ export const GenesisState = {
     },
     fromJSON(object) {
         const message = { ...baseGenesisState };
+        message.issueTokenList = [];
         message.createPoolList = [];
         if (object.params !== undefined && object.params !== null) {
             message.params = Params.fromJSON(object.params);
         }
         else {
             message.params = undefined;
+        }
+        if (object.issueTokenList !== undefined && object.issueTokenList !== null) {
+            for (const e of object.issueTokenList) {
+                message.issueTokenList.push(IssueToken.fromJSON(e));
+            }
         }
         if (object.createPoolList !== undefined && object.createPoolList !== null) {
             for (const e of object.createPoolList) {
@@ -66,6 +80,12 @@ export const GenesisState = {
     toJSON(message) {
         const obj = {};
         message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
+        if (message.issueTokenList) {
+            obj.issueTokenList = message.issueTokenList.map((e) => (e ? IssueToken.toJSON(e) : undefined));
+        }
+        else {
+            obj.issueTokenList = [];
+        }
         if (message.createPoolList) {
             obj.createPoolList = message.createPoolList.map((e) => (e ? CreatePool.toJSON(e) : undefined));
         }
@@ -77,12 +97,18 @@ export const GenesisState = {
     },
     fromPartial(object) {
         const message = { ...baseGenesisState };
+        message.issueTokenList = [];
         message.createPoolList = [];
         if (object.params !== undefined && object.params !== null) {
             message.params = Params.fromPartial(object.params);
         }
         else {
             message.params = undefined;
+        }
+        if (object.issueTokenList !== undefined && object.issueTokenList !== null) {
+            for (const e of object.issueTokenList) {
+                message.issueTokenList.push(IssueToken.fromPartial(e));
+            }
         }
         if (object.createPoolList !== undefined && object.createPoolList !== null) {
             for (const e of object.createPoolList) {

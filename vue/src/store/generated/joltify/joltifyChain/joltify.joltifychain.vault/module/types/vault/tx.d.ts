@@ -1,6 +1,15 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "joltify.joltifychain.vault";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgCreateIssueToken {
+    creator: Uint8Array;
+    index: string;
+    coin: Uint8Array;
+    receiver: Uint8Array;
+}
+export interface MsgCreateIssueTokenResponse {
+    successful: boolean;
+}
 export interface MsgCreateCreatePool {
     creator: Uint8Array;
     poolPubKey: string;
@@ -9,6 +18,20 @@ export interface MsgCreateCreatePool {
 export interface MsgCreateCreatePoolResponse {
     successful: boolean;
 }
+export declare const MsgCreateIssueToken: {
+    encode(message: MsgCreateIssueToken, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateIssueToken;
+    fromJSON(object: any): MsgCreateIssueToken;
+    toJSON(message: MsgCreateIssueToken): unknown;
+    fromPartial(object: DeepPartial<MsgCreateIssueToken>): MsgCreateIssueToken;
+};
+export declare const MsgCreateIssueTokenResponse: {
+    encode(message: MsgCreateIssueTokenResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateIssueTokenResponse;
+    fromJSON(object: any): MsgCreateIssueTokenResponse;
+    toJSON(message: MsgCreateIssueTokenResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreateIssueTokenResponse>): MsgCreateIssueTokenResponse;
+};
 export declare const MsgCreateCreatePool: {
     encode(message: MsgCreateCreatePool, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateCreatePool;
@@ -26,11 +49,13 @@ export declare const MsgCreateCreatePoolResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse>;
     CreateCreatePool(request: MsgCreateCreatePool): Promise<MsgCreateCreatePoolResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse>;
     CreateCreatePool(request: MsgCreateCreatePool): Promise<MsgCreateCreatePoolResponse>;
 }
 interface Rpc {

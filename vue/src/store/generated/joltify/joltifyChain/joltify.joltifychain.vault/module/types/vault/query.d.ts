@@ -1,17 +1,34 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import { PoolProposal } from '../vault/create_pool';
+import { IssueToken } from '../vault/issue_token';
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { PoolProposal } from '../vault/create_pool';
 export declare const protobufPackage = "joltify.joltifychain.vault";
 /** this line is used by starport scaffolding # 3 */
+export interface QueryGetIssueTokenRequest {
+    index: string;
+}
+export interface QueryGetIssueTokenResponse {
+    IssueToken: IssueToken | undefined;
+}
+export interface QueryAllIssueTokenRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllIssueTokenResponse {
+    IssueToken: IssueToken[];
+    pagination: PageResponse | undefined;
+}
 export interface QueryGetCreatePoolRequest {
     index: string;
 }
 export interface QueryGetCreatePoolResponse {
     CreatePool: PoolProposal | undefined;
 }
-export interface QueryLastPoolResponse {
+export interface poolInfo {
     BlockHeight: string;
     CreatePool: PoolProposal | undefined;
+}
+export interface QueryLastPoolResponse {
+    pools: poolInfo[];
 }
 export interface QueryAllCreatePoolRequest {
     pagination: PageRequest | undefined;
@@ -23,6 +40,34 @@ export interface QueryAllCreatePoolResponse {
     CreatePool: PoolProposal[];
     pagination: PageResponse | undefined;
 }
+export declare const QueryGetIssueTokenRequest: {
+    encode(message: QueryGetIssueTokenRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetIssueTokenRequest;
+    fromJSON(object: any): QueryGetIssueTokenRequest;
+    toJSON(message: QueryGetIssueTokenRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetIssueTokenRequest>): QueryGetIssueTokenRequest;
+};
+export declare const QueryGetIssueTokenResponse: {
+    encode(message: QueryGetIssueTokenResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetIssueTokenResponse;
+    fromJSON(object: any): QueryGetIssueTokenResponse;
+    toJSON(message: QueryGetIssueTokenResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetIssueTokenResponse>): QueryGetIssueTokenResponse;
+};
+export declare const QueryAllIssueTokenRequest: {
+    encode(message: QueryAllIssueTokenRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllIssueTokenRequest;
+    fromJSON(object: any): QueryAllIssueTokenRequest;
+    toJSON(message: QueryAllIssueTokenRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllIssueTokenRequest>): QueryAllIssueTokenRequest;
+};
+export declare const QueryAllIssueTokenResponse: {
+    encode(message: QueryAllIssueTokenResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllIssueTokenResponse;
+    fromJSON(object: any): QueryAllIssueTokenResponse;
+    toJSON(message: QueryAllIssueTokenResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllIssueTokenResponse>): QueryAllIssueTokenResponse;
+};
 export declare const QueryGetCreatePoolRequest: {
     encode(message: QueryGetCreatePoolRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetCreatePoolRequest;
@@ -36,6 +81,13 @@ export declare const QueryGetCreatePoolResponse: {
     fromJSON(object: any): QueryGetCreatePoolResponse;
     toJSON(message: QueryGetCreatePoolResponse): unknown;
     fromPartial(object: DeepPartial<QueryGetCreatePoolResponse>): QueryGetCreatePoolResponse;
+};
+export declare const poolInfo: {
+    encode(message: poolInfo, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): poolInfo;
+    fromJSON(object: any): poolInfo;
+    toJSON(message: poolInfo): unknown;
+    fromPartial(object: DeepPartial<poolInfo>): poolInfo;
 };
 export declare const QueryLastPoolResponse: {
     encode(message: QueryLastPoolResponse, writer?: Writer): Writer;
@@ -67,6 +119,10 @@ export declare const QueryAllCreatePoolResponse: {
 };
 /** Query defines the gRPC querier service. */
 export interface Query {
+    /** Queries a issueToken by index. */
+    IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>;
+    /** Queries a list of issueToken items. */
+    IssueTokenAll(request: QueryAllIssueTokenRequest): Promise<QueryAllIssueTokenResponse>;
     /** Queries a createPool by index. */
     CreatePool(request: QueryGetCreatePoolRequest): Promise<QueryGetCreatePoolResponse>;
     /** Queries a list of createPool items. */
@@ -77,6 +133,8 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
+    IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>;
+    IssueTokenAll(request: QueryAllIssueTokenRequest): Promise<QueryAllIssueTokenResponse>;
     CreatePool(request: QueryGetCreatePoolRequest): Promise<QueryGetCreatePoolResponse>;
     CreatePoolAll(request: QueryAllCreatePoolRequest): Promise<QueryAllCreatePoolResponse>;
     GetLastPool(request: QueryLatestPoolRequest): Promise<QueryLastPoolResponse>;

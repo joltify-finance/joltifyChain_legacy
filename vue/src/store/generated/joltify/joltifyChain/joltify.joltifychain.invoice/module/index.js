@@ -3,16 +3,16 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgDeleteSellOrder } from "./types/invoice/tx";
+import { MsgDeleteInvoice } from "./types/invoice/tx";
+import { MsgCreateInvoice } from "./types/invoice/tx";
 import { MsgCreatePlaceOrder } from "./types/invoice/tx";
 import { MsgCreateSellOrder } from "./types/invoice/tx";
-import { MsgCreateInvoice } from "./types/invoice/tx";
-import { MsgDeleteInvoice } from "./types/invoice/tx";
 const types = [
     ["/joltify.joltifychain.invoice.MsgDeleteSellOrder", MsgDeleteSellOrder],
+    ["/joltify.joltifychain.invoice.MsgDeleteInvoice", MsgDeleteInvoice],
+    ["/joltify.joltifychain.invoice.MsgCreateInvoice", MsgCreateInvoice],
     ["/joltify.joltifychain.invoice.MsgCreatePlaceOrder", MsgCreatePlaceOrder],
     ["/joltify.joltifychain.invoice.MsgCreateSellOrder", MsgCreateSellOrder],
-    ["/joltify.joltifychain.invoice.MsgCreateInvoice", MsgCreateInvoice],
-    ["/joltify.joltifychain.invoice.MsgDeleteInvoice", MsgDeleteInvoice],
 ];
 export const MissingWalletError = new Error("wallet is required");
 const registry = new Registry(types);
@@ -28,10 +28,10 @@ const txClient = async (wallet, { addr: addr } = { addr: "http://localhost:26657
     return {
         signAndBroadcast: (msgs, { fee, memo } = { fee: defaultFee, memo: "" }) => client.signAndBroadcast(address, msgs, fee, memo),
         msgDeleteSellOrder: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteSellOrder", value: data }),
+        msgDeleteInvoice: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteInvoice", value: data }),
+        msgCreateInvoice: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateInvoice", value: data }),
         msgCreatePlaceOrder: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreatePlaceOrder", value: data }),
         msgCreateSellOrder: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateSellOrder", value: data }),
-        msgCreateInvoice: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateInvoice", value: data }),
-        msgDeleteInvoice: (data) => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteInvoice", value: data }),
     };
 };
 const queryClient = async ({ addr: addr } = { addr: "http://localhost:1317" }) => {

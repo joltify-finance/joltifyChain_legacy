@@ -57,7 +57,19 @@ export interface V1Beta1PageResponse {
     /** @format uint64 */
     total?: string;
 }
+export interface VaultIssueToken {
+    /** @format byte */
+    creator?: string;
+    index?: string;
+    /** @format byte */
+    coin?: string;
+    /** @format byte */
+    receiver?: string;
+}
 export interface VaultMsgCreateCreatePoolResponse {
+    successful?: boolean;
+}
+export interface VaultMsgCreateIssueTokenResponse {
     successful?: boolean;
 }
 export interface VaultPoolProposal {
@@ -77,10 +89,29 @@ export interface VaultQueryAllCreatePoolResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export interface VaultQueryAllIssueTokenResponse {
+    IssueToken?: VaultIssueToken[];
+    /**
+     * PageResponse is to be embedded in gRPC response messages where the
+     * corresponding request message has used PageRequest.
+     *
+     *  message SomeResponse {
+     *          repeated Bar results = 1;
+     *          PageResponse page = 2;
+     *  }
+     */
+    pagination?: V1Beta1PageResponse;
+}
 export interface VaultQueryGetCreatePoolResponse {
     CreatePool?: VaultPoolProposal;
 }
+export interface VaultQueryGetIssueTokenResponse {
+    IssueToken?: VaultIssueToken;
+}
 export interface VaultQueryLastPoolResponse {
+    pools?: VaultpoolInfo[];
+}
+export interface VaultpoolInfo {
     BlockHeight?: string;
     CreatePool?: VaultPoolProposal;
 }
@@ -179,5 +210,28 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
         "pagination.limit"?: string;
         "pagination.countTotal"?: boolean;
     }, params?: RequestParams) => Promise<HttpResponse<VaultQueryLastPoolResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryIssueTokenAll
+     * @summary Queries a list of issueToken items.
+     * @request GET:/joltify/joltifychain/vault/issueToken
+     */
+    queryIssueTokenAll: (query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<VaultQueryAllIssueTokenResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryIssueToken
+     * @summary Queries a issueToken by index.
+     * @request GET:/joltify/joltifychain/vault/issueToken/{index}
+     */
+    queryIssueToken: (index: string, params?: RequestParams) => Promise<HttpResponse<VaultQueryGetIssueTokenResponse, RpcStatus>>;
 }
 export {};

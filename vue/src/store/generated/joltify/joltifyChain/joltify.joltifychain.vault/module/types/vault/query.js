@@ -1,8 +1,238 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal';
-import { PoolProposal } from '../vault/create_pool';
+import { IssueToken } from '../vault/issue_token';
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { PoolProposal } from '../vault/create_pool';
 export const protobufPackage = 'joltify.joltifychain.vault';
+const baseQueryGetIssueTokenRequest = { index: '' };
+export const QueryGetIssueTokenRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.index !== '') {
+            writer.uint32(10).string(message.index);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetIssueTokenRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.index = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetIssueTokenRequest };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = String(object.index);
+        }
+        else {
+            message.index = '';
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.index !== undefined && (obj.index = message.index);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetIssueTokenRequest };
+        if (object.index !== undefined && object.index !== null) {
+            message.index = object.index;
+        }
+        else {
+            message.index = '';
+        }
+        return message;
+    }
+};
+const baseQueryGetIssueTokenResponse = {};
+export const QueryGetIssueTokenResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.IssueToken !== undefined) {
+            IssueToken.encode(message.IssueToken, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetIssueTokenResponse };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.IssueToken = IssueToken.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetIssueTokenResponse };
+        if (object.IssueToken !== undefined && object.IssueToken !== null) {
+            message.IssueToken = IssueToken.fromJSON(object.IssueToken);
+        }
+        else {
+            message.IssueToken = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.IssueToken !== undefined && (obj.IssueToken = message.IssueToken ? IssueToken.toJSON(message.IssueToken) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetIssueTokenResponse };
+        if (object.IssueToken !== undefined && object.IssueToken !== null) {
+            message.IssueToken = IssueToken.fromPartial(object.IssueToken);
+        }
+        else {
+            message.IssueToken = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllIssueTokenRequest = {};
+export const QueryAllIssueTokenRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllIssueTokenRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllIssueTokenRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllIssueTokenRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllIssueTokenResponse = {};
+export const QueryAllIssueTokenResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.IssueToken) {
+            IssueToken.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllIssueTokenResponse };
+        message.IssueToken = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.IssueToken.push(IssueToken.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllIssueTokenResponse };
+        message.IssueToken = [];
+        if (object.IssueToken !== undefined && object.IssueToken !== null) {
+            for (const e of object.IssueToken) {
+                message.IssueToken.push(IssueToken.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.IssueToken) {
+            obj.IssueToken = message.IssueToken.map((e) => (e ? IssueToken.toJSON(e) : undefined));
+        }
+        else {
+            obj.IssueToken = [];
+        }
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllIssueTokenResponse };
+        message.IssueToken = [];
+        if (object.IssueToken !== undefined && object.IssueToken !== null) {
+            for (const e of object.IssueToken) {
+                message.IssueToken.push(IssueToken.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
 const baseQueryGetCreatePoolRequest = { index: '' };
 export const QueryGetCreatePoolRequest = {
     encode(message, writer = Writer.create()) {
@@ -105,8 +335,8 @@ export const QueryGetCreatePoolResponse = {
         return message;
     }
 };
-const baseQueryLastPoolResponse = { BlockHeight: '' };
-export const QueryLastPoolResponse = {
+const basepoolInfo = { BlockHeight: '' };
+export const poolInfo = {
     encode(message, writer = Writer.create()) {
         if (message.BlockHeight !== '') {
             writer.uint32(10).string(message.BlockHeight);
@@ -119,7 +349,7 @@ export const QueryLastPoolResponse = {
     decode(input, length) {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseQueryLastPoolResponse };
+        const message = { ...basepoolInfo };
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -137,7 +367,7 @@ export const QueryLastPoolResponse = {
         return message;
     },
     fromJSON(object) {
-        const message = { ...baseQueryLastPoolResponse };
+        const message = { ...basepoolInfo };
         if (object.BlockHeight !== undefined && object.BlockHeight !== null) {
             message.BlockHeight = String(object.BlockHeight);
         }
@@ -159,7 +389,7 @@ export const QueryLastPoolResponse = {
         return obj;
     },
     fromPartial(object) {
-        const message = { ...baseQueryLastPoolResponse };
+        const message = { ...basepoolInfo };
         if (object.BlockHeight !== undefined && object.BlockHeight !== null) {
             message.BlockHeight = object.BlockHeight;
         }
@@ -171,6 +401,63 @@ export const QueryLastPoolResponse = {
         }
         else {
             message.CreatePool = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryLastPoolResponse = {};
+export const QueryLastPoolResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.pools) {
+            poolInfo.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryLastPoolResponse };
+        message.pools = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pools.push(poolInfo.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryLastPoolResponse };
+        message.pools = [];
+        if (object.pools !== undefined && object.pools !== null) {
+            for (const e of object.pools) {
+                message.pools.push(poolInfo.fromJSON(e));
+            }
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.pools) {
+            obj.pools = message.pools.map((e) => (e ? poolInfo.toJSON(e) : undefined));
+        }
+        else {
+            obj.pools = [];
+        }
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryLastPoolResponse };
+        message.pools = [];
+        if (object.pools !== undefined && object.pools !== null) {
+            for (const e of object.pools) {
+                message.pools.push(poolInfo.fromPartial(e));
+            }
         }
         return message;
     }
@@ -356,6 +643,16 @@ export const QueryAllCreatePoolResponse = {
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
+    }
+    IssueToken(request) {
+        const data = QueryGetIssueTokenRequest.encode(request).finish();
+        const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'IssueToken', data);
+        return promise.then((data) => QueryGetIssueTokenResponse.decode(new Reader(data)));
+    }
+    IssueTokenAll(request) {
+        const data = QueryAllIssueTokenRequest.encode(request).finish();
+        const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'IssueTokenAll', data);
+        return promise.then((data) => QueryAllIssueTokenResponse.decode(new Reader(data)));
     }
     CreatePool(request) {
         const data = QueryGetCreatePoolRequest.encode(request).finish();

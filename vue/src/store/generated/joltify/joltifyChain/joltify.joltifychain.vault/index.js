@@ -3,8 +3,10 @@ import { txClient, queryClient, MissingWalletError } from './module';
 import { SpVuexError } from '@starport/vuex';
 import { PoolProposal } from "./module/types/vault/create_pool";
 import { CreatePool } from "./module/types/vault/create_pool";
+import { IssueToken } from "./module/types/vault/issue_token";
+import { poolInfo } from "./module/types/vault/query";
 import { Params } from "./module/types/vault/staking";
-export { PoolProposal, CreatePool, Params };
+export { PoolProposal, CreatePool, IssueToken, poolInfo, Params };
 async function initTxClient(vuexGetters) {
     return await txClient(vuexGetters['common/wallet/signer'], {
         addr: vuexGetters['common/env/apiTendermint']
@@ -38,12 +40,16 @@ function getStructure(template) {
 }
 const getDefaultState = () => {
     return {
+        IssueToken: {},
+        IssueTokenAll: {},
         CreatePool: {},
         CreatePoolAll: {},
         GetLastPool: {},
         _Structure: {
             PoolProposal: getStructure(PoolProposal.fromPartial({})),
             CreatePool: getStructure(CreatePool.fromPartial({})),
+            IssueToken: getStructure(IssueToken.fromPartial({})),
+            poolInfo: getStructure(poolInfo.fromPartial({})),
             Params: getStructure(Params.fromPartial({})),
         },
         _Subscriptions: new Set(),
@@ -69,6 +75,18 @@ export default {
         }
     },
     getters: {
+        getIssueToken: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.IssueToken[JSON.stringify(params)] ?? {};
+        },
+        getIssueTokenAll: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.IssueTokenAll[JSON.stringify(params)] ?? {};
+        },
         getCreatePool: (state) => (params = { params: {} }) => {
             if (!params.query) {
                 params.query = null;
@@ -115,6 +133,36 @@ export default {
                     throw new SpVuexError('Subscriptions: ' + e.message);
                 }
             });
+        },
+        async QueryIssueToken({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
+            try {
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryIssueToken(key.index)).data;
+                commit('QUERY', { query: 'IssueToken', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryIssueToken', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getIssueToken']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                throw new SpVuexError('QueryClient:QueryIssueToken', 'API Node Unavailable. Could not perform query: ' + e.message);
+            }
+        },
+        async QueryIssueTokenAll({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
+            try {
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryIssueTokenAll(query)).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await queryClient.queryIssueTokenAll({ ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    value = mergeResults(value, next_values);
+                }
+                commit('QUERY', { query: 'IssueTokenAll', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryIssueTokenAll', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getIssueTokenAll']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                throw new SpVuexError('QueryClient:QueryIssueTokenAll', 'API Node Unavailable. Could not perform query: ' + e.message);
+            }
         },
         async QueryCreatePool({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
             try {
@@ -163,6 +211,23 @@ export default {
                 throw new SpVuexError('QueryClient:QueryGetLastPool', 'API Node Unavailable. Could not perform query: ' + e.message);
             }
         },
+        async sendMsgCreateIssueToken({ rootGetters }, { value, fee = [], memo = '' }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgCreateIssueToken(value);
+                const result = await txClient.signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new SpVuexError('TxClient:MsgCreateIssueToken:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgCreateIssueToken:Send', 'Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
         async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
             try {
                 const txClient = await initTxClient(rootGetters);
@@ -177,6 +242,21 @@ export default {
                 }
                 else {
                     throw new SpVuexError('TxClient:MsgCreateCreatePool:Send', 'Could not broadcast Tx: ' + e.message);
+                }
+            }
+        },
+        async MsgCreateIssueToken({ rootGetters }, { value }) {
+            try {
+                const txClient = await initTxClient(rootGetters);
+                const msg = await txClient.msgCreateIssueToken(value);
+                return msg;
+            }
+            catch (e) {
+                if (e == MissingWalletError) {
+                    throw new SpVuexError('TxClient:MsgCreateIssueToken:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgCreateIssueToken:Create', 'Could not create message: ' + e.message);
                 }
             }
         },

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+
+import "gogoproto/gogo.proto";
+
+message IssueToken {
+  bytes creator = 1  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string index = 2;
+  bytes coin = 3  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = true];
+  bytes receiver = 4  [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
