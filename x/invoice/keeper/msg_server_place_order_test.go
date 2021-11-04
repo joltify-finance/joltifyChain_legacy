@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/tendermint/tendermint/crypto/ed25519"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,12 +13,12 @@ import (
 
 func TestPlaceOrderMsgServerCreate(t *testing.T) {
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 
-	buyerStr := "inv1spqc68q37enzsz8pdhhkfw2rjmrd6fan7jkjjh"
-	buyer, err := sdk.AccAddressFromBech32(buyerStr)
+	sk = ed25519.GenPrivKey()
+	buyer, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"

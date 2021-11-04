@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/tendermint/tendermint/crypto/ed25519"
 	"testing"
 	"time"
 
@@ -14,8 +15,9 @@ import (
 
 func TestSellOrderMsgServerCreate(t *testing.T) {
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
+
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
@@ -32,8 +34,9 @@ func TestSellOrderMsgServerCreate(t *testing.T) {
 
 func TestSellOrderMsgServerCreateFail(t *testing.T) {
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
+
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
@@ -51,13 +54,14 @@ func TestSellOrderMsgServerCreateFail(t *testing.T) {
 
 func TestSellOrderMsgServerDelete(t *testing.T) {
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
-	require.Nil(t, err)
 
-	user2Str := "inv1nxz2kneh6nvdklkvlhzwv7sqzch0s6ghf27eg9"
-	user2, err := sdk.AccAddressFromBech32(user2Str)
-	require.Nil(t, err)
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	assert.Nil(t, err)
+
+	sk = ed25519.GenPrivKey()
+	user2, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
 	rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)

@@ -20,7 +20,7 @@ func TestCreateInvoice(t *testing.T) {
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
-	fields := []string{"xyz", "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k", "100000", "10", "xyz"}
+	fields := []string{"xyz", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "100000", "10", "xyz"}
 	for _, tc := range []struct {
 		desc string
 		args []string
@@ -60,7 +60,7 @@ func TestCreateInvoiceInvalid(t *testing.T) {
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
-	fields := []string{"xyzaaaa", "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k", "1000", "10", "xyz"}
+	fields := []string{"xyzaaaa", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "1000", "10", "xyz"}
 	for _, tc := range []struct {
 		desc string
 		args []string
@@ -94,7 +94,7 @@ func TestDeleteInvoice(t *testing.T) {
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
-	fields := []string{"xyz", "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k", "100000", "10", "xyz"}
+	fields := []string{"xyz", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "100000", "10", "xyz"}
 	common := []string{
 		fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
 		fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
@@ -106,7 +106,7 @@ func TestDeleteInvoice(t *testing.T) {
 	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
 	require.NoError(t, err)
 
-	deleteArgsUser := []string{"xyz", "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"}
+	deleteArgsUser := []string{"xyz", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d"}
 	deleteArgs := append(deleteArgsUser, common...)
 	for _, tc := range []struct {
 		name string

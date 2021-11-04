@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"encoding/hex"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -28,11 +29,31 @@ func newRootInvoice(t *testing.T, creator sdk.AccAddress, invoiceName string) (t
 func Test_msgServer_TransferInvoice(t *testing.T) {
 	invoiceName := "any"
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	user2Str := "inv1nxz2kneh6nvdklkvlhzwv7sqzch0s6ghf27eg9"
-	user3Str := "inv12yhdwmrurde2pvteq3fsn2lt69lyqmfmjj87gn"
-	user4Str := "inv13cp28h7mau2mx3sqr2wfzpkmxar5ycaxjdl4u7"
-	user5Str := "inv17uxlmlhg6v0648hhlmqcxnjv77cc24k9ung9ns"
+	sk := ed25519.GenPrivKey()
+	addr, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	require.Nil(t, err)
+	creatorStr := addr.String()
+
+	sk = ed25519.GenPrivKey()
+	addr, err = sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	require.Nil(t, err)
+	user2Str := addr.String()
+
+	sk = ed25519.GenPrivKey()
+	addr, err = sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	require.Nil(t, err)
+	user3Str := addr.String()
+
+	sk = ed25519.GenPrivKey()
+	addr, err = sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	require.Nil(t, err)
+	user4Str := addr.String()
+
+	sk = ed25519.GenPrivKey()
+	addr, err = sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	require.Nil(t, err)
+	user5Str := addr.String()
+
 	creator, err := sdk.AccAddressFromBech32(creatorStr)
 	require.NoError(t, err)
 	user2, err := sdk.AccAddressFromBech32(user2Str)

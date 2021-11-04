@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/tendermint/tendermint/crypto/ed25519"
 	"strconv"
 	"testing"
 
@@ -35,8 +36,8 @@ func networkWithInvoiceObjects(t *testing.T, n int) (*network.Network, []*types.
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 	invoiceMember := types.InvoiceMember{
 		Share:         sdk.NewInt(10),

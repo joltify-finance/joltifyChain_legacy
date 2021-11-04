@@ -23,7 +23,7 @@ func TestCreateSellOrderUnauthorized(t *testing.T) {
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
-	createInvoiceFields := []string{"xyz", "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k", "100000", "10", "xyz"}
+	createInvoiceFields := []string{"xyz", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "100000", "10", "xyz"}
 
 	invoiceIDByte, err := tools.GenHash([]string{val.Address.String(), createInvoiceFields[1], createInvoiceFields[0]})
 	require.Nil(t, err)

@@ -3,6 +3,7 @@ package keeper
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/tendermint/tendermint/crypto/ed25519"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -27,8 +28,8 @@ func TestInvoiceMsgServerCreate(t *testing.T) {
 	keeper, ctx := setupKeeper(t)
 	srv := NewMsgServerImpl(*keeper)
 	wctx := sdk.WrapSDKContext(ctx)
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
 	assert.Nil(t, err)
 	for i := 0; i < 5; i++ {
 		idx := fmt.Sprintf("%d", i)
@@ -48,12 +49,14 @@ func TestInvoiceMsgServerCreate(t *testing.T) {
 func TestInvoiceMsgServerDelete(t *testing.T) {
 	invoiceName := "any"
 	setupBech32Prefix()
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
-	invalidUserStr := "inv1nxz2kneh6nvdklkvlhzwv7sqzch0s6ghf27eg9"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
-	require.NoError(t, err)
-	invalidUser, err := sdk.AccAddressFromBech32(invalidUserStr)
-	require.NoError(t, err)
+
+	sk := ed25519.GenPrivKey()
+	creator, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	assert.Nil(t, err)
+	sk = ed25519.GenPrivKey()
+	invalidUser, err := sdk.AccAddressFromHex(sk.PubKey().Address().String())
+	assert.Nil(t, err)
+
 	for _, tc := range []struct {
 		desc    string
 		request *types.MsgDeleteInvoice

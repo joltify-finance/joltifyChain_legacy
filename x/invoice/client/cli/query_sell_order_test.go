@@ -27,7 +27,7 @@ func networkWithSellOrderObjects(t *testing.T, n int) (*network.Network, []*type
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
-	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
+	creatorStr := "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d"
 	creator, err := sdk.AccAddressFromBech32(creatorStr)
 	assert.Nil(t, err)
 
