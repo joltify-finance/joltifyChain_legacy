@@ -80,20 +80,20 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/joltify/joltifyChain/docs"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/docs"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	invoicemodule "github.com/joltify/joltifyChain/x/invoice"
-	invoicemodulekeeper "github.com/joltify/joltifyChain/x/invoice/keeper"
-	invoicemoduletypes "github.com/joltify/joltifyChain/x/invoice/types"
-	parammanagermodule "github.com/joltify/joltifyChain/x/parammanager"
-	parammanagermodulekeeper "github.com/joltify/joltifyChain/x/parammanager/keeper"
-	parammanagermoduletypes "github.com/joltify/joltifyChain/x/parammanager/types"
-	vaultmodule "github.com/joltify/joltifyChain/x/vault"
-	vaultmodulekeeper "github.com/joltify/joltifyChain/x/vault/keeper"
-	vaultmoduletypes "github.com/joltify/joltifyChain/x/vault/types"
+	invoicemodule "gitlab.com/joltify/joltifychain/joltifychain/x/invoice"
+	invoicemodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/invoice/keeper"
+	invoicemoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
+	parammanagermodule "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager"
+	parammanagermodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/keeper"
+	parammanagermoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
+	vaultmodule "gitlab.com/joltify/joltifychain/joltifychain/x/vault"
+	vaultmodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/vault/keeper"
+	vaultmoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
@@ -159,7 +159,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		vaultmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		vaultmoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 		invoicemoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	}

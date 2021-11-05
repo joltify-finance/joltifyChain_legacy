@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/joltify/joltifyChain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 func TestSellOrderMsgServerCreate(t *testing.T) {

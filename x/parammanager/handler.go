@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/joltify/joltifyChain/x/parammanager/keeper"
-	"github.com/joltify/joltifyChain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/keeper"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
 )
 
 // NewHandler ...

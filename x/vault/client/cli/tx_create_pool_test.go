@@ -12,8 +12,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 
-	"github.com/joltify/joltifyChain/testutil/network"
-	"github.com/joltify/joltifyChain/x/vault/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/client/cli"
 )
 
 func setupBech32Prefix() {

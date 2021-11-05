@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/joltify/joltifyChain/x/invoice/types"
 	"github.com/spf13/cast"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 func CmdCreateSellOrder() *cobra.Command {

@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	vaultmoduletypes "github.com/joltify/joltifyChain/x/vault/types"
+	vaultmoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func (k Keeper) unbondedToBonded(ctx sdk.Context, validator stakingtypes.Validator) (stakingtypes.Validator, error) {

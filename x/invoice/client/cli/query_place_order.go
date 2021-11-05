@@ -5,8 +5,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/joltify/joltifyChain/x/invoice/types"
 	"github.com/spf13/cobra"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 func CmdListPlaceOrder() *cobra.Command {

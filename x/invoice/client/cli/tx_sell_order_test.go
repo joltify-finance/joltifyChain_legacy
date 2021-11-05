@@ -10,11 +10,11 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
-	"github.com/joltify/joltifyChain/testutil/network"
-	"github.com/joltify/joltifyChain/x/invoice/client/cli"
-	"github.com/joltify/joltifyChain/x/invoice/tools"
-	"github.com/joltify/joltifyChain/x/invoice/types"
 	"github.com/stretchr/testify/require"
+	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/tools"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 func TestCreateSellOrderUnauthorized(t *testing.T) {

@@ -16,9 +16,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/joltify/joltifyChain/x/invoice/client/cli"
-	"github.com/joltify/joltifyChain/x/invoice/keeper"
-	"github.com/joltify/joltifyChain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/keeper"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 	// this line is used by starport scaffolding # ibc/module/import
 )
 

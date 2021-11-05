@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -47,7 +47,7 @@ func (k Keeper) IssueToken(c context.Context, req *types.QueryGetIssueTokenReque
 
 	val, found := k.GetIssueToken(ctx, req.Index)
 	if !found {
-	    return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
 	return &types.QueryGetIssueTokenResponse{IssueToken: &val}, nil
