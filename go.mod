@@ -1,4 +1,4 @@
-module github.com/joltify/joltifyChain
+module github.com/joltify-finance/joltifyChain
 
 go 1.16
 
