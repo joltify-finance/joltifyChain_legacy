@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/joltify/joltifyChain/x/vault/types"
 	"github.com/stretchr/testify/assert"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func createNCreatePool(keeper *Keeper, ctx sdk.Context, n int) []types.CreatePool {

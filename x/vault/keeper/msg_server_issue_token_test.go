@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func TestIssueTokenMsgServerCreate(t *testing.T) {

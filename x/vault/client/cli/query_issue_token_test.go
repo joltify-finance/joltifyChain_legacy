@@ -14,19 +14,18 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/joltify/joltifyChain/testutil/network"
-	"github.com/joltify/joltifyChain/x/vault/client/cli"
-    "github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func networkWithIssueTokenObjects(t *testing.T, n int) (*network.Network, []*types.IssueToken) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
-    require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-
-	addr,err:=sdk.AccAddressFromBech32("jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg")
+	addr, err := sdk.AccAddressFromBech32("jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg")
 	require.Nil(t, err)
 
 	for i := 0; i < n; i++ {

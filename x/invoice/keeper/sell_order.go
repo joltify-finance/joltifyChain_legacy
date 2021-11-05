@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/joltify/joltifyChain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 // SetSellOrder set a specific sellOrder in the store from its index

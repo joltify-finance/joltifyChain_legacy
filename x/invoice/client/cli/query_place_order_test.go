@@ -14,9 +14,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/joltify/joltifyChain/testutil/network"
-	"github.com/joltify/joltifyChain/x/invoice/client/cli"
-	"github.com/joltify/joltifyChain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
 )
 
 func networkWithPlaceOrderObjects(t *testing.T, n int) (*network.Network, []*types.PlaceOrder) {

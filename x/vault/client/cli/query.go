@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -28,7 +28,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdListIssueToken())
 	cmd.AddCommand(CmdShowIssueToken())
-
 
 	cmd.AddCommand(CmdListCreatePool())
 	cmd.AddCommand(CmdShowCreatePool())

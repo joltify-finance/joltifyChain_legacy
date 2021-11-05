@@ -4,8 +4,8 @@ import (
 	"os"
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/joltify/joltifyChain/app"
 	"github.com/tendermint/spm/cosmoscmd"
+	"gitlab.com/joltify/joltifychain/joltifychain/app"
 )
 
 func main() {

@@ -18,9 +18,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/joltify/joltifyChain/testutil/network"
-	"github.com/joltify/joltifyChain/x/vault/client/cli"
-	"github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/client/cli"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func networkWithCreatePoolObjects(t *testing.T, n int) (*network.Network, []*types.CreatePool) {

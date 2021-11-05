@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	vaultmoduletypes "github.com/joltify/joltifyChain/x/vault/types"
+	vaultmoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 func (k Keeper) BlockChurnInterval(ctx sdk.Context) (res int64) {

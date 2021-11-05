@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	// "github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/joltify/joltifyChain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
 )
 
 var (

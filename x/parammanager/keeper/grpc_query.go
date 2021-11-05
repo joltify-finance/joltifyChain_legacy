@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/joltify/joltifyChain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
 )
 
 var _ types.QueryServer = Keeper{}

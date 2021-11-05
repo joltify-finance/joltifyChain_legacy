@@ -8,11 +8,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/joltify/joltifyChain/x/parammanager/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
 )
 
 func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {

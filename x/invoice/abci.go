@@ -2,7 +2,7 @@ package invoice
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/joltify/joltifyChain/x/invoice/keeper"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/keeper"
 )
 
 // BeginBlocker all the invoice module related begin block should be here

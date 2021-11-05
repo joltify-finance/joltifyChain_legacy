@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/joltify/joltifyChain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
 var _ types.QueryServer = Keeper{}

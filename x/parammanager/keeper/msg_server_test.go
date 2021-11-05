@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/joltify/joltifyChain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
