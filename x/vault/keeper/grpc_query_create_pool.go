@@ -66,15 +66,23 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 
 	poolBlock := (blockHeight / churnHeight) * churnHeight
 
+	var valLatest types.CreatePool
+	var found bool
+	var height string
 	// if the current block height is 50, the height will be larger than blockHeight
 	if poolBlock+1 >= blockHeight {
 		poolBlock -= churnHeight
 	}
-	height := strconv.FormatInt(poolBlock+1, 10)
-
-	valLatest, found := k.GetCreatePool(ctx, height)
-	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+	for {
+		height = strconv.FormatInt(poolBlock+1, 10)
+		valLatest, found = k.GetCreatePool(ctx, height)
+		if found {
+			break
+		}
+		if poolBlock < 10 {
+			return nil, status.Error(codes.InvalidArgument, "not found")
+		}
+		poolBlock -= churnHeight
 	}
 
 	proposalLast := getProposal(valLatest.Proposal)
@@ -85,7 +93,7 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 
 	allProposal = append(allProposal, &lastProposal)
 
-	height = strconv.FormatInt(poolBlock+1-10, 10)
+	height = strconv.FormatInt(poolBlock+1-churnHeight, 10)
 
 	valLatest2, found := k.GetCreatePool(ctx, height)
 	if found {
