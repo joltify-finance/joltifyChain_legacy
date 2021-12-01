@@ -5,6 +5,7 @@ export const protobufPackage = 'joltify.joltifychain.vault'
 
 export interface PoolProposal {
   poolPubKey: string
+  poolAddr: Uint8Array
   nodes: Uint8Array[]
 }
 
@@ -21,8 +22,11 @@ export const PoolProposal = {
     if (message.poolPubKey !== '') {
       writer.uint32(10).string(message.poolPubKey)
     }
+    if (message.poolAddr.length !== 0) {
+      writer.uint32(18).bytes(message.poolAddr)
+    }
     for (const v of message.nodes) {
-      writer.uint32(18).bytes(v!)
+      writer.uint32(26).bytes(v!)
     }
     return writer
   },
@@ -39,6 +43,9 @@ export const PoolProposal = {
           message.poolPubKey = reader.string()
           break
         case 2:
+          message.poolAddr = reader.bytes()
+          break
+        case 3:
           message.nodes.push(reader.bytes())
           break
         default:
@@ -57,6 +64,9 @@ export const PoolProposal = {
     } else {
       message.poolPubKey = ''
     }
+    if (object.poolAddr !== undefined && object.poolAddr !== null) {
+      message.poolAddr = bytesFromBase64(object.poolAddr)
+    }
     if (object.nodes !== undefined && object.nodes !== null) {
       for (const e of object.nodes) {
         message.nodes.push(bytesFromBase64(e))
@@ -68,6 +78,7 @@ export const PoolProposal = {
   toJSON(message: PoolProposal): unknown {
     const obj: any = {}
     message.poolPubKey !== undefined && (obj.poolPubKey = message.poolPubKey)
+    message.poolAddr !== undefined && (obj.poolAddr = base64FromBytes(message.poolAddr !== undefined ? message.poolAddr : new Uint8Array()))
     if (message.nodes) {
       obj.nodes = message.nodes.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()))
     } else {
@@ -83,6 +94,11 @@ export const PoolProposal = {
       message.poolPubKey = object.poolPubKey
     } else {
       message.poolPubKey = ''
+    }
+    if (object.poolAddr !== undefined && object.poolAddr !== null) {
+      message.poolAddr = object.poolAddr
+    } else {
+      message.poolAddr = new Uint8Array()
     }
     if (object.nodes !== undefined && object.nodes !== null) {
       for (const e of object.nodes) {

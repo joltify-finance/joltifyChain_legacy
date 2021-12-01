@@ -74,6 +74,8 @@ export interface VaultMsgCreateIssueTokenResponse {
 }
 export interface VaultPoolProposal {
     poolPubKey?: string;
+    /** @format byte */
+    poolAddr?: string;
     nodes?: string[];
 }
 export interface VaultQueryAllCreatePoolResponse {

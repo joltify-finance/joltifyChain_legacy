@@ -2,6 +2,7 @@ import { Writer, Reader } from 'protobufjs/minimal';
 export declare const protobufPackage = "joltify.joltifychain.vault";
 export interface PoolProposal {
     poolPubKey: string;
+    poolAddr: Uint8Array;
     nodes: Uint8Array[];
 }
 export interface CreatePool {

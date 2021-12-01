@@ -9,164 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface InvoiceInvoice {
-  invoiceID?: string;
-  invoiceBase?: InvoiceInvoiceBase;
-  invoiceFinance?: InvoiceInvoiceFinance;
-
-  /** @format byte */
-  currentOwner?: string;
-  invoiceMembers?: InvoiceInvoiceMember[];
-  rootOwner?: boolean;
-  deleted?: boolean;
-  isListedForSell?: boolean;
-}
-
-export interface InvoiceInvoiceBase {
-  /** @format byte */
-  creator?: string;
-  name?: string;
-  url?: string;
-  data?: string;
-
-  /** @format byte */
-  origOwner?: string;
-}
-
-export interface InvoiceInvoiceFinance {
-  denom?: string;
-
-  /** @format byte */
-  amount?: string;
-
-  /** @format byte */
-  amountLocked?: string;
-
-  /** @format float */
-  apy?: number;
-}
-
-export interface InvoiceInvoiceMember {
-  invoiceID?: string;
-
-  /** @format byte */
-  share?: string;
-
-  /** @format byte */
-  invoiceHolder?: string;
-}
-
-export interface InvoiceMsgCreateInvoiceResponse {
-  invoiceID?: string;
-}
-
-export interface InvoiceMsgCreatePlaceOrderResponse {
-  placeOrderID?: string;
-}
-
-export interface InvoiceMsgCreateSellOrderResponse {
-  orderID?: string;
-}
-
-export type InvoiceMsgDeleteInvoiceResponse = object;
-
-export type InvoiceMsgDeleteSellOrderResponse = object;
-
-export interface InvoicePlaceOrder {
-  /** @format byte */
-  creator?: string;
-  placeOrderIndex?: string;
-  sellOrderID?: string;
-
-  /** @format byte */
-  amount?: string;
-
-  /** @format int32 */
-  OrderStatus?: number;
-
-  /** @format date-time */
-  createdTime?: string;
-}
-
-export interface InvoiceQueryAllInvoiceResponse {
-  Invoice?: InvoiceInvoice[];
-
-  /**
-   * PageResponse is to be embedded in gRPC response messages where the
-   * corresponding request message has used PageRequest.
-   *
-   *  message SomeResponse {
-   *          repeated Bar results = 1;
-   *          PageResponse page = 2;
-   *  }
-   */
-  pagination?: V1Beta1PageResponse;
-}
-
-export interface InvoiceQueryAllPlaceOrderResponse {
-  PlaceOrder?: InvoicePlaceOrder[];
-
-  /**
-   * PageResponse is to be embedded in gRPC response messages where the
-   * corresponding request message has used PageRequest.
-   *
-   *  message SomeResponse {
-   *          repeated Bar results = 1;
-   *          PageResponse page = 2;
-   *  }
-   */
-  pagination?: V1Beta1PageResponse;
-}
-
-export interface InvoiceQueryAllSellOrderResponse {
-  SellOrder?: InvoiceSellOrder[];
-
-  /**
-   * PageResponse is to be embedded in gRPC response messages where the
-   * corresponding request message has used PageRequest.
-   *
-   *  message SomeResponse {
-   *          repeated Bar results = 1;
-   *          PageResponse page = 2;
-   *  }
-   */
-  pagination?: V1Beta1PageResponse;
-}
-
-export interface InvoiceQueryGetInvoiceResponse {
-  Invoice?: InvoiceInvoice;
-}
-
-export interface InvoiceQueryGetPlaceOrderResponse {
-  PlaceOrder?: InvoicePlaceOrder;
-}
-
-export interface InvoiceQueryGetSellOrderResponse {
-  SellOrder?: InvoiceSellOrder;
-}
-
-export interface InvoiceSellOrder {
-  /** @format byte */
-  creator?: string;
-  sellOrderID?: string;
-  invoiceID?: string;
-
-  /** @format byte */
-  amount?: string;
-
-  /** @format byte */
-  price?: string;
-
-  /** @format byte */
-  leftAmount?: string;
-  priceRatio?: string;
-  sellDuration?: string;
-
-  /** @format date-time */
-  createdTime?: string;
-  isDeleted?: boolean;
-}
-
 export interface ProtobufAny {
   "@type"?: string;
 }
@@ -232,6 +74,81 @@ export interface V1Beta1PageResponse {
 
   /** @format uint64 */
   total?: string;
+}
+
+export interface VaultIssueToken {
+  /** @format byte */
+  creator?: string;
+  index?: string;
+
+  /** @format byte */
+  coin?: string;
+
+  /** @format byte */
+  receiver?: string;
+}
+
+export interface VaultMsgCreateCreatePoolResponse {
+  successful?: boolean;
+}
+
+export interface VaultMsgCreateIssueTokenResponse {
+  successful?: boolean;
+}
+
+export interface VaultPoolProposal {
+  poolPubKey?: string;
+
+  /** @format byte */
+  poolAddr?: string;
+  nodes?: string[];
+}
+
+export interface VaultQueryAllCreatePoolResponse {
+  CreatePool?: VaultPoolProposal[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface VaultQueryAllIssueTokenResponse {
+  IssueToken?: VaultIssueToken[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface VaultQueryGetCreatePoolResponse {
+  CreatePool?: VaultPoolProposal;
+}
+
+export interface VaultQueryGetIssueTokenResponse {
+  IssueToken?: VaultIssueToken;
+}
+
+export interface VaultQueryLastPoolResponse {
+  pools?: VaultpoolInfo[];
+}
+
+export interface VaultpoolInfo {
+  BlockHeight?: string;
+  CreatePool?: VaultPoolProposal;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -426,7 +343,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title invoice/genesis.proto
+ * @title vault/create_pool.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -434,11 +351,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryInvoiceAll
-   * @summary Queries a list of invoice items.
-   * @request GET:/joltify/joltifychain/invoice/invoice
+   * @name QueryCreatePoolAll
+   * @summary Queries a list of createPool items.
+   * @request GET:/joltify/joltifyChain/vault/createPool
    */
-  queryInvoiceAll = (
+  queryCreatePoolAll = (
     query?: {
       "pagination.key"?: string;
       "pagination.offset"?: string;
@@ -447,8 +364,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     },
     params: RequestParams = {},
   ) =>
-    this.request<InvoiceQueryAllInvoiceResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/invoice`,
+    this.request<VaultQueryAllCreatePoolResponse, RpcStatus>({
+      path: `/joltify/joltifyChain/vault/createPool`,
       method: "GET",
       query: query,
       format: "json",
@@ -459,13 +376,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryInvoice
-   * @summary Queries a invoice by index.
-   * @request GET:/joltify/joltifychain/invoice/invoice/{index}
+   * @name QueryCreatePool
+   * @summary Queries a createPool by index.
+   * @request GET:/joltify/joltifyChain/vault/createPool/{index}
    */
-  queryInvoice = (index: string, params: RequestParams = {}) =>
-    this.request<InvoiceQueryGetInvoiceResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/invoice/${index}`,
+  queryCreatePool = (index: string, params: RequestParams = {}) =>
+    this.request<VaultQueryGetCreatePoolResponse, RpcStatus>({
+      path: `/joltify/joltifyChain/vault/createPool/${index}`,
       method: "GET",
       format: "json",
       ...params,
@@ -475,11 +392,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryPlaceOrderAll
-   * @summary Queries a list of placeOrder items.
-   * @request GET:/joltify/joltifychain/invoice/placeOrder
+   * @name QueryGetLastPool
+   * @summary Queries a createPool by index.
+   * @request GET:/joltify/joltifyChain/vault/getLastPool
    */
-  queryPlaceOrderAll = (
+  queryGetLastPool = (
     query?: {
       "pagination.key"?: string;
       "pagination.offset"?: string;
@@ -488,8 +405,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     },
     params: RequestParams = {},
   ) =>
-    this.request<InvoiceQueryAllPlaceOrderResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/placeOrder`,
+    this.request<VaultQueryLastPoolResponse, RpcStatus>({
+      path: `/joltify/joltifyChain/vault/getLastPool`,
       method: "GET",
       query: query,
       format: "json",
@@ -500,27 +417,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryPlaceOrder
-   * @summary Queries a placeOrder by index.
-   * @request GET:/joltify/joltifychain/invoice/placeOrder/{index}
+   * @name QueryIssueTokenAll
+   * @summary Queries a list of issueToken items.
+   * @request GET:/joltify/joltifychain/vault/issueToken
    */
-  queryPlaceOrder = (index: string, params: RequestParams = {}) =>
-    this.request<InvoiceQueryGetPlaceOrderResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/placeOrder/${index}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
-   * @name QuerySellOrderAll
-   * @summary Queries a list of sellOrder items.
-   * @request GET:/joltify/joltifychain/invoice/sellOrder
-   */
-  querySellOrderAll = (
+  queryIssueTokenAll = (
     query?: {
       "pagination.key"?: string;
       "pagination.offset"?: string;
@@ -529,8 +430,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     },
     params: RequestParams = {},
   ) =>
-    this.request<InvoiceQueryAllSellOrderResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/sellOrder`,
+    this.request<VaultQueryAllIssueTokenResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/issueToken`,
       method: "GET",
       query: query,
       format: "json",
@@ -541,13 +442,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QuerySellOrder
-   * @summary Queries a sellOrder by index.
-   * @request GET:/joltify/joltifychain/invoice/sellOrder/{index}
+   * @name QueryIssueToken
+   * @summary Queries a issueToken by index.
+   * @request GET:/joltify/joltifychain/vault/issueToken/{index}
    */
-  querySellOrder = (index: string, params: RequestParams = {}) =>
-    this.request<InvoiceQueryGetSellOrderResponse, RpcStatus>({
-      path: `/joltify/joltifychain/invoice/sellOrder/${index}`,
+  queryIssueToken = (index: string, params: RequestParams = {}) =>
+    this.request<VaultQueryGetIssueTokenResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/issueToken/${index}`,
       method: "GET",
       format: "json",
       ...params,
