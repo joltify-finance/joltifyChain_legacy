@@ -10,6 +10,20 @@ import (
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
+func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
+	//config := sdk.GetConfig()
+	//config.SetBech32PrefixForAccount("jolt", "joltpub")
+	poolPubKey, err := sdk.GetPubKeyFromBech32(sdk.Bech32PubKeyTypeAccPub, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	addr, err := sdk.AccAddressFromHex(poolPubKey.Address().String())
+	if err != nil {
+		return nil, err
+	}
+	return addr, nil
+}
 func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateCreatePool) (*types.MsgCreateCreatePoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -35,12 +49,19 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 		ctx.Logger().Info("not a validator update tss message", "result", "false")
 		return &types.MsgCreateCreatePoolResponse{Successful: false}, nil
 	}
+
 	var newProposal types.PoolProposal
 	info, isFound := k.GetCreatePool(ctx, msg.BlockHeight)
 	if isFound {
 		entryFound := false
 		for i, proposal := range info.Proposal {
 			newProposal.PoolPubKey = proposal.PoolPubKey
+			addr, err := PubKeyToPoolAddr(proposal.PoolPubKey)
+			if err != nil {
+				ctx.Logger().Info("not a valid address with err", "result", err)
+				return nil, err
+			}
+			newProposal.PoolAddr = addr
 			if proposal.GetPoolPubKey() == msg.PoolPubKey {
 				proposal.Nodes = append(proposal.Nodes, msg.Creator)
 				entryFound = true
@@ -50,13 +71,25 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 		}
 		if !entryFound {
 			newProposal.PoolPubKey = msg.PoolPubKey
+			addr, err := PubKeyToPoolAddr(msg.PoolPubKey)
+			if err != nil {
+				ctx.Logger().Info("not a valid address with err", "result", err)
+				return nil, err
+			}
+			newProposal.PoolAddr = addr
 			newProposal.Nodes = []sdk.AccAddress{msg.Creator}
 			info.Proposal = append(info.Proposal, &newProposal)
 		}
 
 	} else {
+		addr, err := PubKeyToPoolAddr(msg.PoolPubKey)
+		if err != nil {
+			ctx.Logger().Info("not a valid address with err", "result", err)
+			return nil, err
+		}
 		pro := types.PoolProposal{
 			PoolPubKey: msg.PoolPubKey,
+			PoolAddr:   addr,
 			Nodes:      []sdk.AccAddress{msg.Creator},
 		}
 		info.Proposal = []*types.PoolProposal{&pro}

@@ -1,13 +1,14 @@
 syntax = "proto3";
 package joltify.joltifychain.vault;
 
-option go_package = "gitlab.com/joltify/joltifyChain/x/vault/types";
+option go_package = "gitlab.com/joltify/joltifychain/x/vault/types";
 
 import "gogoproto/gogo.proto";
 
 message PoolProposal {
   string poolPubKey = 1 ;
-  repeated bytes nodes = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  bytes poolAddr = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  repeated bytes nodes = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message CreatePool {

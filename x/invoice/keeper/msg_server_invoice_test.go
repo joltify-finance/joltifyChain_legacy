@@ -17,7 +17,6 @@ import (
 
 func setupBech32Prefix() {
 	config := sdk.GetConfig()
-
 	config.SetBech32PrefixForAccount("jolt", "joltpub")
 	config.SetBech32PrefixForValidator("joltval", "joltvpub")
 	config.SetBech32PrefixForConsensusNode("joltvalcons", "joltcpub")
