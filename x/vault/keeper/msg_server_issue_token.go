@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
@@ -11,20 +13,11 @@ func (k msgServer) CreateIssueToken(goCtx context.Context, msg *types.MsgCreateI
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	//_, isFound := k.GetIssueToken(ctx, msg.Index)
-	//if isFound {
-	//	return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("index %v already set", msg.Index))
-	//}
-	//
-	//pools, err := k.getLastTwoPools(goCtx)
-	//if err != nil {
-	//	return nil, err
-	//}
+	_, isFound := k.GetIssueToken(ctx, msg.Index)
+	if isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("index %v already set", msg.Index))
+	}
 
-	//inPool := k.checkAddressInPool(pools, msg.Creator.Bytes())
-	//if !inPool {
-	//	return &types.MsgCreateIssueTokenResponse{Successful: false}, nil
-	//}
 	err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(msg.Coin))
 	if err != nil {
 		k.Logger(ctx).Error("fail to mint token")

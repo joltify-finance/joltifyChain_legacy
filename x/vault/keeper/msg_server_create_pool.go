@@ -10,6 +10,18 @@ import (
 	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
 )
 
+func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
+	poolPubKey, err := sdk.GetPubKeyFromBech32(sdk.Bech32PrefixAccPub, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	addr, err := sdk.AccAddressFromHex(poolPubKey.Address().String())
+	if err != nil {
+		return nil, err
+	}
+	return addr, nil
+}
 func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateCreatePool) (*types.MsgCreateCreatePoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -41,6 +53,8 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 		entryFound := false
 		for i, proposal := range info.Proposal {
 			newProposal.PoolPubKey = proposal.PoolPubKey
+
+			sdk.AccAddressFromHex(proposal.PoolPubKey)
 			if proposal.GetPoolPubKey() == msg.PoolPubKey {
 				proposal.Nodes = append(proposal.Nodes, msg.Creator)
 				entryFound = true

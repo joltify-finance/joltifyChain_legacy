@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -11,6 +12,21 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
+func (k Keeper) calMinSupportNodes(c context.Context) int32 {
+
+	ctx := sdk.UnwrapSDKContext(c)
+	maxValidators := k.vaultStaking.GetParams(ctx).MaxValidators
+	candidateDec := sdk.NewDecWithPrec(int64(maxValidators), 0)
+	ratio, err := sdk.NewDecFromStr("0.67")
+	if err != nil {
+		panic("should never been invalid")
+	}
+	candidateNumDec := candidateDec.Mul(ratio)
+	candidateNum := int32(candidateNumDec.RoundInt64()) - 1
+	return candidateNum
+
+}
 
 func (k Keeper) CreatePoolAll(c context.Context, req *types.QueryAllCreatePoolRequest) (*types.QueryAllCreatePoolResponse, error) {
 	if req == nil {
@@ -28,8 +44,8 @@ func (k Keeper) CreatePoolAll(c context.Context, req *types.QueryAllCreatePoolRe
 		if err := k.cdc.UnmarshalBinaryBare(value, &createPool); err != nil {
 			return err
 		}
-
-		proposal := getProposal(createPool.Proposal)
+		minSupportNodes := k.calMinSupportNodes(c)
+		proposal := getProposal(createPool.Proposal, minSupportNodes)
 		proposals = append(proposals, proposal)
 		return nil
 	})
@@ -44,13 +60,16 @@ func (k Keeper) CreatePool(c context.Context, req *types.QueryGetCreatePoolReque
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
-	ctx := sdk.UnwrapSDKContext(c)
 
+	ctx := sdk.UnwrapSDKContext(c)
 	val, found := k.GetCreatePool(ctx, req.Index)
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
-	proposal := getProposal(val.Proposal)
+
+	minSupportNodes := k.calMinSupportNodes(c)
+
+	proposal := getProposal(val.Proposal, minSupportNodes)
 	return &types.QueryGetCreatePoolResponse{CreatePool: proposal}, nil
 }
 
@@ -85,7 +104,8 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 		poolBlock -= churnHeight
 	}
 
-	proposalLast := getProposal(valLatest.Proposal)
+	minSupportNodes := k.calMinSupportNodes(c)
+	proposalLast := getProposal(valLatest.Proposal, minSupportNodes)
 	lastProposal := types.PoolInfo{
 		BlockHeight: height,
 		CreatePool:  proposalLast,
@@ -97,7 +117,7 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 
 	valLatest2, found := k.GetCreatePool(ctx, height)
 	if found {
-		proposalLast2 := getProposal(valLatest2.Proposal)
+		proposalLast2 := getProposal(valLatest2.Proposal, minSupportNodes)
 		lastProposal := types.PoolInfo{
 			BlockHeight: height,
 			CreatePool:  proposalLast2,
@@ -108,16 +128,20 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 	return &types.QueryLastPoolResponse{Pools: allProposal}, nil
 }
 
-func getProposal(proposals []*types.PoolProposal) *types.PoolProposal {
+func getProposal(proposals []*types.PoolProposal, minSupportNodes int32) *types.PoolProposal {
 	// since 2/3 nodes are honest, so we will not have 5/5 situation
+	fmt.Printf(">>>>>>>>>>>>>#########>>>>>>>>>>%v\n", minSupportNodes)
 	maxLength := 0
-	proposalIndex := 0
+	proposalIndex := -1
 	for index, proposal := range proposals {
 		length := len(proposal.Nodes)
-		if maxLength > length {
+		if maxLength > length || int32(length) >= minSupportNodes {
 			proposalIndex = index
 			maxLength = length
 		}
+	}
+	if proposalIndex == -1 {
+		return nil
 	}
 	return proposals[proposalIndex]
 }

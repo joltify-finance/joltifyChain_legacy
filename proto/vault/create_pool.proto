@@ -7,7 +7,9 @@ import "gogoproto/gogo.proto";
 
 message PoolProposal {
   string poolPubKey = 1 ;
-  repeated bytes nodes = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string aaa=2;
+  bytes poolAddr = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  repeated bytes nodes = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message CreatePool {
