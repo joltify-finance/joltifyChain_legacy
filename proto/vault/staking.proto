@@ -3,7 +3,7 @@ package joltify.joltifychain.vault;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+option go_package = "gitlab.com/joltify/joltifyChain/x/vault/types";
 
 message Params{
   option (gogoproto.equal)            = true;

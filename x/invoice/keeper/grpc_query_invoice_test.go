@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
 func TestInvoiceQuerySingle(t *testing.T) {

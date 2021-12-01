@@ -10,8 +10,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/client/cli"
+	"gitlab.com/joltify/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/x/invoice/client/cli"
 )
 
 func TestCreateInvoice(t *testing.T) {

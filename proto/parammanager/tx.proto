@@ -3,7 +3,7 @@ package joltify.joltifychain.parammanager;
 
 // this line is used by starport scaffolding # proto/tx/import
 
-option go_package = "github.com/joltify/joltifyChain/x/parammanager/types";
+option go_package = "gitlab.com/joltify/joltifyChain/x/parammanager/types";
 
 // Msg defines the Msg service.
 service Msg {

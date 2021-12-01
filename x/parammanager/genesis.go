@@ -2,8 +2,8 @@ package parammanager
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/keeper"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/x/parammanager/keeper"
+	"gitlab.com/joltify/joltifychain/x/parammanager/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

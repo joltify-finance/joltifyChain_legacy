@@ -12,7 +12,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/x/parammanager/types"
 )
 
 func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {

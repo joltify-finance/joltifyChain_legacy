@@ -10,9 +10,9 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/tools"
+	"gitlab.com/joltify/joltifychain/x/invoice/tools"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
 func setupBech32Prefix() {

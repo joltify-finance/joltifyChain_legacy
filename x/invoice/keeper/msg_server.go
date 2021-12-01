@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
 type msgServer struct {

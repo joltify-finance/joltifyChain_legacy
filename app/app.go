@@ -82,18 +82,18 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"gitlab.com/joltify/joltifychain/joltifychain/docs"
+	"gitlab.com/joltify/joltifychain/docs"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	invoicemodule "gitlab.com/joltify/joltifychain/joltifychain/x/invoice"
-	invoicemodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/invoice/keeper"
-	invoicemoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
-	parammanagermodule "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager"
-	parammanagermodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/keeper"
-	parammanagermoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
-	vaultmodule "gitlab.com/joltify/joltifychain/joltifychain/x/vault"
-	vaultmodulekeeper "gitlab.com/joltify/joltifychain/joltifychain/x/vault/keeper"
-	vaultmoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
+	invoicemodule "gitlab.com/joltify/joltifychain/x/invoice"
+	invoicemodulekeeper "gitlab.com/joltify/joltifychain/x/invoice/keeper"
+	invoicemoduletypes "gitlab.com/joltify/joltifychain/x/invoice/types"
+	parammanagermodule "gitlab.com/joltify/joltifychain/x/parammanager"
+	parammanagermodulekeeper "gitlab.com/joltify/joltifychain/x/parammanager/keeper"
+	parammanagermoduletypes "gitlab.com/joltify/joltifychain/x/parammanager/types"
+	vaultmodule "gitlab.com/joltify/joltifychain/x/vault"
+	vaultmodulekeeper "gitlab.com/joltify/joltifychain/x/vault/keeper"
+	vaultmoduletypes "gitlab.com/joltify/joltifychain/x/vault/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )

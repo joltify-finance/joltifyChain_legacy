@@ -1,7 +1,7 @@
 syntax = "proto3";
 package joltify.joltifychain.invoice;
 
-option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+option go_package = "gitlab.com/joltify/joltifychain/x/invoice/types";
 
 import "google/protobuf/timestamp.proto";
 import "gogoproto/gogo.proto";

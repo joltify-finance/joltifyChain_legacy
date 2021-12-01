@@ -7,7 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "vault/issue_token.proto";
 import "vault/create_pool.proto";
 
-option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+option go_package = "gitlab.com/joltify/joltifyChain/x/vault/types";
 
 // Query defines the gRPC querier service.
 service Query {

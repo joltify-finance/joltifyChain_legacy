@@ -9,8 +9,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/client/cli"
+	"gitlab.com/joltify/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/x/vault/client/cli"
 )
 
 func TestCreateIssueToken(t *testing.T) {

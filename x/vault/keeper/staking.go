@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	costypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/distribution/types"
-	vaultmoduletypes "gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
+	vaultmoduletypes "gitlab.com/joltify/joltifychain/x/vault/types"
 
 	gogotypes "github.com/gogo/protobuf/types"
 

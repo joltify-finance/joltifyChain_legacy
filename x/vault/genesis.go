@@ -2,8 +2,8 @@ package vault
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/keeper"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/types"
+	"gitlab.com/joltify/joltifychain/x/vault/keeper"
+	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

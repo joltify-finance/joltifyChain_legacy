@@ -3,7 +3,7 @@ package vault
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/vault/keeper"
+	"gitlab.com/joltify/joltifychain/x/vault/keeper"
 )
 
 func BeginBlock(ctx sdk.Context, keeper keeper.Keeper) {

@@ -11,7 +11,7 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/app"
+	"gitlab.com/joltify/joltifychain/app"
 )
 
 // New creates application instance with in-memory database and disabled logging.

@@ -4,7 +4,7 @@ package joltify.joltifychain.vault;
 // this line is used by starport scaffolding # proto/tx/import
 //import "vault/create_pool.proto";
 
-option go_package = "github.com/joltify/joltifyChain/x/vault/types";
+option go_package = "gitlab.com/joltify/joltifyChain/x/vault/types";
 
 import "gogoproto/gogo.proto";
 // Msg defines the Msg service.

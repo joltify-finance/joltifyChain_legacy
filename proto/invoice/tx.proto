@@ -6,10 +6,12 @@ import "invoice/place_order.proto";
 import "invoice/sell_order.proto";
 //import "invoice/invoice.proto";
 
-option go_package = "github.com/joltify/joltifyChain/x/invoice/types";
+
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/duration.proto";
+
+option go_package = "gitlab.com/joltify/joltifychain/x/invoice/types";
 
 // Msg defines the Msg service.
 service Msg {

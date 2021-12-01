@@ -18,7 +18,7 @@ import (
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmdb "github.com/tendermint/tm-db"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/app"
+	"gitlab.com/joltify/joltifychain/app"
 )
 
 type (

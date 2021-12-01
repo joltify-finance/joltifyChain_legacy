@@ -3,7 +3,7 @@ package parammanager
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/parammanager/types"
+	"gitlab.com/joltify/joltifychain/x/parammanager/types"
 	"strconv"
 )
 

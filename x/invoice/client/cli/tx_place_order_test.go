@@ -12,10 +12,10 @@ import (
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
 
-	"gitlab.com/joltify/joltifychain/joltifychain/testutil/network"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/client/cli"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/tools"
-	"gitlab.com/joltify/joltifychain/joltifychain/x/invoice/types"
+	"gitlab.com/joltify/joltifychain/testutil/network"
+	"gitlab.com/joltify/joltifychain/x/invoice/client/cli"
+	"gitlab.com/joltify/joltifychain/x/invoice/tools"
+	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
 func TestCreatePlaceOrder(t *testing.T) {
