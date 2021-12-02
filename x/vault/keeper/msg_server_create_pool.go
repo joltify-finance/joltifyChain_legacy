@@ -11,8 +11,6 @@ import (
 )
 
 func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
-	//config := sdk.GetConfig()
-	//config.SetBech32PrefixForAccount("jolt", "joltpub")
 	poolPubKey, err := sdk.GetPubKeyFromBech32(sdk.Bech32PubKeyTypeAccPub, pk)
 	if err != nil {
 		return nil, err

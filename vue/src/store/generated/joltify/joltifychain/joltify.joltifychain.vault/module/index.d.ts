@@ -1,8 +1,8 @@
 import { StdFee } from "@cosmjs/launchpad";
 import { OfflineSigner, EncodeObject } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgCreateIssueToken } from "./types/vault/tx";
 import { MsgCreateCreatePool } from "./types/vault/tx";
+import { MsgCreateIssueToken } from "./types/vault/tx";
 export declare const MissingWalletError: Error;
 interface TxClientOptions {
     addr: string;
@@ -13,8 +13,8 @@ interface SignAndBroadcastOptions {
 }
 declare const txClient: (wallet: OfflineSigner, { addr: addr }?: TxClientOptions) => Promise<{
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }?: SignAndBroadcastOptions) => Promise<import("@cosmjs/stargate").BroadcastTxResponse>;
-    msgCreateIssueToken: (data: MsgCreateIssueToken) => EncodeObject;
     msgCreateCreatePool: (data: MsgCreateCreatePool) => EncodeObject;
+    msgCreateIssueToken: (data: MsgCreateIssueToken) => EncodeObject;
 }>;
 interface QueryClientOptions {
     addr: string;

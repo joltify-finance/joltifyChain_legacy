@@ -18,7 +18,17 @@ func (k msgServer) CreateIssueToken(goCtx context.Context, msg *types.MsgCreateI
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("index %v already set", msg.Index))
 	}
 
-	err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(msg.Coin))
+	pools, err := k.getLastTwoPools(goCtx)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "fail to get the pool address")
+	}
+
+	inPool := k.checkAddressInPool(pools, msg.Creator.Bytes())
+	if !inPool {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("creator %s is not a valid pool address", msg.Creator.String()))
+	}
+
+	err = k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(msg.Coin))
 	if err != nil {
 		k.Logger(ctx).Error("fail to mint token")
 		return nil, err
