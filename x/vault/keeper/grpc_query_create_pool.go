@@ -112,16 +112,24 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 
 	allProposal = append(allProposal, &lastProposal)
 
-	height = strconv.FormatInt(poolBlock+1-churnHeight, 10)
-
-	valLatest2, found := k.GetCreatePool(ctx, height)
-	if found {
-		proposalLast2 := getProposal(valLatest2.Proposal, minSupportNodes)
-		lastProposal := types.PoolInfo{
-			BlockHeight: height,
-			CreatePool:  proposalLast2,
+	loopHeight := poolBlock + 1 - churnHeight
+	for {
+		heightStr := strconv.FormatInt(loopHeight, 10)
+		valLatest2, found := k.GetCreatePool(ctx, heightStr)
+		if found {
+			proposalLast2 := getProposal(valLatest2.Proposal, minSupportNodes)
+			lastProposal := types.PoolInfo{
+				BlockHeight: heightStr,
+				CreatePool:  proposalLast2,
+			}
+			allProposal = append(allProposal, &lastProposal)
+			break
 		}
-		allProposal = append(allProposal, &lastProposal)
+		loopHeight -= churnHeight
+		// the system will have the pool at height 10
+		if loopHeight < 10 {
+			break
+		}
 	}
 
 	return &types.QueryLastPoolResponse{Pools: allProposal}, nil
