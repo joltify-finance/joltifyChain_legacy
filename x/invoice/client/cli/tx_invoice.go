@@ -2,6 +2,7 @@ package cli
 
 import (
 	stdErr "errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
@@ -43,15 +44,11 @@ func CmdCreateInvoice() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			invoiceOwner, err := sdk.AccAddressFromBech32(argsOwner)
-			if err != nil {
-				return err
-			}
 			amount, ok := sdk.NewIntFromString(argsAmount)
 			if !ok {
 				return stdErr.New("fail to convert to amount")
 			}
-			msg := types.NewMsgCreateInvoice(clientCtx.GetFromAddress(), invoiceOwner, argsName, amount, argsURL, argsAPY, true)
+			msg := types.NewMsgCreateInvoice(clientCtx.GetFromAddress().String(), argsOwner, argsName, amount, argsURL, argsAPY, true)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -83,12 +80,8 @@ func CmdDeleteInvoice() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			invoiceOwner, err := sdk.AccAddressFromBech32(argsOwner)
-			if err != nil {
-				return err
-			}
 
-			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress(), invoiceOwner, argsName)
+			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress().String(), argsOwner, argsName)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

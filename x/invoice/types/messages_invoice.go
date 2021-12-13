@@ -2,13 +2,22 @@ package types
 
 import (
 	"errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strconv"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var _ sdk.Msg = &MsgCreateInvoice{}
 
-func NewMsgCreateInvoice(creator, owner sdk.AccAddress, name string, amount sdk.Int, url string, apy string, isRootOwner bool) *MsgCreateInvoice {
+func NewMsgCreateInvoice(creatorStr, ownerStr, name string, amount sdk.Int, url, apy string, isRootOwner bool) *MsgCreateInvoice {
+	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	if err != nil {
+		return nil
+	}
+	owner, err := sdk.AccAddressFromBech32(ownerStr)
+	if err != nil {
+		return nil
+	}
 	return &MsgCreateInvoice{
 		Creator:     creator,
 		Name:        name,
@@ -53,7 +62,15 @@ func (msg *MsgCreateInvoice) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgDeleteInvoice{}
 
-func NewMsgDeleteInvoice(creator, owner sdk.AccAddress, name string) *MsgDeleteInvoice {
+func NewMsgDeleteInvoice(creatorStr, ownerStr string, name string) *MsgDeleteInvoice {
+	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	if err != nil {
+		return nil
+	}
+	owner, err := sdk.AccAddressFromBech32(ownerStr)
+	if err != nil {
+		return nil
+	}
 	return &MsgDeleteInvoice{
 		Creator:   creator,
 		Name:      name,
