@@ -28,12 +28,12 @@ export interface MsgDeleteSellOrder {
 export interface MsgDeleteSellOrderResponse {
 }
 export interface MsgCreateInvoice {
-    creator: Uint8Array;
+    creator: string;
     invoiceID: string;
     name: string;
     url: string;
-    amount: Uint8Array;
-    origOwner: Uint8Array;
+    amount: string;
+    origOwner: string;
     apy: string;
     isRootOwner: boolean;
 }

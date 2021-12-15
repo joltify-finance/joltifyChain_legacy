@@ -36,12 +36,12 @@ export interface MsgDeleteSellOrder {
 export interface MsgDeleteSellOrderResponse {}
 
 export interface MsgCreateInvoice {
-  creator: Uint8Array
+  creator: string
   invoiceID: string
   name: string
   url: string
-  amount: Uint8Array
-  origOwner: Uint8Array
+  amount: string
+  origOwner: string
   apy: string
   isRootOwner: boolean
 }
@@ -493,12 +493,12 @@ export const MsgDeleteSellOrderResponse = {
   }
 }
 
-const baseMsgCreateInvoice: object = { invoiceID: '', name: '', url: '', apy: '', isRootOwner: false }
+const baseMsgCreateInvoice: object = { creator: '', invoiceID: '', name: '', url: '', amount: '', origOwner: '', apy: '', isRootOwner: false }
 
 export const MsgCreateInvoice = {
   encode(message: MsgCreateInvoice, writer: Writer = Writer.create()): Writer {
-    if (message.creator.length !== 0) {
-      writer.uint32(10).bytes(message.creator)
+    if (message.creator !== '') {
+      writer.uint32(10).string(message.creator)
     }
     if (message.invoiceID !== '') {
       writer.uint32(18).string(message.invoiceID)
@@ -509,11 +509,11 @@ export const MsgCreateInvoice = {
     if (message.url !== '') {
       writer.uint32(34).string(message.url)
     }
-    if (message.amount.length !== 0) {
-      writer.uint32(50).bytes(message.amount)
+    if (message.amount !== '') {
+      writer.uint32(42).string(message.amount)
     }
-    if (message.origOwner.length !== 0) {
-      writer.uint32(58).bytes(message.origOwner)
+    if (message.origOwner !== '') {
+      writer.uint32(50).string(message.origOwner)
     }
     if (message.apy !== '') {
       writer.uint32(66).string(message.apy)
@@ -532,7 +532,7 @@ export const MsgCreateInvoice = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.creator = reader.bytes()
+          message.creator = reader.string()
           break
         case 2:
           message.invoiceID = reader.string()
@@ -543,11 +543,11 @@ export const MsgCreateInvoice = {
         case 4:
           message.url = reader.string()
           break
-        case 6:
-          message.amount = reader.bytes()
+        case 5:
+          message.amount = reader.string()
           break
-        case 7:
-          message.origOwner = reader.bytes()
+        case 6:
+          message.origOwner = reader.string()
           break
         case 8:
           message.apy = reader.string()
@@ -566,7 +566,9 @@ export const MsgCreateInvoice = {
   fromJSON(object: any): MsgCreateInvoice {
     const message = { ...baseMsgCreateInvoice } as MsgCreateInvoice
     if (object.creator !== undefined && object.creator !== null) {
-      message.creator = bytesFromBase64(object.creator)
+      message.creator = String(object.creator)
+    } else {
+      message.creator = ''
     }
     if (object.invoiceID !== undefined && object.invoiceID !== null) {
       message.invoiceID = String(object.invoiceID)
@@ -584,10 +586,14 @@ export const MsgCreateInvoice = {
       message.url = ''
     }
     if (object.amount !== undefined && object.amount !== null) {
-      message.amount = bytesFromBase64(object.amount)
+      message.amount = String(object.amount)
+    } else {
+      message.amount = ''
     }
     if (object.origOwner !== undefined && object.origOwner !== null) {
-      message.origOwner = bytesFromBase64(object.origOwner)
+      message.origOwner = String(object.origOwner)
+    } else {
+      message.origOwner = ''
     }
     if (object.apy !== undefined && object.apy !== null) {
       message.apy = String(object.apy)
@@ -604,12 +610,12 @@ export const MsgCreateInvoice = {
 
   toJSON(message: MsgCreateInvoice): unknown {
     const obj: any = {}
-    message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()))
+    message.creator !== undefined && (obj.creator = message.creator)
     message.invoiceID !== undefined && (obj.invoiceID = message.invoiceID)
     message.name !== undefined && (obj.name = message.name)
     message.url !== undefined && (obj.url = message.url)
-    message.amount !== undefined && (obj.amount = base64FromBytes(message.amount !== undefined ? message.amount : new Uint8Array()))
-    message.origOwner !== undefined && (obj.origOwner = base64FromBytes(message.origOwner !== undefined ? message.origOwner : new Uint8Array()))
+    message.amount !== undefined && (obj.amount = message.amount)
+    message.origOwner !== undefined && (obj.origOwner = message.origOwner)
     message.apy !== undefined && (obj.apy = message.apy)
     message.isRootOwner !== undefined && (obj.isRootOwner = message.isRootOwner)
     return obj
@@ -620,7 +626,7 @@ export const MsgCreateInvoice = {
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = object.creator
     } else {
-      message.creator = new Uint8Array()
+      message.creator = ''
     }
     if (object.invoiceID !== undefined && object.invoiceID !== null) {
       message.invoiceID = object.invoiceID
@@ -640,12 +646,12 @@ export const MsgCreateInvoice = {
     if (object.amount !== undefined && object.amount !== null) {
       message.amount = object.amount
     } else {
-      message.amount = new Uint8Array()
+      message.amount = ''
     }
     if (object.origOwner !== undefined && object.origOwner !== null) {
       message.origOwner = object.origOwner
     } else {
-      message.origOwner = new Uint8Array()
+      message.origOwner = ''
     }
     if (object.apy !== undefined && object.apy !== null) {
       message.apy = object.apy

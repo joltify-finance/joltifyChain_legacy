@@ -5,11 +5,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"gitlab.com/joltify/joltifychain/x/invoice/tools"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
-	"strconv"
 )
 
 func (k msgServer) createInvoiceBase(invoiceCrater, invoiceOwner sdk.AccAddress, name, url, denom string, amount sdk.Int, apyStr string) (types.InvoiceBase, types.InvoiceFinance, error) {
@@ -92,7 +93,21 @@ func (k msgServer) doCreateInvoice(ctx sdk.Context, creator, origOwner sdk.AccAd
 
 func (k msgServer) CreateInvoice(goCtx context.Context, msg *types.MsgCreateInvoice) (*types.MsgCreateInvoiceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	return k.doCreateInvoice(ctx, msg.Creator, msg.OrigOwner, msg.Name, msg.Amount, msg.Url, msg.Apy, msg.IsRootOwner)
+
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+	owner, err := sdk.AccAddressFromBech32(msg.OrigOwner)
+	if err != nil {
+		return nil, err
+	}
+
+	amountDec, err := sdk.NewDecFromStr(msg.Amount)
+	if err != nil {
+		return nil, err
+	}
+	return k.doCreateInvoice(ctx, creator, owner, msg.Name, amountDec.RoundInt(), msg.Url, msg.Apy, msg.IsRootOwner)
 }
 
 func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvoice) (*types.MsgDeleteInvoiceResponse, error) {
