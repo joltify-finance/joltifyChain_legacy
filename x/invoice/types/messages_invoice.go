@@ -9,7 +9,7 @@ import (
 
 var _ sdk.Msg = &MsgCreateInvoice{}
 
-func NewMsgCreateInvoice(creatorStr, ownerStr, name string, amount sdk.Int, url, apy string, isRootOwner bool) *MsgCreateInvoice {
+func NewMsgCreateInvoice(creatorStr, ownerStr, name, amount, url, apy string, isRootOwner bool) *MsgCreateInvoice {
 	creator, err := sdk.AccAddressFromBech32(creatorStr)
 	if err != nil {
 		return nil
@@ -18,12 +18,18 @@ func NewMsgCreateInvoice(creatorStr, ownerStr, name string, amount sdk.Int, url,
 	if err != nil {
 		return nil
 	}
+
+	amountDec, err := sdk.NewDecFromStr(amount)
+	if err != nil {
+		return nil
+	}
+
 	return &MsgCreateInvoice{
 		Creator:     creator,
 		Name:        name,
 		Url:         url,
 		OrigOwner:   owner,
-		Amount:      amount,
+		Amount:      amountDec.RoundInt(),
 		Apy:         apy,
 		IsRootOwner: isRootOwner,
 	}
