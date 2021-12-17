@@ -31,7 +31,9 @@ export interface MsgCreateInvoice {
     creator: Uint8Array;
     name: string;
     url: string;
-    amount: Uint8Array;
+    /** bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false]; */
+    amount: string;
+    /** string amount = 4 [(gogoproto.customtype) = "Int", (gogoproto.nullable) = false]; */
     origOwner: Uint8Array;
     apy: string;
     isRootOwner: boolean;

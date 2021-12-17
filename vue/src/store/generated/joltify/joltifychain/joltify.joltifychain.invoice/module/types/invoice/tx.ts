@@ -39,7 +39,9 @@ export interface MsgCreateInvoice {
   creator: Uint8Array
   name: string
   url: string
-  amount: Uint8Array
+  /** bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false]; */
+  amount: string
+  /** string amount = 4 [(gogoproto.customtype) = "Int", (gogoproto.nullable) = false]; */
   origOwner: Uint8Array
   apy: string
   isRootOwner: boolean
@@ -492,7 +494,7 @@ export const MsgDeleteSellOrderResponse = {
   }
 }
 
-const baseMsgCreateInvoice: object = { name: '', url: '', apy: '', isRootOwner: false }
+const baseMsgCreateInvoice: object = { name: '', url: '', amount: '', apy: '', isRootOwner: false }
 
 export const MsgCreateInvoice = {
   encode(message: MsgCreateInvoice, writer: Writer = Writer.create()): Writer {
@@ -505,8 +507,8 @@ export const MsgCreateInvoice = {
     if (message.url !== '') {
       writer.uint32(26).string(message.url)
     }
-    if (message.amount.length !== 0) {
-      writer.uint32(34).bytes(message.amount)
+    if (message.amount !== '') {
+      writer.uint32(34).string(message.amount)
     }
     if (message.origOwner.length !== 0) {
       writer.uint32(42).bytes(message.origOwner)
@@ -537,7 +539,7 @@ export const MsgCreateInvoice = {
           message.url = reader.string()
           break
         case 4:
-          message.amount = reader.bytes()
+          message.amount = reader.string()
           break
         case 5:
           message.origOwner = reader.bytes()
@@ -572,7 +574,9 @@ export const MsgCreateInvoice = {
       message.url = ''
     }
     if (object.amount !== undefined && object.amount !== null) {
-      message.amount = bytesFromBase64(object.amount)
+      message.amount = String(object.amount)
+    } else {
+      message.amount = ''
     }
     if (object.origOwner !== undefined && object.origOwner !== null) {
       message.origOwner = bytesFromBase64(object.origOwner)
@@ -595,7 +599,7 @@ export const MsgCreateInvoice = {
     message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()))
     message.name !== undefined && (obj.name = message.name)
     message.url !== undefined && (obj.url = message.url)
-    message.amount !== undefined && (obj.amount = base64FromBytes(message.amount !== undefined ? message.amount : new Uint8Array()))
+    message.amount !== undefined && (obj.amount = message.amount)
     message.origOwner !== undefined && (obj.origOwner = base64FromBytes(message.origOwner !== undefined ? message.origOwner : new Uint8Array()))
     message.apy !== undefined && (obj.apy = message.apy)
     message.isRootOwner !== undefined && (obj.isRootOwner = message.isRootOwner)
@@ -622,7 +626,7 @@ export const MsgCreateInvoice = {
     if (object.amount !== undefined && object.amount !== null) {
       message.amount = object.amount
     } else {
-      message.amount = new Uint8Array()
+      message.amount = ''
     }
     if (object.origOwner !== undefined && object.origOwner !== null) {
       message.origOwner = object.origOwner

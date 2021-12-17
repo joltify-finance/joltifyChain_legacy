@@ -93,7 +93,11 @@ func (k msgServer) doCreateInvoice(ctx sdk.Context, creator, origOwner sdk.AccAd
 
 func (k msgServer) CreateInvoice(goCtx context.Context, msg *types.MsgCreateInvoice) (*types.MsgCreateInvoiceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	return k.doCreateInvoice(ctx, msg.Creator, msg.OrigOwner, msg.Name, msg.Amount.RoundInt(), msg.Url, msg.Apy, msg.IsRootOwner)
+	amount, err := sdk.NewDecFromStr(msg.Amount)
+	if err != nil {
+		return nil, err
+	}
+	return k.doCreateInvoice(ctx, msg.Creator, msg.OrigOwner, msg.Name, amount.RoundInt(), msg.Url, msg.Apy, msg.IsRootOwner)
 }
 
 func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvoice) (*types.MsgDeleteInvoiceResponse, error) {

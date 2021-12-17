@@ -9,7 +9,7 @@ import (
 
 var _ sdk.Msg = &MsgCreateInvoice{}
 
-func NewMsgCreateInvoice(creator, owner sdk.AccAddress, name string, amount sdk.Dec, url string, apy string, isRootOwner bool) *MsgCreateInvoice {
+func NewMsgCreateInvoice(creator, owner sdk.AccAddress, name string, amount string, url string, apy string, isRootOwner bool) *MsgCreateInvoice {
 	return &MsgCreateInvoice{
 		Creator:     creator,
 		Name:        name,
@@ -39,8 +39,12 @@ func (msg *MsgCreateInvoice) GetSignBytes() []byte {
 }
 
 func (msg *MsgCreateInvoice) ValidateBasic() error {
-	if msg.Amount.IsNegative() {
-		return errors.New("the amount cannnot be negtive")
+	amount, err := sdk.NewDecFromStr(msg.Amount)
+	if err != nil {
+		return err
+	}
+	if amount.IsInteger() {
+		return errors.New("the amount cannot be negative")
 	}
 	apy, err := strconv.ParseFloat(msg.Apy, 32)
 	if err != nil {
