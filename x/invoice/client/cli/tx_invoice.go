@@ -42,12 +42,8 @@ func CmdCreateInvoice() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			invoiceOwner, err := sdk.AccAddressFromBech32(argsOwner)
-			if err != nil {
-				return err
-			}
 
-			msg := types.NewMsgCreateInvoice(clientCtx.GetFromAddress(), invoiceOwner, argsName, argsAmount, argsURL, argsAPY, true)
+			msg := types.NewMsgCreateInvoice(clientCtx.GetFromAddress().String(), argsOwner, argsName, argsAmount, argsURL, argsAPY, true)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -84,7 +80,7 @@ func CmdDeleteInvoice() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress(), invoiceOwner, argsName)
+			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress().String(), invoiceOwner.String(), argsName)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

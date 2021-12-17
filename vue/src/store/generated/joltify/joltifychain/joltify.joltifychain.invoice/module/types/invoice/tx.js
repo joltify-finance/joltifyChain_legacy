@@ -420,23 +420,23 @@ export const MsgDeleteSellOrderResponse = {
         return message;
     }
 };
-const baseMsgCreateInvoice = { name: '', url: '', amount: '', apy: '', isRootOwner: false };
+const baseMsgCreateInvoice = { creator: '', origOwner: '', name: '', url: '', amount: '', apy: '', isRootOwner: false };
 export const MsgCreateInvoice = {
     encode(message, writer = Writer.create()) {
-        if (message.creator.length !== 0) {
-            writer.uint32(10).bytes(message.creator);
+        if (message.creator !== '') {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.origOwner !== '') {
+            writer.uint32(18).string(message.origOwner);
         }
         if (message.name !== '') {
-            writer.uint32(18).string(message.name);
+            writer.uint32(26).string(message.name);
         }
         if (message.url !== '') {
-            writer.uint32(26).string(message.url);
+            writer.uint32(34).string(message.url);
         }
         if (message.amount !== '') {
-            writer.uint32(34).string(message.amount);
-        }
-        if (message.origOwner.length !== 0) {
-            writer.uint32(42).bytes(message.origOwner);
+            writer.uint32(42).string(message.amount);
         }
         if (message.apy !== '') {
             writer.uint32(50).string(message.apy);
@@ -454,19 +454,19 @@ export const MsgCreateInvoice = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    message.creator = reader.bytes();
+                    message.creator = reader.string();
                     break;
                 case 2:
-                    message.name = reader.string();
+                    message.origOwner = reader.string();
                     break;
                 case 3:
-                    message.url = reader.string();
+                    message.name = reader.string();
                     break;
                 case 4:
-                    message.amount = reader.string();
+                    message.url = reader.string();
                     break;
                 case 5:
-                    message.origOwner = reader.bytes();
+                    message.amount = reader.string();
                     break;
                 case 6:
                     message.apy = reader.string();
@@ -484,7 +484,16 @@ export const MsgCreateInvoice = {
     fromJSON(object) {
         const message = { ...baseMsgCreateInvoice };
         if (object.creator !== undefined && object.creator !== null) {
-            message.creator = bytesFromBase64(object.creator);
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = '';
+        }
+        if (object.origOwner !== undefined && object.origOwner !== null) {
+            message.origOwner = String(object.origOwner);
+        }
+        else {
+            message.origOwner = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = String(object.name);
@@ -504,9 +513,6 @@ export const MsgCreateInvoice = {
         else {
             message.amount = '';
         }
-        if (object.origOwner !== undefined && object.origOwner !== null) {
-            message.origOwner = bytesFromBase64(object.origOwner);
-        }
         if (object.apy !== undefined && object.apy !== null) {
             message.apy = String(object.apy);
         }
@@ -523,11 +529,11 @@ export const MsgCreateInvoice = {
     },
     toJSON(message) {
         const obj = {};
-        message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()));
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.origOwner !== undefined && (obj.origOwner = message.origOwner);
         message.name !== undefined && (obj.name = message.name);
         message.url !== undefined && (obj.url = message.url);
         message.amount !== undefined && (obj.amount = message.amount);
-        message.origOwner !== undefined && (obj.origOwner = base64FromBytes(message.origOwner !== undefined ? message.origOwner : new Uint8Array()));
         message.apy !== undefined && (obj.apy = message.apy);
         message.isRootOwner !== undefined && (obj.isRootOwner = message.isRootOwner);
         return obj;
@@ -538,7 +544,13 @@ export const MsgCreateInvoice = {
             message.creator = object.creator;
         }
         else {
-            message.creator = new Uint8Array();
+            message.creator = '';
+        }
+        if (object.origOwner !== undefined && object.origOwner !== null) {
+            message.origOwner = object.origOwner;
+        }
+        else {
+            message.origOwner = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = object.name;
@@ -557,12 +569,6 @@ export const MsgCreateInvoice = {
         }
         else {
             message.amount = '';
-        }
-        if (object.origOwner !== undefined && object.origOwner !== null) {
-            message.origOwner = object.origOwner;
-        }
-        else {
-            message.origOwner = new Uint8Array();
         }
         if (object.apy !== undefined && object.apy !== null) {
             message.apy = object.apy;
@@ -630,14 +636,14 @@ export const MsgCreateInvoiceResponse = {
         return message;
     }
 };
-const baseMsgDeleteInvoice = { name: '' };
+const baseMsgDeleteInvoice = { creator: '', origOwner: '', name: '' };
 export const MsgDeleteInvoice = {
     encode(message, writer = Writer.create()) {
-        if (message.creator.length !== 0) {
-            writer.uint32(10).bytes(message.creator);
+        if (message.creator !== '') {
+            writer.uint32(10).string(message.creator);
         }
-        if (message.origOwner.length !== 0) {
-            writer.uint32(18).bytes(message.origOwner);
+        if (message.origOwner !== '') {
+            writer.uint32(18).string(message.origOwner);
         }
         if (message.name !== '') {
             writer.uint32(26).string(message.name);
@@ -652,10 +658,10 @@ export const MsgDeleteInvoice = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    message.creator = reader.bytes();
+                    message.creator = reader.string();
                     break;
                 case 2:
-                    message.origOwner = reader.bytes();
+                    message.origOwner = reader.string();
                     break;
                 case 3:
                     message.name = reader.string();
@@ -670,10 +676,16 @@ export const MsgDeleteInvoice = {
     fromJSON(object) {
         const message = { ...baseMsgDeleteInvoice };
         if (object.creator !== undefined && object.creator !== null) {
-            message.creator = bytesFromBase64(object.creator);
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = '';
         }
         if (object.origOwner !== undefined && object.origOwner !== null) {
-            message.origOwner = bytesFromBase64(object.origOwner);
+            message.origOwner = String(object.origOwner);
+        }
+        else {
+            message.origOwner = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = String(object.name);
@@ -685,8 +697,8 @@ export const MsgDeleteInvoice = {
     },
     toJSON(message) {
         const obj = {};
-        message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()));
-        message.origOwner !== undefined && (obj.origOwner = base64FromBytes(message.origOwner !== undefined ? message.origOwner : new Uint8Array()));
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.origOwner !== undefined && (obj.origOwner = message.origOwner);
         message.name !== undefined && (obj.name = message.name);
         return obj;
     },
@@ -696,13 +708,13 @@ export const MsgDeleteInvoice = {
             message.creator = object.creator;
         }
         else {
-            message.creator = new Uint8Array();
+            message.creator = '';
         }
         if (object.origOwner !== undefined && object.origOwner !== null) {
             message.origOwner = object.origOwner;
         }
         else {
-            message.origOwner = new Uint8Array();
+            message.origOwner = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = object.name;

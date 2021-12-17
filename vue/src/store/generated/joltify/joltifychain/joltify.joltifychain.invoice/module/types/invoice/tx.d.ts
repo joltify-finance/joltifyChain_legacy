@@ -28,13 +28,11 @@ export interface MsgDeleteSellOrder {
 export interface MsgDeleteSellOrderResponse {
 }
 export interface MsgCreateInvoice {
-    creator: Uint8Array;
+    creator: string;
+    origOwner: string;
     name: string;
     url: string;
-    /** bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false]; */
     amount: string;
-    /** string amount = 4 [(gogoproto.customtype) = "Int", (gogoproto.nullable) = false]; */
-    origOwner: Uint8Array;
     apy: string;
     isRootOwner: boolean;
 }
@@ -42,8 +40,8 @@ export interface MsgCreateInvoiceResponse {
     invoiceID: string;
 }
 export interface MsgDeleteInvoice {
-    creator: Uint8Array;
-    origOwner: Uint8Array;
+    creator: string;
+    origOwner: string;
     name: string;
 }
 export interface MsgDeleteInvoiceResponse {

@@ -51,13 +51,11 @@ message MsgDeleteSellOrder {
 message MsgDeleteSellOrderResponse { }
 
 message MsgCreateInvoice {
-  bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string name = 2;
-  string url = 3;
-//  bytes amount = 4  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
-  string amount=4;
-//  string amount = 4 [(gogoproto.customtype) = "Int", (gogoproto.nullable) = false];
-  bytes origOwner = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"] ;
+  string creator = 1 ;
+  string origOwner = 2  ;
+  string name = 3;
+  string url = 4;
+  string amount = 5;
   string apy = 6;
   bool isRootOwner = 7;
 }
@@ -67,8 +65,8 @@ message MsgCreateInvoiceResponse {
 
 
 message MsgDeleteInvoice {
-  bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  bytes origOwner= 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string creator = 1 ;
+  string origOwner= 2;
   string name= 3;
 }
 message MsgDeleteInvoiceResponse { }
