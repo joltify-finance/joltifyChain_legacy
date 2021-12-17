@@ -14,8 +14,8 @@ import CosmosCosmosSdkIbcApplicationsTransferV1 from './cosmos/cosmos-sdk/ibc.ap
 import CosmosCosmosSdkIbcCoreChannelV1 from './cosmos/cosmos-sdk/ibc.core.channel.v1'
 import CosmosCosmosSdkIbcCoreClientV1 from './cosmos/cosmos-sdk/ibc.core.client.v1'
 import CosmosCosmosSdkIbcCoreConnectionV1 from './cosmos/cosmos-sdk/ibc.core.connection.v1'
-import JoltifyJoltifychainJoltifyJoltifychainInvoice from './joltify/joltifychain/joltify.joltifychain.invoice'
-import JoltifyJoltifychainJoltifyJoltifychainVault from './joltify/joltifychain/joltify.joltifychain.vault'
+import JoltifyJoltifyChainJoltifyJoltifychainInvoice from './joltify/joltifyChain/joltify.joltifychain.invoice'
+import JoltifyJoltifyChainJoltifyJoltifychainVault from './joltify/joltifyChain/joltify.joltifychain.vault'
 
 
 export default { 
@@ -33,8 +33,8 @@ export default {
   CosmosCosmosSdkIbcCoreChannelV1: load(CosmosCosmosSdkIbcCoreChannelV1, 'ibc.core.channel.v1'),
   CosmosCosmosSdkIbcCoreClientV1: load(CosmosCosmosSdkIbcCoreClientV1, 'ibc.core.client.v1'),
   CosmosCosmosSdkIbcCoreConnectionV1: load(CosmosCosmosSdkIbcCoreConnectionV1, 'ibc.core.connection.v1'),
-  JoltifyJoltifychainJoltifyJoltifychainInvoice: load(JoltifyJoltifychainJoltifyJoltifychainInvoice, 'joltify.joltifychain.invoice'),
-  JoltifyJoltifychainJoltifyJoltifychainVault: load(JoltifyJoltifychainJoltifyJoltifychainVault, 'joltify.joltifychain.vault'),
+  JoltifyJoltifyChainJoltifyJoltifychainInvoice: load(JoltifyJoltifyChainJoltifyJoltifychainInvoice, 'joltify.joltifychain.invoice'),
+  JoltifyJoltifyChainJoltifyJoltifychainVault: load(JoltifyJoltifyChainJoltifyJoltifychainVault, 'joltify.joltifychain.vault'),
   
 }
 

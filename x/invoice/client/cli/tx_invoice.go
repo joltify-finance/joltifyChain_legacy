@@ -2,6 +2,7 @@ package cli
 
 import (
 	stdErr "errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
@@ -47,8 +48,8 @@ func CmdCreateInvoice() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			amount, ok := sdk.NewIntFromString(argsAmount)
-			if !ok {
+			amount, err := sdk.NewDecFromStr(argsAmount)
+			if err != nil {
 				return stdErr.New("fail to convert to amount")
 			}
 			msg := types.NewMsgCreateInvoice(clientCtx.GetFromAddress(), invoiceOwner, argsName, amount, argsURL, argsAPY, true)

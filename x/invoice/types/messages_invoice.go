@@ -2,13 +2,14 @@ package types
 
 import (
 	"errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strconv"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var _ sdk.Msg = &MsgCreateInvoice{}
 
-func NewMsgCreateInvoice(creator, owner sdk.AccAddress, name string, amount sdk.Int, url string, apy string, isRootOwner bool) *MsgCreateInvoice {
+func NewMsgCreateInvoice(creator, owner sdk.AccAddress, name string, amount sdk.Dec, url string, apy string, isRootOwner bool) *MsgCreateInvoice {
 	return &MsgCreateInvoice{
 		Creator:     creator,
 		Name:        name,

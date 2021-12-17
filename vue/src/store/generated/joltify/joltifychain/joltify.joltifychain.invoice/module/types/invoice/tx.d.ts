@@ -29,7 +29,6 @@ export interface MsgDeleteSellOrderResponse {
 }
 export interface MsgCreateInvoice {
     creator: Uint8Array;
-    invoiceID: string;
     name: string;
     url: string;
     amount: Uint8Array;

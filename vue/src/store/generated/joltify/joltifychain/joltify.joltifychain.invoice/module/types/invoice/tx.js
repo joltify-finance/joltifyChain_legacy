@@ -420,32 +420,29 @@ export const MsgDeleteSellOrderResponse = {
         return message;
     }
 };
-const baseMsgCreateInvoice = { invoiceID: '', name: '', url: '', apy: '', isRootOwner: false };
+const baseMsgCreateInvoice = { name: '', url: '', apy: '', isRootOwner: false };
 export const MsgCreateInvoice = {
     encode(message, writer = Writer.create()) {
         if (message.creator.length !== 0) {
             writer.uint32(10).bytes(message.creator);
         }
-        if (message.invoiceID !== '') {
-            writer.uint32(18).string(message.invoiceID);
-        }
         if (message.name !== '') {
-            writer.uint32(26).string(message.name);
+            writer.uint32(18).string(message.name);
         }
         if (message.url !== '') {
-            writer.uint32(34).string(message.url);
+            writer.uint32(26).string(message.url);
         }
         if (message.amount.length !== 0) {
-            writer.uint32(50).bytes(message.amount);
+            writer.uint32(34).bytes(message.amount);
         }
         if (message.origOwner.length !== 0) {
-            writer.uint32(58).bytes(message.origOwner);
+            writer.uint32(42).bytes(message.origOwner);
         }
         if (message.apy !== '') {
-            writer.uint32(66).string(message.apy);
+            writer.uint32(50).string(message.apy);
         }
         if (message.isRootOwner === true) {
-            writer.uint32(72).bool(message.isRootOwner);
+            writer.uint32(56).bool(message.isRootOwner);
         }
         return writer;
     },
@@ -460,24 +457,21 @@ export const MsgCreateInvoice = {
                     message.creator = reader.bytes();
                     break;
                 case 2:
-                    message.invoiceID = reader.string();
-                    break;
-                case 3:
                     message.name = reader.string();
                     break;
-                case 4:
+                case 3:
                     message.url = reader.string();
                     break;
-                case 6:
+                case 4:
                     message.amount = reader.bytes();
                     break;
-                case 7:
+                case 5:
                     message.origOwner = reader.bytes();
                     break;
-                case 8:
+                case 6:
                     message.apy = reader.string();
                     break;
-                case 9:
+                case 7:
                     message.isRootOwner = reader.bool();
                     break;
                 default:
@@ -491,12 +485,6 @@ export const MsgCreateInvoice = {
         const message = { ...baseMsgCreateInvoice };
         if (object.creator !== undefined && object.creator !== null) {
             message.creator = bytesFromBase64(object.creator);
-        }
-        if (object.invoiceID !== undefined && object.invoiceID !== null) {
-            message.invoiceID = String(object.invoiceID);
-        }
-        else {
-            message.invoiceID = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = String(object.name);
@@ -533,7 +521,6 @@ export const MsgCreateInvoice = {
     toJSON(message) {
         const obj = {};
         message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()));
-        message.invoiceID !== undefined && (obj.invoiceID = message.invoiceID);
         message.name !== undefined && (obj.name = message.name);
         message.url !== undefined && (obj.url = message.url);
         message.amount !== undefined && (obj.amount = base64FromBytes(message.amount !== undefined ? message.amount : new Uint8Array()));
@@ -549,12 +536,6 @@ export const MsgCreateInvoice = {
         }
         else {
             message.creator = new Uint8Array();
-        }
-        if (object.invoiceID !== undefined && object.invoiceID !== null) {
-            message.invoiceID = object.invoiceID;
-        }
-        else {
-            message.invoiceID = '';
         }
         if (object.name !== undefined && object.name !== null) {
             message.name = object.name;
