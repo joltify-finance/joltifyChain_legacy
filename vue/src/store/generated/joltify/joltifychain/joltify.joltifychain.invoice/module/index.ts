@@ -5,17 +5,17 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgCreateInvoice } from "./types/invoice/tx";
-import { MsgDeleteSellOrder } from "./types/invoice/tx";
 import { MsgDeleteInvoice } from "./types/invoice/tx";
 import { MsgCreatePlaceOrder } from "./types/invoice/tx";
+import { MsgDeleteSellOrder } from "./types/invoice/tx";
 import { MsgCreateSellOrder } from "./types/invoice/tx";
 
 
 const types = [
   ["/joltify.joltifychain.invoice.MsgCreateInvoice", MsgCreateInvoice],
-  ["/joltify.joltifychain.invoice.MsgDeleteSellOrder", MsgDeleteSellOrder],
   ["/joltify.joltifychain.invoice.MsgDeleteInvoice", MsgDeleteInvoice],
   ["/joltify.joltifychain.invoice.MsgCreatePlaceOrder", MsgCreatePlaceOrder],
+  ["/joltify.joltifychain.invoice.MsgDeleteSellOrder", MsgDeleteSellOrder],
   ["/joltify.joltifychain.invoice.MsgCreateSellOrder", MsgCreateSellOrder],
   
 ];
@@ -46,9 +46,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgCreateInvoice: (data: MsgCreateInvoice): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateInvoice", value: data }),
-    msgDeleteSellOrder: (data: MsgDeleteSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteSellOrder", value: data }),
     msgDeleteInvoice: (data: MsgDeleteInvoice): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteInvoice", value: data }),
     msgCreatePlaceOrder: (data: MsgCreatePlaceOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreatePlaceOrder", value: data }),
+    msgDeleteSellOrder: (data: MsgDeleteSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteSellOrder", value: data }),
     msgCreateSellOrder: (data: MsgCreateSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateSellOrder", value: data }),
     
   };

@@ -29,11 +29,10 @@ export interface MsgDeleteSellOrderResponse {
 }
 export interface MsgCreateInvoice {
     creator: string;
-    invoiceID: string;
+    origOwner: string;
     name: string;
     url: string;
     amount: string;
-    origOwner: string;
     apy: string;
     isRootOwner: boolean;
 }
@@ -41,8 +40,8 @@ export interface MsgCreateInvoiceResponse {
     invoiceID: string;
 }
 export interface MsgDeleteInvoice {
-    creator: Uint8Array;
-    origOwner: Uint8Array;
+    creator: string;
+    origOwner: string;
     name: string;
 }
 export interface MsgDeleteInvoiceResponse {

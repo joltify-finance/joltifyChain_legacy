@@ -93,21 +93,20 @@ func (k msgServer) doCreateInvoice(ctx sdk.Context, creator, origOwner sdk.AccAd
 
 func (k msgServer) CreateInvoice(goCtx context.Context, msg *types.MsgCreateInvoice) (*types.MsgCreateInvoiceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
+	amount, err := sdk.NewDecFromStr(msg.Amount)
+	if err != nil {
+		return nil, err
+	}
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-	owner, err := sdk.AccAddressFromBech32(msg.OrigOwner)
+	originalOwner, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return nil, err
 	}
 
-	amountDec, err := sdk.NewDecFromStr(msg.Amount)
-	if err != nil {
-		return nil, err
-	}
-	return k.doCreateInvoice(ctx, creator, owner, msg.Name, amountDec.RoundInt(), msg.Url, msg.Apy, msg.IsRootOwner)
+	return k.doCreateInvoice(ctx, creator, originalOwner, msg.Name, amount.RoundInt(), msg.Url, msg.Apy, msg.IsRootOwner)
 }
 
 func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvoice) (*types.MsgDeleteInvoiceResponse, error) {
@@ -116,7 +115,7 @@ func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvo
 	// the invoice has no members except itself.
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	invoiceIDByte, err := tools.GenHash([]string{msg.Creator.String(), msg.OrigOwner.String(), msg.Name})
+	invoiceIDByte, err := tools.GenHash([]string{msg.Creator, msg.OrigOwner, msg.Name})
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("fail to hash the invoice data %v", err))
 	}
@@ -128,14 +127,17 @@ func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvo
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, fmt.Sprintf("the given invoice can not be found with ID:%v", invoiceID))
 	}
-
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, fmt.Sprintf("the given invoice can not be found with ID:%v", invoiceID))
+	}
 	// Checks if the the msg sender is the same as the curre2t owner
-	if !msg.Creator.Equals(invFound.InvoiceBase.Creator) {
+	if !creator.Equals(invFound.InvoiceBase.Creator) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 	// burn the tokens
 
-	err = k.burnTokens(ctx, invFound.GetInvoiceFinance().Denom, invFound.GetInvoiceFinance().Amount, msg.Creator)
+	err = k.burnTokens(ctx, invFound.GetInvoiceFinance().Denom, invFound.GetInvoiceFinance().Amount, creator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, fmt.Sprintf("fail to  burn the coins with error %v", err))
 	}

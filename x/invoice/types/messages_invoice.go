@@ -9,7 +9,7 @@ import (
 
 var _ sdk.Msg = &MsgCreateInvoice{}
 
-func NewMsgCreateInvoice(creatorStr, ownerStr, name, amount, url, apy string, isRootOwner bool) *MsgCreateInvoice {
+func NewMsgCreateInvoice(creator, owner, name, amount, url, apy string, isRootOwner bool) *MsgCreateInvoice {
 	return &MsgCreateInvoice{
 		Creator:     creatorStr,
 		Name:        name,
@@ -43,11 +43,11 @@ func (msg *MsgCreateInvoice) GetSignBytes() []byte {
 }
 
 func (msg *MsgCreateInvoice) ValidateBasic() error {
-	amountDec, err := sdk.NewDecFromStr(msg.Amount)
+	amount, err := sdk.NewDecFromStr(msg.Amount)
 	if err != nil {
-		return nil
+		return err
 	}
-	if amountDec.IsNegative() {
+	if amount.IsNegative() {
 		return errors.New("the amount cannot be negative")
 	}
 	apy, err := strconv.ParseFloat(msg.Apy, 32)
@@ -62,15 +62,7 @@ func (msg *MsgCreateInvoice) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgDeleteInvoice{}
 
-func NewMsgDeleteInvoice(creatorStr, ownerStr string, name string) *MsgDeleteInvoice {
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
-	if err != nil {
-		return nil
-	}
-	owner, err := sdk.AccAddressFromBech32(ownerStr)
-	if err != nil {
-		return nil
-	}
+func NewMsgDeleteInvoice(creator, owner, name string) *MsgDeleteInvoice {
 	return &MsgDeleteInvoice{
 		Creator:   creator,
 		Name:      name,
@@ -87,7 +79,11 @@ func (msg *MsgDeleteInvoice) Type() string {
 }
 
 func (msg *MsgDeleteInvoice) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return nil
+	}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgDeleteInvoice) GetSignBytes() []byte {
