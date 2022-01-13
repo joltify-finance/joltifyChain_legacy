@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/btcsuite/btcd/btcec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
@@ -18,16 +16,7 @@ func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
 		return nil, err
 	}
 
-	pk2, err := btcec.ParsePubKey(poolPubKey.Bytes(), btcec.S256())
-	if err != nil {
-		return nil, err
-	}
-	addr2 := ethcrypto.PubkeyToAddress(*pk2.ToECDSA())
-	addr, err := sdk.AccAddressFromHex(addr2.Hex()[2:])
-	if err != nil {
-		return nil, err
-	}
-	return addr, nil
+	return sdk.AccAddressFromHex(poolPubKey.Address().String())
 }
 func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateCreatePool) (*types.MsgCreateCreatePoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)

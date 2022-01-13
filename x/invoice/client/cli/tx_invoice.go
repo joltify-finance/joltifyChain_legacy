@@ -1,7 +1,6 @@
 package cli
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/cast"
@@ -76,7 +75,7 @@ func CmdDeleteInvoice() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress().String(), invoiceOwner.String(), argsName)
+			msg := types.NewMsgDeleteInvoice(clientCtx.GetFromAddress().String(), argsOwner, argsName)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

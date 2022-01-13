@@ -11,10 +11,10 @@ var _ sdk.Msg = &MsgCreateInvoice{}
 
 func NewMsgCreateInvoice(creator, owner, name, amount, url, apy string, isRootOwner bool) *MsgCreateInvoice {
 	return &MsgCreateInvoice{
-		Creator:     creatorStr,
+		Creator:     creator,
 		Name:        name,
 		Url:         url,
-		OrigOwner:   ownerStr,
+		OrigOwner:   owner,
 		Amount:      amount,
 		Apy:         apy,
 		IsRootOwner: isRootOwner,
