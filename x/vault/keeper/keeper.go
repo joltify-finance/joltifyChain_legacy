@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
 	"github.com/tendermint/tendermint/libs/log"
@@ -14,7 +15,7 @@ import (
 
 type (
 	Keeper struct {
-		cdc                       codec.Marshaler
+		cdc                       codec.BinaryCodec
 		storeKey                  sdk.StoreKey
 		memKey                    sdk.StoreKey
 		vaultStaking              types.VaultStaking
@@ -26,7 +27,7 @@ type (
 )
 
 func NewKeeper(
-	cdc codec.Marshaler,
+	cdc codec.BinaryCodec,
 	storeKey,
 	memKey sdk.StoreKey,
 	vaultStaking types.VaultStaking,
@@ -35,7 +36,6 @@ func NewKeeper(
 	// this line is used by starport scaffolding # ibc/keeper/parameter
 
 ) *Keeper {
-
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
