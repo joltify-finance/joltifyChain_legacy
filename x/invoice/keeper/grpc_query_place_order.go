@@ -24,14 +24,13 @@ func (k Keeper) PlaceOrderAll(c context.Context, req *types.QueryAllPlaceOrderRe
 
 	pageRes, err := query.Paginate(placeOrderStore, req.Pagination, func(key []byte, value []byte) error {
 		var placeOrder types.PlaceOrder
-		if err := k.cdc.UnmarshalBinaryBare(value, &placeOrder); err != nil {
+		if err := k.cdc.Unmarshal(value, &placeOrder); err != nil {
 			return err
 		}
 
 		placeOrders = append(placeOrders, &placeOrder)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

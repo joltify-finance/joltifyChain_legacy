@@ -16,8 +16,8 @@ type BankKeeper interface {
 
 	GetParams(ctx sdk.Context) banktypes.Params
 	SetParams(ctx sdk.Context, params banktypes.Params)
-	SendEnabledCoin(ctx sdk.Context, coin sdk.Coin) bool
-	SendEnabledCoins(ctx sdk.Context, coins ...sdk.Coin) error
+	// SendEnabledCoin(ctx sdk.Context, coin sdk.Coin) bool
+	// SendEnabledCoins(ctx sdk.Context, coins ...sdk.Coin) error
 
 	GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin
 }

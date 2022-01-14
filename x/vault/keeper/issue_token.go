@@ -9,7 +9,7 @@ import (
 // SetIssueToken set a specific issueToken in the store from its index
 func (k Keeper) SetIssueToken(ctx sdk.Context, issueToken types.IssueToken) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.IssueTokenKey))
-	b := k.cdc.MustMarshalBinaryBare(&issueToken)
+	b := k.cdc.MustMarshal(&issueToken)
 	store.Set(types.KeyPrefix(issueToken.Index), b)
 }
 
@@ -22,7 +22,7 @@ func (k Keeper) GetIssueToken(ctx sdk.Context, index string) (val types.IssueTok
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -35,7 +35,7 @@ func (k Keeper) GetAllIssueToken(ctx sdk.Context) (list []types.IssueToken) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.IssueToken
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 
