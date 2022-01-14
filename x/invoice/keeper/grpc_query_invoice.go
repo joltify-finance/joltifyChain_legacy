@@ -24,14 +24,13 @@ func (k Keeper) InvoiceAll(c context.Context, req *types.QueryAllInvoiceRequest)
 
 	pageRes, err := query.Paginate(invoiceStore, req.Pagination, func(key []byte, value []byte) error {
 		var invoice types.Invoice
-		if err := k.cdc.UnmarshalBinaryBare(value, &invoice); err != nil {
+		if err := k.cdc.Unmarshal(value, &invoice); err != nil {
 			return err
 		}
 
 		invoices = append(invoices, &invoice)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

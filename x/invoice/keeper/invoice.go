@@ -9,7 +9,7 @@ import (
 // SetInvoice set a specific invoice in the store from its index
 func (k Keeper) SetInvoice(ctx sdk.Context, invoice types.Invoice) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.InvoiceKey))
-	b := k.cdc.MustMarshalBinaryBare(&invoice)
+	b := k.cdc.MustMarshal(&invoice)
 	store.Set(types.KeyPrefix(invoice.InvoiceID), b)
 }
 
@@ -22,7 +22,7 @@ func (k Keeper) GetInvoice(ctx sdk.Context, index string) (val types.Invoice, fo
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -41,7 +41,7 @@ func (k Keeper) GetAllInvoice(ctx sdk.Context) (list []types.Invoice) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Invoice
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

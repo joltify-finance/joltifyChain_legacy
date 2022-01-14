@@ -6,18 +6,20 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
 func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
-	poolPubKey, err := sdk.GetPubKeyFromBech32(sdk.Bech32PubKeyTypeAccPub, pk)
+	poolPubKey, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, pk)
 	if err != nil {
 		return nil, err
 	}
 
 	return sdk.AccAddressFromHex(poolPubKey.Address().String())
 }
+
 func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateCreatePool) (*types.MsgCreateCreatePoolResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -88,7 +90,7 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 		}
 		info.Proposal = []*types.PoolProposal{&pro}
 	}
-	var createPool = types.CreatePool{
+	createPool := types.CreatePool{
 		BlockHeight: msg.BlockHeight,
 		Validators:  validators,
 		Proposal:    info.Proposal,

@@ -13,7 +13,6 @@ import (
 )
 
 func (k Keeper) calMinSupportNodes(c context.Context) int32 {
-
 	ctx := sdk.UnwrapSDKContext(c)
 	maxValidators := k.vaultStaking.GetParams(ctx).MaxValidators
 	candidateDec := sdk.NewDecWithPrec(int64(maxValidators), 0)
@@ -24,7 +23,6 @@ func (k Keeper) calMinSupportNodes(c context.Context) int32 {
 	candidateNumDec := candidateDec.Mul(ratio)
 	candidateNum := int32(candidateNumDec.RoundInt64()) - 1
 	return candidateNum
-
 }
 
 func (k Keeper) CreatePoolAll(c context.Context, req *types.QueryAllCreatePoolRequest) (*types.QueryAllCreatePoolResponse, error) {
@@ -40,7 +38,7 @@ func (k Keeper) CreatePoolAll(c context.Context, req *types.QueryAllCreatePoolRe
 
 	pageRes, err := query.Paginate(createPoolStore, req.Pagination, func(key []byte, value []byte) error {
 		var createPool types.CreatePool
-		if err := k.cdc.UnmarshalBinaryBare(value, &createPool); err != nil {
+		if err := k.cdc.Unmarshal(value, &createPool); err != nil {
 			return err
 		}
 		minSupportNodes := k.calMinSupportNodes(c)

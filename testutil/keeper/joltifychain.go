@@ -3,8 +3,6 @@ package keeper
 import (
 	"testing"
 
-	"github.com/cosmonaut/mars/x/mars/keeper"
-	"github.com/cosmonaut/mars/x/mars/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
@@ -14,6 +12,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
+	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
 func MarsKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {

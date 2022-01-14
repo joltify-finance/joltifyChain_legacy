@@ -9,7 +9,7 @@ import (
 // SetAddedSellOrder set a specific sellOrder in the store from its index
 func (k Keeper) SetAddedSellOrder(ctx sdk.Context, sellOrder types.SellOrder) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AddedSellOrderKey))
-	b := k.cdc.MustMarshalBinaryBare(&sellOrder)
+	b := k.cdc.MustMarshal(&sellOrder)
 	store.Set(types.KeyPrefix(sellOrder.SellOrderID), b)
 }
 
@@ -22,7 +22,7 @@ func (k Keeper) GetAddedSellOrder(ctx sdk.Context, index string) (val types.Sell
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -41,7 +41,7 @@ func (k Keeper) GetAllAddedSellOrder(ctx sdk.Context) (list []types.SellOrder) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.SellOrder
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

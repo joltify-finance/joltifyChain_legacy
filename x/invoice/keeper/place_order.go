@@ -9,7 +9,7 @@ import (
 // SetPlaceOrder set a specific placeOrder in the store from its index
 func (k Keeper) SetPlaceOrder(ctx sdk.Context, placeOrder types.PlaceOrder) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PlaceOrderKey))
-	b := k.cdc.MustMarshalBinaryBare(&placeOrder)
+	b := k.cdc.MustMarshal(&placeOrder)
 	store.Set(types.KeyPrefix(placeOrder.PlaceOrderIndex), b)
 }
 
@@ -22,7 +22,7 @@ func (k Keeper) GetPlaceOrder(ctx sdk.Context, index string) (val types.PlaceOrd
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -41,7 +41,7 @@ func (k Keeper) GetAllPlaceOrder(ctx sdk.Context) (list []types.PlaceOrder) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.PlaceOrder
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

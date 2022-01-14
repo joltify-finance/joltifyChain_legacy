@@ -36,7 +36,6 @@ func (k Keeper) StakingInfo(ctx sdk.Context) {
 		k.validatorStandbyPowerInfo[consAddr.String()] -= params.Step
 		return false
 	})
-
 }
 
 func (k Keeper) getLastValidatorByAddr(ctx sdk.Context) (vaultmoduletypes.ValidatorsByAddr, error) {
@@ -82,10 +81,10 @@ func (k Keeper) GetEligibleValidators(ctx sdk.Context) (stakingtypes.Validators,
 		}
 		validatorWithPower := vaultmoduletypes.ValidatorPowerInfo{
 			Validator: validator,
-			Power:     validator.PotentialConsensusPower(),
+			Power:     validator.PotentialConsensusPower(sdk.DefaultPowerReduction),
 		}
 		candidates = append(candidates, validatorWithPower)
-		power := validator.PotentialConsensusPower()
+		power := validator.PotentialConsensusPower(sdk.DefaultPowerReduction)
 		totalPower += power
 		count += 1
 	}
@@ -144,7 +143,7 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 
 		// if we get to a zero-power validator (which we don't bond),
 		// there are no more possible bonded validators
-		if validator.PotentialConsensusPower() == 0 {
+		if validator.PotentialConsensusPower(sdk.DefaultPowerReduction) == 0 {
 			break
 		}
 
@@ -175,12 +174,12 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		}
 
 		oldPowerBytes, found := last[validator.OperatorAddress]
-		newPower := validator.ConsensusPower()
-		newPowerBytes := k.cdc.MustMarshalBinaryBare(&gogotypes.Int64Value{Value: newPower})
+		newPower := validator.ConsensusPower(sdk.DefaultPowerReduction)
+		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
 
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
-			updates = append(updates, validator.ABCIValidatorUpdate())
+			updates = append(updates, validator.ABCIValidatorUpdate(sdk.DefaultPowerReduction))
 			k.vaultStaking.SetLastValidatorPower(ctx, valAddr, newPower)
 		}
 
@@ -317,8 +316,8 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context) []abci.ValidatorUpdate {
 func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 	defer telemetry.ModuleMeasureSince(vaultmoduletypes.ModuleName, time.Now(), telemetry.MetricKeyEndBlocker)
 
-	//blockHeight := k.GetParams(ctx).BlockChurnInterval
-	//if ctx.BlockHeight() > 1 && ctx.BlockHeight()%blockHeight == 0 {
+	// blockHeight := k.GetParams(ctx).BlockChurnInterval
+	// if ctx.BlockHeight() > 1 && ctx.BlockHeight()%blockHeight == 0 {
 	if ctx.BlockHeight() == 10 || ctx.BlockHeight() == 20 {
 		return k.BlockValidatorUpdates(ctx)
 	}
