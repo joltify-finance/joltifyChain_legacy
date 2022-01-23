@@ -4,26 +4,45 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	types2 "github.com/cosmos/cosmos-sdk/x/params/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
+	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	types2 "github.com/cosmos/cosmos-sdk/x/params/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
+	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+
+	"gitlab.com/joltify/joltifychain/x/vault/keeper"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
 type testVaultStaking struct{}
+
+func (t testVaultStaking) GetHistoricalInfo(ctx sdk.Context, height int64) (stakingtypes.HistoricalInfo, bool) {
+	operatorStr := "joltval1f0atl7egduue8a07j42hyklct0sqa68wyh02h6"
+	operator, err := sdk.ValAddressFromBech32(operatorStr)
+	if err != nil {
+		return stakingtypes.HistoricalInfo{}, false
+	}
+
+	sk := ed25519.GenPrivKey()
+	desc := stakingtypes.NewDescription("tester", "testId", "www.test.com", "aaa", "aaa")
+	testValidator, err := stakingtypes.NewValidator(operator, sk.PubKey(), desc)
+	if err != nil {
+		return stakingtypes.HistoricalInfo{}, false
+	}
+	historicalInfo := stakingtypes.HistoricalInfo{
+		Valset: []stakingtypes.Validator{testValidator},
+	}
+	return historicalInfo, true
+}
 
 func (t testVaultStaking) IterateBondedValidatorsByPower(context sdk.Context, f func(index int64, validator stakingtypes.ValidatorI) (stop bool)) {
 	panic("implement me")
@@ -70,7 +89,9 @@ func (t testVaultStaking) CompleteRedelegation(ctx sdk.Context, delAddr sdk.AccA
 }
 
 func (t testVaultStaking) GetParams(ctx sdk.Context) stakingtypes.Params {
-	panic("implement me")
+	return stakingtypes.Params{
+		MaxValidators: 6,
+	}
 }
 
 func (t testVaultStaking) LastValidatorsIterator(ctx sdk.Context) (iterator sdk.Iterator) {
@@ -117,27 +138,7 @@ func (t testVaultStaking) BondDenom(ctx sdk.Context) (res string) {
 	panic("implement me")
 }
 
-func (t testVaultStaking) GetHistoricalInfo(ctx sdk.Context, height int64) (stakingtypes.HistoricalInfo, bool) {
-	operatorStr := "invvaloper12k0nzax6dr3d9tssxne7ygmhdpj79rpxhnrk0u"
-	operator, err := sdk.ValAddressFromBech32(operatorStr)
-	if err != nil {
-		return stakingtypes.HistoricalInfo{}, false
-	}
-
-	sk := ed25519.GenPrivKey()
-	desc := stakingtypes.NewDescription("tester", "testId", "www.test.com", "aaa", "aaa")
-	testValidator, err := stakingtypes.NewValidator(operator, sk.PubKey(), desc)
-	if err != nil {
-		return stakingtypes.HistoricalInfo{}, false
-	}
-	historicalInfo := stakingtypes.HistoricalInfo{
-		Valset: []stakingtypes.Validator{testValidator},
-	}
-	return historicalInfo, true
-}
-
-func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
-	app := simapp.Setup(false)
+func SetupVaultKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
@@ -149,8 +150,9 @@ func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
 
 	testVaultStaking := testVaultStaking{}
 
+	app := simapp.Setup(false)
 	registry := codectypes.NewInterfaceRegistry()
-	keeper := NewKeeper(
+	keeper := keeper.NewKeeper(
 		codec.NewProtoCodec(registry),
 		storeKey,
 		memStoreKey,
@@ -158,7 +160,6 @@ func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
 		app.BankKeeper,
 		types2.NewSubspace(app.AppCodec(), app.LegacyAmino(), storeKey, memStoreKey, types.ModuleName),
 	)
-
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
 	return keeper, ctx
 }

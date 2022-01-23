@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
@@ -33,8 +34,7 @@ func TestCreateCreatePool(t *testing.T) {
 
 	sk := ed25519.GenPrivKey()
 	sk.PubKey().Address()
-	pubkey, err := sdk.Bech32ifyPubKey(sdk.Bech32PubKeyTypeAccPub, sk.PubKey())
-	require.NoError(t, err)
+	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, sk.PubKey())
 
 	for _, tc := range []struct {
 		desc   string
@@ -46,9 +46,9 @@ func TestCreateCreatePool(t *testing.T) {
 	}{
 		{
 			id:     "0",
-			err:    stderr.New("invalid pubkey (invalid Bech32 prefix; expected invpub, got inv): invalid pubkey"),
+			err:    stderr.New("invalid pubkey (invalid Bech32 prefix; expected joltpub, got jolt): invalid pubkey"),
 			desc:   "invalid",
-			fields: []string{"inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k", "1"},
+			fields: []string{"jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "1"},
 			args: []string{
 				fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
 				fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
@@ -76,11 +76,11 @@ func TestCreateCreatePool(t *testing.T) {
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateCreatePool(), args)
 			if tc.err != nil {
-				require.Equal(t, err.Error(), tc.err.Error())
+				require.Equal(t, tc.err.Error(), err.Error())
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})

@@ -8,8 +8,8 @@ var _ sdk.Msg = &MsgCreateIssueToken{}
 
 func NewMsgCreateIssueToken(creator string, index string, coinStr string, receiver string) (*MsgCreateIssueToken, error) {
 	coins, err := sdk.ParseCoinsNormalized(coinStr)
-	if err!=nil ||len(coins)!=1{
-		return nil,err
+	if err != nil || len(coins) != 1 {
+		return nil, err
 	}
 	creatorAddr, err := sdk.AccAddressFromBech32(creator)
 	if err != nil {
@@ -22,9 +22,9 @@ func NewMsgCreateIssueToken(creator string, index string, coinStr string, receiv
 	}
 
 	return &MsgCreateIssueToken{
-		Index: index,
+		Index:    index,
 		Creator:  creatorAddr,
-		Coin:    coins[0],
+		Coin:     coins[0],
 		Receiver: receiverAddr,
 	}, nil
 }

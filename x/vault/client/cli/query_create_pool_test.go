@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
@@ -23,14 +24,15 @@ import (
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
-func networkWithCreatePoolObjects(t *testing.T, n int) (*network.Network, []*types.CreatePool) {
+func networkWithCreatePoolObjects(t *testing.T, n int, maxValidator uint32) (*network.Network, []*types.CreatePool) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
+	stateStaking := stakingtypes.GenesisState{}
+
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
-
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[stakingtypes.ModuleName], &stateStaking))
 	for i := 1; i < n; i++ {
-
 		operatorStr := "joltval1yu5wjall4atm29puasahplrkvyz3vplmngm7kk"
 		operator, err := sdk.ValAddressFromBech32(operatorStr)
 		require.NoError(t, err)
@@ -41,7 +43,7 @@ func networkWithCreatePoolObjects(t *testing.T, n int) (*network.Network, []*typ
 		require.NoError(t, err)
 
 		randPoolSk := ed25519.GenPrivKey()
-		poolPubKey, err := sdk.Bech32ifyPubKey(sdk.Bech32PrefixAccPub, randPoolSk.PubKey())
+		poolPubKey, err := legacybech32.MarshalPubKey(legacybech32.AccPK, randPoolSk.PubKey())
 		require.NoError(t, err)
 
 		pro := types.PoolProposal{
@@ -53,12 +55,21 @@ func networkWithCreatePoolObjects(t *testing.T, n int) (*network.Network, []*typ
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.CreatePoolList
+
+	var stateVault stakingtypes.GenesisState
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[stakingtypes.ModuleName], &stateVault))
+	stateVault.Params.MaxValidators = maxValidator
+	buf, err = cfg.Codec.MarshalJSON(&stateVault)
+	require.NoError(t, err)
+	cfg.GenesisState[stakingtypes.ModuleName] = buf
+
+	nb := network.New(t, cfg)
+	return nb, state.CreatePoolList
 }
 
 func TestShowCreatePool(t *testing.T) {
 	setupBech32Prefix()
-	net, objs := networkWithCreatePoolObjects(t, 2)
+	net, objs := networkWithCreatePoolObjects(t, 2, 3)
 
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -104,9 +115,50 @@ func TestShowCreatePool(t *testing.T) {
 	}
 }
 
+func TestListCreatePoolNotEnoughValidator(t *testing.T) {
+	setupBech32Prefix()
+	net, _ := networkWithCreatePoolObjects(t, 2, 300)
+	ctx := net.Validators[0].ClientCtx
+	common := []string{
+		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
+	}
+	for _, tc := range []struct {
+		desc string
+		id   string
+		args []string
+		err  error
+		obj  *types.CreatePool
+	}{
+		{
+			desc: "not found because not enough validator",
+			id:   "not_found",
+			args: common,
+			err:  status.Error(codes.InvalidArgument, "not found"),
+		},
+	} {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			args := []string{tc.id}
+			args = append(args, tc.args...)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowCreatePool(), args)
+			if tc.err != nil {
+				stat, ok := status.FromError(tc.err)
+				require.True(t, ok)
+				require.ErrorIs(t, stat.Err(), tc.err)
+			} else {
+				require.NoError(t, err)
+				var resp types.QueryGetCreatePoolResponse
+				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NotNil(t, resp.CreatePool)
+				require.Equal(t, tc.obj.Proposal[0].PoolPubKey, resp.CreatePool.GetPoolPubKey())
+			}
+		})
+	}
+}
+
 func TestListCreatePool(t *testing.T) {
 	setupBech32Prefix()
-	net, objs := networkWithCreatePoolObjects(t, 5)
+	net, objs := networkWithCreatePoolObjects(t, 5, 3)
 
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {

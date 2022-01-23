@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
@@ -14,9 +14,17 @@ import (
 )
 
 func TestCreatePoolQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCreatePool(keeper, ctx, 2)
+	k, _, wctx := setupMsgServer(t)
+	ctx := sdk.UnwrapSDKContext(wctx)
+	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
+	addresses := make([]sdk.AccAddress, 3)
+	var err error
+	for i := 0; i < 3; i++ {
+		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
+		assert.Nil(t, err)
+	}
+
+	msgs := createNCreatePool(k, ctx, 2, addresses)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetCreatePoolRequest
@@ -45,7 +53,7 @@ func TestCreatePoolQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.CreatePool(wctx, tc.request)
+			response, err := k.CreatePool(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -56,9 +64,16 @@ func TestCreatePoolQuerySingle(t *testing.T) {
 }
 
 func TestCreatePoolQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCreatePool(keeper, ctx, 5)
+	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
+	addresses := make([]sdk.AccAddress, 3)
+	var err error
+	for i := 0; i < 3; i++ {
+		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
+		assert.Nil(t, err)
+	}
+	k, _, wctx := setupMsgServer(t)
+	ctx := sdk.UnwrapSDKContext(wctx)
+	msgs := createNCreatePool(k, ctx, 5, addresses)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllCreatePoolRequest {
 		return &types.QueryAllCreatePoolRequest{
@@ -73,7 +88,7 @@ func TestCreatePoolQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.CreatePoolAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := k.CreatePoolAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				assert.Equal(t, msgs[j].Proposal[0].PoolPubKey, resp.CreatePool[j-i].PoolPubKey)
@@ -84,7 +99,7 @@ func TestCreatePoolQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.CreatePoolAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := k.CreatePoolAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				assert.Equal(t, msgs[j].Proposal[0].PoolPubKey, resp.CreatePool[j-i].PoolPubKey)
@@ -93,12 +108,12 @@ func TestCreatePoolQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.CreatePoolAll(wctx, request(nil, 0, 0, true))
+		resp, err := k.CreatePoolAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.CreatePoolAll(wctx, nil)
+		_, err := k.CreatePoolAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

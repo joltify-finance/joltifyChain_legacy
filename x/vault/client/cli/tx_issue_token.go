@@ -31,7 +31,6 @@ func CmdCreateIssueToken() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
 			msg, err := types.NewMsgCreateIssueToken(clientCtx.GetFromAddress().String(), index, argsCoin, argsReceiver)
 			if err != nil {
 				return err

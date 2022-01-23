@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"fmt"
@@ -6,15 +6,18 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
+	"gitlab.com/joltify/joltifychain/x/vault/keeper"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
-func createNCreatePool(keeper *Keeper, ctx sdk.Context, n int) []types.CreatePool {
+func createNCreatePool(keeper *keeper.Keeper, ctx sdk.Context, n int, addresses []sdk.AccAddress) []types.CreatePool {
 	items := make([]types.CreatePool, n)
 	for i := range items {
 		poolProposal := types.PoolProposal{
 			PoolPubKey: fmt.Sprintf("%d", i),
 		}
+		poolProposal.Nodes = addresses
 		items[i].Proposal = []*types.PoolProposal{&poolProposal}
 		items[i].BlockHeight = fmt.Sprintf("%d", i)
 		keeper.SetCreatePool(ctx, items[i])
@@ -23,8 +26,17 @@ func createNCreatePool(keeper *Keeper, ctx sdk.Context, n int) []types.CreatePoo
 }
 
 func TestCreatePoolGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10)
+	setupBech32Prefix()
+	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
+	addresses := make([]sdk.AccAddress, 3)
+	var err error
+	for i := 0; i < 3; i++ {
+		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
+		assert.Nil(t, err)
+	}
+
+	keeper, ctx := keepertest.SetupVaultKeeper(t)
+	items := createNCreatePool(keeper, ctx, 10, addresses)
 	for _, item := range items {
 		rst, found := keeper.GetCreatePool(ctx, item.BlockHeight)
 		assert.True(t, found)
@@ -33,8 +45,16 @@ func TestCreatePoolGet(t *testing.T) {
 }
 
 func TestCreatePoolRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10)
+	setupBech32Prefix()
+	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
+	addresses := make([]sdk.AccAddress, 3)
+	var err error
+	for i := 0; i < 3; i++ {
+		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
+		assert.Nil(t, err)
+	}
+	keeper, ctx := keepertest.SetupVaultKeeper(t)
+	items := createNCreatePool(keeper, ctx, 10, addresses)
 	for _, item := range items {
 		keeper.RemoveCreatePool(ctx, item.BlockHeight)
 		_, found := keeper.GetCreatePool(ctx, item.BlockHeight)
@@ -43,7 +63,15 @@ func TestCreatePoolRemove(t *testing.T) {
 }
 
 func TestCreatePoolGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10)
+	setupBech32Prefix()
+	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
+	addresses := make([]sdk.AccAddress, 3)
+	var err error
+	for i := 0; i < 3; i++ {
+		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
+		assert.Nil(t, err)
+	}
+	keeper, ctx := keepertest.SetupVaultKeeper(t)
+	items := createNCreatePool(keeper, ctx, 10, addresses)
 	assert.Equal(t, items, keeper.GetAllCreatePool(ctx))
 }

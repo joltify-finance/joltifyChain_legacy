@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -25,7 +26,7 @@ func (k msgServer) CreateIssueToken(goCtx context.Context, msg *types.MsgCreateI
 
 	inPool := k.checkAddressInPool(pools, msg.Creator.Bytes())
 	if !inPool {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("creator %s is not a valid pool address", msg.Creator.String()))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("creator %s is not in pool addresses set", msg.Creator.String()))
 	}
 
 	err = k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(msg.Coin))
