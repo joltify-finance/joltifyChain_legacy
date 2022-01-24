@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"fmt"
@@ -6,12 +6,13 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
 
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
-func createNPlaceOrder(keeper *Keeper, ctx sdk.Context, n int) []types.PlaceOrder {
-
+func createNPlaceOrder(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.PlaceOrder {
 	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
 	creator, _ := sdk.AccAddressFromBech32(creatorStr)
 	items := make([]types.PlaceOrder, n)
@@ -25,7 +26,7 @@ func createNPlaceOrder(keeper *Keeper, ctx sdk.Context, n int) []types.PlaceOrde
 }
 
 func TestPlaceOrderGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNPlaceOrder(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetPlaceOrder(ctx, item.PlaceOrderIndex)
@@ -33,8 +34,9 @@ func TestPlaceOrderGet(t *testing.T) {
 		assert.Equal(t, item, rst)
 	}
 }
+
 func TestPlaceOrderRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNPlaceOrder(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemovePlaceOrder(ctx, item.PlaceOrderIndex)
@@ -44,7 +46,7 @@ func TestPlaceOrderRemove(t *testing.T) {
 }
 
 func TestPlaceOrderGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNPlaceOrder(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllPlaceOrder(ctx))
 }

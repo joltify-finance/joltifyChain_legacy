@@ -101,7 +101,7 @@ func (k msgServer) CreateInvoice(goCtx context.Context, msg *types.MsgCreateInvo
 	if err != nil {
 		return nil, err
 	}
-	originalOwner, err := sdk.AccAddressFromBech32(msg.Creator)
+	originalOwner, err := sdk.AccAddressFromBech32(msg.OrigOwner)
 	if err != nil {
 		return nil, err
 	}
@@ -131,12 +131,11 @@ func (k msgServer) DeleteInvoice(goCtx context.Context, msg *types.MsgDeleteInvo
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, fmt.Sprintf("the given invoice can not be found with ID:%v", invoiceID))
 	}
-	// Checks if the the msg sender is the same as the curre2t owner
+	// Checks if the the msg sender is the same as the current owner
 	if !creator.Equals(invFound.InvoiceBase.Creator) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 	// burn the tokens
-
 	err = k.burnTokens(ctx, invFound.GetInvoiceFinance().Denom, invFound.GetInvoiceFinance().Amount, creator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, fmt.Sprintf("fail to  burn the coins with error %v", err))

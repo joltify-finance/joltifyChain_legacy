@@ -3,12 +3,13 @@ package cli_test
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"google.golang.org/grpc/codes"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -48,7 +49,6 @@ func networkWithSellOrderObjects(t *testing.T, n int) (*network.Network, []*type
 }
 
 func TestShowSellOrder(t *testing.T) {
-
 	net, objs := networkWithSellOrderObjects(t, 2)
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -139,7 +139,7 @@ func TestCmdListSellOrderAndQuerySellOrder(t *testing.T) {
 	out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSellOrder(), []string{})
 	require.Nil(t, err)
 	var listResp types.QueryAllSellOrderResponse
-	require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &listResp))
+	require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &listResp))
 	require.Len(t, listResp.SellOrder, 3)
 	queryID := listResp.SellOrder[0].SellOrderID
 	_, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdShowSellOrder(), []string{"invalid"})

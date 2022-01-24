@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"fmt"
@@ -7,40 +7,43 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
+
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
-func createNInvoice(keeper *Keeper, ctx sdk.Context, n int) []types.Invoice {
+func createNInvoice(k *keeper.Keeper, ctx sdk.Context, n int) []types.Invoice {
 	items := make([]types.Invoice, n)
 	for i := range items {
 		items[i].InvoiceID = fmt.Sprintf("%d", i)
-		keeper.SetInvoice(ctx, items[i])
+		k.SetInvoice(ctx, items[i])
 	}
 	return items
 }
 
 func TestInvoiceGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNInvoice(keeper, ctx, 10)
+	k, ctx := keepertest.SetupKeeper(t)
+	items := createNInvoice(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetInvoice(ctx, item.InvoiceID)
+		rst, found := k.GetInvoice(ctx, item.InvoiceID)
 		assert.True(t, found)
 		assert.Equal(t, item, rst)
 	}
 }
 
 func TestInvoiceRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNInvoice(keeper, ctx, 10)
+	k, ctx := keepertest.SetupKeeper(t)
+	items := createNInvoice(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveInvoice(ctx, item.InvoiceID)
-		_, found := keeper.GetInvoice(ctx, item.InvoiceID)
+		k.RemoveInvoice(ctx, item.InvoiceID)
+		_, found := k.GetInvoice(ctx, item.InvoiceID)
 		assert.False(t, found)
 	}
 }
 
 func TestInvoiceGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
-	items := createNInvoice(keeper, ctx, 10)
-	assert.Equal(t, items, keeper.GetAllInvoice(ctx))
+	k, ctx := keepertest.SetupKeeper(t)
+	items := createNInvoice(k, ctx, 10)
+	assert.Equal(t, items, k.GetAllInvoice(ctx))
 }

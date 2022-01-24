@@ -1,15 +1,17 @@
-package keeper
+package keeper_test
 
 import (
-	"github.com/tendermint/tendermint/crypto/ed25519"
 	"testing"
 	"time"
+
+	"github.com/tendermint/tendermint/crypto/ed25519"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
@@ -21,13 +23,13 @@ func TestSellOrderMsgServerCreate(t *testing.T) {
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
-	rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
-	srv := NewMsgServerImpl(*keeper)
+	rootInvoice, ctx, k := NewRootInvoice(t, creator, invoiceName)
+	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
 	expected := &types.MsgCreateSellOrder{Creator: creator, SellInvoiceID: rootInvoice.InvoiceID, Amount: sdk.NewInt(20), Price: sdk.NewInt(0)}
 	_, err = srv.CreateSellOrder(wctx, expected)
 	require.NoError(t, err)
-	sellOrders := keeper.GetAllSellOrder(ctx)
+	sellOrders := k.GetAllSellOrder(ctx)
 	require.Len(t, sellOrders, 1)
 	assert.Equal(t, expected.Creator, sellOrders[0].Creator)
 }
@@ -40,8 +42,8 @@ func TestSellOrderMsgServerCreateFail(t *testing.T) {
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
-	rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
-	srv := NewMsgServerImpl(*keeper)
+	rootInvoice, ctx, k := NewRootInvoice(t, creator, invoiceName)
+	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
 	expected := &types.MsgCreateSellOrder{Creator: creator, SellInvoiceID: rootInvoice.InvoiceID, Amount: sdk.NewInt(-20)}
 	_, err = srv.CreateSellOrder(wctx, expected)
@@ -49,7 +51,6 @@ func TestSellOrderMsgServerCreateFail(t *testing.T) {
 	expected2 := &types.MsgCreateSellOrder{Creator: creator, SellInvoiceID: rootInvoice.InvoiceID, Amount: sdk.NewInt(20), Price: sdk.NewInt(-1)}
 	_, err = srv.CreateSellOrder(wctx, expected2)
 	require.Error(t, err)
-
 }
 
 func TestSellOrderMsgServerDelete(t *testing.T) {
@@ -64,8 +65,8 @@ func TestSellOrderMsgServerDelete(t *testing.T) {
 	assert.Nil(t, err)
 
 	invoiceName := "two invoice test"
-	rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
-	srv := NewMsgServerImpl(*keeper)
+	rootInvoice, ctx, k := NewRootInvoice(t, creator, invoiceName)
+	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
 
 	for i, tc := range []struct {
@@ -103,7 +104,7 @@ func TestSellOrderMsgServerDelete(t *testing.T) {
 				require.ErrorIs(t, err, tc.err)
 			} else {
 				require.NoError(t, err)
-				order, found := keeper.GetSellOrder(ctx, tc.request.SellOrderID)
+				order, found := k.GetSellOrder(ctx, tc.request.SellOrderID)
 				require.True(t, found)
 				require.True(t, order.IsDeleted)
 			}

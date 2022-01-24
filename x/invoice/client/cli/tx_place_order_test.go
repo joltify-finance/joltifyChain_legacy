@@ -41,13 +41,13 @@ func TestCreatePlaceOrder(t *testing.T) {
 		require.Nil(t, err)
 
 		var resp1 sdk.TxResponse
-		require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(invoiceResp.Bytes(), &resp1))
+		require.NoError(t, ctx.Codec.UnmarshalJSON(invoiceResp.Bytes(), &resp1))
 		args2 := append(createSellBookFields, basicArgs...)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateSellOrder(), args2)
 		require.Nil(t, err)
 
 		var resp sdk.TxResponse
-		require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		outbb, _ := hex.DecodeString(resp.Data)
 		var respOrder types.MsgCreateSellOrderResponse
 		err = proto.Unmarshal(outbb, &respOrder)
@@ -58,6 +58,5 @@ func TestCreatePlaceOrder(t *testing.T) {
 		args = append(args, basicArgs...)
 		_, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdCreatePlaceOrder(), args)
 		require.Nil(t, err)
-
 	})
 }

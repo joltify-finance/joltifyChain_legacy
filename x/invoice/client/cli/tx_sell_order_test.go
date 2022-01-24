@@ -74,7 +74,7 @@ func TestCreateSellOrderUnauthorized(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})
@@ -138,7 +138,7 @@ func TestCreateSellOrderNotEnoughMoney(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})
@@ -201,7 +201,7 @@ func TestCreateSellOrder(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})
@@ -261,7 +261,7 @@ func TestDeleteSellOrder(t *testing.T) {
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateSellOrder(), args2)
 			require.Nil(t, err)
 			var resp sdk.TxResponse
-			require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			outbb, _ := hex.DecodeString(resp.Data)
 			var respOrder types.MsgCreateSellOrderResponse
 			err = proto.Unmarshal(outbb, &respOrder)
@@ -272,7 +272,7 @@ func TestDeleteSellOrder(t *testing.T) {
 			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdListSellOrder(), []string{})
 			require.Nil(t, err)
 			var listResp types.QueryAllSellOrderResponse
-			require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &listResp))
+			require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &listResp))
 
 			deleteArgs := []string{"invalid order"}
 			deleteArgs = append(deleteArgs, tc.args...)
@@ -280,7 +280,7 @@ func TestDeleteSellOrder(t *testing.T) {
 			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteSellOrder(), deleteArgs)
 			require.Nil(t, err)
 			var v2 sdk.TxResponse
-			require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &v2))
+			require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &v2))
 			require.Equal(t, uint32(0x16), v2.Code)
 
 			// now, we can delete the sell order
@@ -288,7 +288,7 @@ func TestDeleteSellOrder(t *testing.T) {
 			deleteArgs = append(deleteArgs, tc.args...)
 			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteSellOrder(), deleteArgs)
 			require.Nil(t, err)
-			require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &v2))
+			require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &v2))
 			require.Equal(t, uint32(0x0), v2.Code)
 		})
 	}

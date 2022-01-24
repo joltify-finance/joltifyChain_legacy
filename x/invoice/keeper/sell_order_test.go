@@ -1,18 +1,21 @@
-package keeper
+package keeper_test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
-func createNSellOrder(keeper *Keeper, ctx sdk.Context, n int) []types.SellOrder {
+func createNSellOrder(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.SellOrder {
 	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
 	creator, _ := sdk.AccAddressFromBech32(creatorStr)
 	items := make([]types.SellOrder, n)
@@ -30,7 +33,7 @@ func createNSellOrder(keeper *Keeper, ctx sdk.Context, n int) []types.SellOrder 
 }
 
 func TestSellOrderGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNSellOrder(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetSellOrder(ctx, item.SellOrderID)
@@ -40,7 +43,7 @@ func TestSellOrderGet(t *testing.T) {
 }
 
 func TestSellOrderRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNSellOrder(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveSellOrder(ctx, item.SellOrderID)
@@ -50,13 +53,13 @@ func TestSellOrderRemove(t *testing.T) {
 }
 
 func TestSellOrderGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	items := createNSellOrder(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllSellOrder(ctx))
 }
 
 func TestRemoveExpireInvoice(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	creatorStr := "inv12k0nzax6dr3d9tssxne7ygmhdpj79rpx797a4k"
 	creator, _ := sdk.AccAddressFromBech32(creatorStr)
 	items := make([]types.SellOrder, 10)

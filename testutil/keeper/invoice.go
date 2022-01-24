@@ -13,6 +13,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
 )
 
@@ -61,7 +62,7 @@ func (tb testBank) SendEnabledCoins(ctx sdk.Context, coins ...sdk.Coin) error {
 	return nil
 }
 
-func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
+func SetupKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
@@ -77,7 +78,7 @@ func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
 		SendEnabled:        []*banktypes.SendEnabled{},
 	}
 	testBank := testBank{params: &params}
-	keeper := NewKeeper(
+	keeper := keeper.NewKeeper(
 		codec.NewProtoCodec(registry),
 		storeKey,
 		memStoreKey,

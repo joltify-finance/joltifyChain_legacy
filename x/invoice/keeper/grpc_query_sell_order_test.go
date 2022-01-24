@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -14,7 +15,7 @@ import (
 )
 
 func TestSellOrderQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNSellOrder(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -56,7 +57,7 @@ func TestSellOrderQuerySingle(t *testing.T) {
 }
 
 func TestSellOrderQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := keepertest.SetupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNSellOrder(keeper, ctx, 5)
 

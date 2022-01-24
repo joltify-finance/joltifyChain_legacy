@@ -1,29 +1,33 @@
-package keeper
+package keeper_test
 
 import (
 	"encoding/hex"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"testing"
+
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
+	"gitlab.com/joltify/joltifychain/x/invoice/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"gitlab.com/joltify/joltifychain/x/invoice/tools"
 	"gitlab.com/joltify/joltifychain/x/invoice/types"
+
+	keepertest "gitlab.com/joltify/joltifychain/testutil/keeper"
 )
 
-func newRootInvoice(t *testing.T, creator sdk.AccAddress, invoiceName string) (types.Invoice, sdk.Context, *Keeper) {
-	keeper, ctx := setupKeeper(t)
-	srv := NewMsgServerImpl(*keeper)
+func NewRootInvoice(t *testing.T, creator sdk.AccAddress, invoiceName string) (types.Invoice, sdk.Context, *keeper.Keeper) {
+	k, ctx := keepertest.SetupKeeper(t)
+	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
-	_, err := srv.CreateInvoice(wctx, &types.MsgCreateInvoice{Creator: creator, OrigOwner: creator, Name: invoiceName, Apy: "100", Amount: sdk.NewInt(100), Url: "testURL", IsRootOwner: true})
+	_, err := srv.CreateInvoice(wctx, &types.MsgCreateInvoice{Creator: creator.String(), OrigOwner: creator.String(), Name: invoiceName, Apy: "100", Amount: "100", Url: "testURL", IsRootOwner: true})
 	require.NoError(t, err)
 	invoiceIDByte, err := tools.GenHash([]string{creator.String(), creator.String(), invoiceName})
 	require.NoError(t, err)
 	invoiceID := hex.EncodeToString(invoiceIDByte)
-	rootInvoice, ok := keeper.GetInvoice(ctx, invoiceID)
+	rootInvoice, ok := k.GetInvoice(ctx, invoiceID)
 	require.True(t, ok)
-	return rootInvoice, ctx, keeper
+	return rootInvoice, ctx, k
 }
 
 func Test_msgServer_TransferInvoice(t *testing.T) {
@@ -86,7 +90,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 
 	// for the fist test, we test creating a new invoice from the root invoice
 	t.Run(tstruct.name, func(t *testing.T) {
-		rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
+		rootInvoice, ctx, keeper := NewRootInvoice(t, creator, invoiceName)
 		// we need to add the money in the locked amount before we can transfer
 		rootInvoice.InvoiceFinance.AmountLocked = sdk.NewInt(100)
 		sharesAllocation := make(map[string]sdk.Int)
@@ -120,7 +124,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 	// for the second test, we test creating two new invoice from the root invoice
 	t.Run(tstruct.name, func(t *testing.T) {
 		invoiceName := "two invoice test"
-		rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
+		rootInvoice, ctx, keeper := NewRootInvoice(t, creator, invoiceName)
 		// we need to transfer some money in locked
 		rootInvoice.InvoiceFinance.AmountLocked = sdk.NewInt(100)
 		sharesAllocation := make(map[string]sdk.Int)
@@ -170,7 +174,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 	// for the third test, we test creating two new invoices from the root invoice(user2,user3), and then, user4,user5 from user2's invoice and creator user5,user2 from user3
 	t.Run(tstruct.name, func(t *testing.T) {
 		invoiceName := "multiinvoicetest"
-		rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
+		rootInvoice, ctx, k := NewRootInvoice(t, creator, invoiceName)
 		// we need to top up the money in locked amount before we can transfer
 		rootInvoice.InvoiceFinance.AmountLocked = sdk.NewInt(100)
 		sharesAllocationLevel1 := make(map[string]sdk.Int)
@@ -191,14 +195,14 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 		tstruct.args.parentInvoice = &rootInvoice
 		tstruct.args.ctx = ctx
 		// now we run 3 invoice transfer
-		if err := keeper.TransferInvoice(tstruct.args.ctx, tstruct.args.claimedOwner, sharesAllocationLevel1, tstruct.args.parentInvoice); (err != nil) != tstruct.wantErr {
+		if err := k.TransferInvoice(tstruct.args.ctx, tstruct.args.claimedOwner, sharesAllocationLevel1, tstruct.args.parentInvoice); (err != nil) != tstruct.wantErr {
 			t.Errorf("TransferInvoice() error = %v, wantErr %v", err, tstruct.wantErr)
 		}
 
 		invoiceIDByte, err := tools.GenHash([]string{creator.String(), creator.String(), invoiceName})
 		require.NoError(t, err)
 		rootInvoiceID := hex.EncodeToString(invoiceIDByte)
-		rootInvoice, ok := keeper.GetInvoice(ctx, rootInvoiceID)
+		rootInvoice, ok := k.GetInvoice(ctx, rootInvoiceID)
 		require.True(t, ok)
 
 		var invoiceIDUser2ID, invoiceIDUser3ID string
@@ -211,9 +215,9 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 			}
 		}
 
-		invoiceUser02, ok := keeper.GetInvoice(ctx, invoiceIDUser2ID)
+		invoiceUser02, ok := k.GetInvoice(ctx, invoiceIDUser2ID)
 		require.True(t, ok)
-		invoiceUser03, ok := keeper.GetInvoice(ctx, invoiceIDUser3ID)
+		invoiceUser03, ok := k.GetInvoice(ctx, invoiceIDUser3ID)
 		require.True(t, ok)
 
 		var invoiceIDUser24ID, invoiceIDUser25ID string
@@ -229,10 +233,10 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 		invoiceUser02.InvoiceFinance.AmountLocked = sdk.NewInt(40)
 		invoiceUser03.InvoiceFinance.AmountLocked = sdk.NewInt(50)
 
-		if err := keeper.TransferInvoice(ctx, user2, sharesAllocationLevel21, &invoiceUser02); (err != nil) != tstruct.wantErr {
+		if err := k.TransferInvoice(ctx, user2, sharesAllocationLevel21, &invoiceUser02); (err != nil) != tstruct.wantErr {
 			t.Errorf("TransferInvoice() error = %v, wantErr %v", err, tstruct.wantErr)
 		}
-		if err := keeper.TransferInvoice(ctx, user3, sharesAllocationLevel22, &invoiceUser03); (err != nil) != tstruct.wantErr {
+		if err := k.TransferInvoice(ctx, user3, sharesAllocationLevel22, &invoiceUser03); (err != nil) != tstruct.wantErr {
 			t.Errorf("TransferInvoice() error = %v, wantErr %v", err, tstruct.wantErr)
 		}
 		var invoiceIDUser3CreatorID, invoiceIDUser35ID, invoiceIDUser32ID string
@@ -248,7 +252,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 			}
 		}
 
-		allInvoices := keeper.GetAllInvoice(ctx)
+		allInvoices := k.GetAllInvoice(ctx)
 		for _, el := range allInvoices {
 			switch el.InvoiceID {
 			case rootInvoiceID:
@@ -340,7 +344,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 				require.Equal(t, creator, el.GetInvoiceMembers()[0].InvoiceHolder)
 				require.Equal(t, sdk.NewInt(10), el.GetInvoiceMembers()[0].Share)
 			default:
-				//t.Error("there exist cases not handled")
+				// t.Error("there exist cases not handled")
 			}
 		}
 	})
@@ -348,7 +352,7 @@ func Test_msgServer_TransferInvoice(t *testing.T) {
 	// now we run the test that has enough found
 	t.Run(tstruct.name, func(t *testing.T) {
 		invoiceName := "invalid invoice"
-		rootInvoice, ctx, keeper := newRootInvoice(t, creator, invoiceName)
+		rootInvoice, ctx, keeper := NewRootInvoice(t, creator, invoiceName)
 		rootInvoice.InvoiceFinance.AmountLocked = sdk.NewInt(100)
 		sharesAllocationLevel1 := make(map[string]sdk.Int)
 		// the root only have 10 left

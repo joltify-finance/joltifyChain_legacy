@@ -47,7 +47,7 @@ func TestCreateInvoice(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})
@@ -103,8 +103,10 @@ func TestDeleteInvoice(t *testing.T) {
 	}
 	args := fields
 	args = append(args, common...)
-	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
+	ret, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
 	require.NoError(t, err)
+	var resp sdk.TxResponse
+	require.NoError(t, ctx.Codec.UnmarshalJSON(ret.Bytes(), &resp))
 
 	deleteArgsUser := []string{"xyz", "jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d"}
 	deleteArgs := append(deleteArgsUser, common...)
@@ -135,7 +137,8 @@ func TestDeleteInvoice(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
-				require.NoError(t, ctx.JSONMarshaler.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				fmt.Printf(">>>>>>>>%v\n", resp.RawLog)
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})
