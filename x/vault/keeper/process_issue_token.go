@@ -22,6 +22,7 @@ func (k msgServer) checkAddressInPool(pool []cryptotypes.Address, creator []byte
 func (k msgServer) getLastTwoPools(goCtx context.Context) ([]cryptotypes.Address, error) {
 	req := types.QueryLatestPoolRequest{}
 	lastTwoPools := make([]cryptotypes.Address, 2)
+
 	lastPoolsInfo, err := k.GetLastPool(goCtx, &req)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "fail to get the last pool address")

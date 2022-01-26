@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -382,7 +383,8 @@ func New(
 	parammanagerModule := parammanagermodule.NewAppModule(appCodec, app.ParammanagerKeeper)
 	err := parammanagerModule.LoadConfig(DefaultNodeHome)
 	if err != nil {
-		panic("fail to inint the params manager module")
+		err := fmt.Errorf("fail to init the paramet manager module %v", err)
+		panic(err)
 	}
 
 	app.VaultKeeper = *vaultmodulekeeper.NewKeeper(
