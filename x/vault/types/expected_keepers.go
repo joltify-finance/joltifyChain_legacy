@@ -44,7 +44,7 @@ type VaultStaking interface {
 	SetValidator(ctx sdk.Context, validator stakingtypes.Validator)
 	SetValidatorByPowerIndex(ctx sdk.Context, validator stakingtypes.Validator)
 	DeleteValidatorQueue(ctx sdk.Context, val stakingtypes.Validator)
-	AfterValidatorBonded(ctx sdk.Context, consAddr sdk.ConsAddress, valAddr sdk.ValAddress)
+	AfterValidatorBonded(ctx sdk.Context, consAddr sdk.ConsAddress, valAddr sdk.ValAddress) error
 	GetValidator(ctx sdk.Context, addr sdk.ValAddress) (validator stakingtypes.Validator, found bool)
 	InsertUnbondingValidatorQueue(ctx sdk.Context, val stakingtypes.Validator)
 	DeleteLastValidatorPower(ctx sdk.Context, operator sdk.ValAddress)

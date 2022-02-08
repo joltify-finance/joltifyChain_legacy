@@ -11,7 +11,6 @@ import (
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
-// fixme need to confirm which is correct
 func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
 	poolPubKey, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, pk)
 	if err != nil {

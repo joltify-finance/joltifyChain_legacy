@@ -2,6 +2,7 @@ package network
 
 import (
 	"fmt"
+	"io/ioutil"
 	"testing"
 	"time"
 
@@ -38,7 +39,13 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 	} else {
 		cfg = configs[0]
 	}
-	net := network.New(t, cfg)
+
+	baseDir, err := ioutil.TempDir(t.TempDir(), cfg.ChainID)
+
+	net, err := network.New(t, baseDir, cfg)
+	if err != nil {
+		panic(err)
+	}
 	t.Cleanup(net.Cleanup)
 	return net
 }
@@ -64,7 +71,7 @@ func DefaultConfig() network.Config {
 		},
 		GenesisState:    app.ModuleBasics.DefaultGenesis(encoding.Marshaler),
 		TimeoutCommit:   2 * time.Second,
-		ChainID:         "chain-" + tmrand.NewRand().Str(6),
+		ChainID:         "chain-" + tmrand.Str(6),
 		NumValidators:   1,
 		BondDenom:       sdk.DefaultBondDenom,
 		MinGasPrices:    fmt.Sprintf("0.000006%s", sdk.DefaultBondDenom),

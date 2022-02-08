@@ -27,6 +27,7 @@ import (
 func networkWithCreatePoolObjects(t *testing.T, n int, maxValidator uint32) (*network.Network, []*types.CreatePool) {
 	t.Helper()
 	cfg := network.DefaultConfig()
+	cfg.EnableLogging = true
 	state := types.GenesisState{}
 	stateStaking := stakingtypes.GenesisState{}
 
@@ -159,7 +160,6 @@ func TestListCreatePoolNotEnoughValidator(t *testing.T) {
 func TestListCreatePool(t *testing.T) {
 	setupBech32Prefix()
 	net, objs := networkWithCreatePoolObjects(t, 5, 3)
-
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
