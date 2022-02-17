@@ -2,8 +2,11 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
+
+	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
@@ -18,6 +21,16 @@ func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
 		return nil, err
 	}
 	return sdk.AccAddressFromHex(poolPubKey.Address().String())
+}
+
+func (k msgServer) setupAccount(ctx sdk.Context, address sdk.AccAddress) error {
+	qAcc := k.ak.GetAccount(ctx, address)
+	if qAcc != nil {
+		return errors.New("account existed")
+	}
+	defer telemetry.IncrCounter(1, "new", "account")
+	k.ak.SetAccount(ctx, k.ak.NewAccountWithAddress(ctx, address))
+	return nil
 }
 
 func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateCreatePool) (*types.MsgCreateCreatePoolResponse, error) {
@@ -89,6 +102,12 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 			Nodes:      []sdk.AccAddress{msg.Creator},
 		}
 		info.Proposal = []*types.PoolProposal{&pro}
+
+		err = k.setupAccount(ctx, addr)
+		if err != nil {
+			ctx.Logger().Info("account exist!!", "result")
+			return nil, err
+		}
 	}
 	createPool := types.CreatePool{
 		BlockHeight: msg.BlockHeight,

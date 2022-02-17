@@ -394,6 +394,7 @@ func New(
 		app.StakingKeeper,
 		app.BankKeeper,
 		app.GetSubspace(vaultmoduletypes.ModuleName),
+		app.AccountKeeper,
 	)
 	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper)
 

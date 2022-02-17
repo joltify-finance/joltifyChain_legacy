@@ -3,6 +3,7 @@ package types
 import (
 	stderr "errors"
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -11,7 +12,7 @@ import (
 )
 
 const (
-	DefaultBlockChurnInterval = 10
+	DefaultBlockChurnInterval = 20
 	DEFAULTPOWER              = 100
 	DEFAULTSTEP               = 100
 	DEFAULTRATIO              = 80
