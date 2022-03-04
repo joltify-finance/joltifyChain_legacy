@@ -23,7 +23,6 @@ type (
 		vaultStaking              types.VaultStaking
 		validatorStandbyPowerInfo map[string]int64
 		bankKeeper                types.BankKeeper
-		bankViewKeeper            types.ViewKeeper
 		paramstore                paramtypes.Subspace
 		ak                        banktypes.AccountKeeper
 		// this line is used by starport scaffolding # ibc/keeper/attribute
