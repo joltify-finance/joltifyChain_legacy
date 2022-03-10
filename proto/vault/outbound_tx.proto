@@ -1,0 +1,17 @@
+syntax = "proto3";
+package joltify.joltifychain.vault;
+
+option go_package = "gitlab.com/joltify/joltifychain/x/vault/types";
+
+import "gogoproto/gogo.proto";
+
+message address{
+  repeated bytes address= 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress",(gogoproto.nullable) = false ];
+
+}
+
+message OutboundTx {
+  string index = 1;
+  map<string, address> items=2 [(gogoproto.nullable) = false];
+}
+

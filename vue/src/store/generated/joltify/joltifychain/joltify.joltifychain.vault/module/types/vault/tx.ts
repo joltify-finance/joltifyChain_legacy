@@ -3,6 +3,17 @@ import { Reader, Writer } from 'protobufjs/minimal'
 
 export const protobufPackage = 'joltify.joltifychain.vault'
 
+export interface MsgCreateOutboundTx {
+  creator: Uint8Array
+  requestID: string
+  outboundTx: string
+  blockHeight: string
+}
+
+export interface MsgCreateOutboundTxResponse {
+  successful: boolean
+}
+
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateIssueToken {
   creator: Uint8Array
@@ -23,6 +34,165 @@ export interface MsgCreateCreatePool {
 
 export interface MsgCreateCreatePoolResponse {
   successful: boolean
+}
+
+const baseMsgCreateOutboundTx: object = { requestID: '', outboundTx: '', blockHeight: '' }
+
+export const MsgCreateOutboundTx = {
+  encode(message: MsgCreateOutboundTx, writer: Writer = Writer.create()): Writer {
+    if (message.creator.length !== 0) {
+      writer.uint32(10).bytes(message.creator)
+    }
+    if (message.requestID !== '') {
+      writer.uint32(18).string(message.requestID)
+    }
+    if (message.outboundTx !== '') {
+      writer.uint32(26).string(message.outboundTx)
+    }
+    if (message.blockHeight !== '') {
+      writer.uint32(34).string(message.blockHeight)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateOutboundTx {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseMsgCreateOutboundTx } as MsgCreateOutboundTx
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.bytes()
+          break
+        case 2:
+          message.requestID = reader.string()
+          break
+        case 3:
+          message.outboundTx = reader.string()
+          break
+        case 4:
+          message.blockHeight = reader.string()
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): MsgCreateOutboundTx {
+    const message = { ...baseMsgCreateOutboundTx } as MsgCreateOutboundTx
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = bytesFromBase64(object.creator)
+    }
+    if (object.requestID !== undefined && object.requestID !== null) {
+      message.requestID = String(object.requestID)
+    } else {
+      message.requestID = ''
+    }
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      message.outboundTx = String(object.outboundTx)
+    } else {
+      message.outboundTx = ''
+    }
+    if (object.blockHeight !== undefined && object.blockHeight !== null) {
+      message.blockHeight = String(object.blockHeight)
+    } else {
+      message.blockHeight = ''
+    }
+    return message
+  },
+
+  toJSON(message: MsgCreateOutboundTx): unknown {
+    const obj: any = {}
+    message.creator !== undefined && (obj.creator = base64FromBytes(message.creator !== undefined ? message.creator : new Uint8Array()))
+    message.requestID !== undefined && (obj.requestID = message.requestID)
+    message.outboundTx !== undefined && (obj.outboundTx = message.outboundTx)
+    message.blockHeight !== undefined && (obj.blockHeight = message.blockHeight)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<MsgCreateOutboundTx>): MsgCreateOutboundTx {
+    const message = { ...baseMsgCreateOutboundTx } as MsgCreateOutboundTx
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator
+    } else {
+      message.creator = new Uint8Array()
+    }
+    if (object.requestID !== undefined && object.requestID !== null) {
+      message.requestID = object.requestID
+    } else {
+      message.requestID = ''
+    }
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      message.outboundTx = object.outboundTx
+    } else {
+      message.outboundTx = ''
+    }
+    if (object.blockHeight !== undefined && object.blockHeight !== null) {
+      message.blockHeight = object.blockHeight
+    } else {
+      message.blockHeight = ''
+    }
+    return message
+  }
+}
+
+const baseMsgCreateOutboundTxResponse: object = { successful: false }
+
+export const MsgCreateOutboundTxResponse = {
+  encode(message: MsgCreateOutboundTxResponse, writer: Writer = Writer.create()): Writer {
+    if (message.successful === true) {
+      writer.uint32(8).bool(message.successful)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateOutboundTxResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseMsgCreateOutboundTxResponse } as MsgCreateOutboundTxResponse
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.successful = reader.bool()
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): MsgCreateOutboundTxResponse {
+    const message = { ...baseMsgCreateOutboundTxResponse } as MsgCreateOutboundTxResponse
+    if (object.successful !== undefined && object.successful !== null) {
+      message.successful = Boolean(object.successful)
+    } else {
+      message.successful = false
+    }
+    return message
+  },
+
+  toJSON(message: MsgCreateOutboundTxResponse): unknown {
+    const obj: any = {}
+    message.successful !== undefined && (obj.successful = message.successful)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<MsgCreateOutboundTxResponse>): MsgCreateOutboundTxResponse {
+    const message = { ...baseMsgCreateOutboundTxResponse } as MsgCreateOutboundTxResponse
+    if (object.successful !== undefined && object.successful !== null) {
+      message.successful = object.successful
+    } else {
+      message.successful = false
+    }
+    return message
+  }
 }
 
 const baseMsgCreateIssueToken: object = { index: '' }
@@ -324,6 +494,7 @@ export const MsgCreateCreatePoolResponse = {
 
 /** Msg defines the Msg service. */
 export interface Msg {
+  CreateOutboundTx(request: MsgCreateOutboundTx): Promise<MsgCreateOutboundTxResponse>
   /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse>
   CreateCreatePool(request: MsgCreateCreatePool): Promise<MsgCreateCreatePoolResponse>
@@ -334,6 +505,12 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
+  CreateOutboundTx(request: MsgCreateOutboundTx): Promise<MsgCreateOutboundTxResponse> {
+    const data = MsgCreateOutboundTx.encode(request).finish()
+    const promise = this.rpc.request('joltify.joltifychain.vault.Msg', 'CreateOutboundTx', data)
+    return promise.then((data) => MsgCreateOutboundTxResponse.decode(new Reader(data)))
+  }
+
   CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse> {
     const data = MsgCreateIssueToken.encode(request).finish()
     const promise = this.rpc.request('joltify.joltifychain.vault.Msg', 'CreateIssueToken', data)

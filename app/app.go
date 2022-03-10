@@ -396,7 +396,7 @@ func New(
 		app.GetSubspace(vaultmoduletypes.ModuleName),
 		app.AccountKeeper,
 	)
-	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper)
+	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 

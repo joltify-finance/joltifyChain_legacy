@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Params } from '../vault/staking'
+import { OutboundTx } from '../vault/outbound_tx'
 import { IssueToken } from '../vault/issue_token'
 import { CreatePool } from '../vault/create_pool'
 import { Writer, Reader } from 'protobufjs/minimal'
@@ -10,6 +11,7 @@ export const protobufPackage = 'joltify.joltifychain.vault'
 export interface GenesisState {
   /** params defines all the paramaters of related to deposit. */
   params: Params | undefined
+  outboundTxList: OutboundTx[]
   /** this line is used by starport scaffolding # genesis/proto/state */
   issueTokenList: IssueToken[]
   /** this line is used by starport scaffolding # genesis/proto/stateField */
@@ -23,6 +25,9 @@ export const GenesisState = {
   encode(message: GenesisState, writer: Writer = Writer.create()): Writer {
     if (message.params !== undefined) {
       Params.encode(message.params, writer.uint32(10).fork()).ldelim()
+    }
+    for (const v of message.outboundTxList) {
+      OutboundTx.encode(v!, writer.uint32(42).fork()).ldelim()
     }
     for (const v of message.issueTokenList) {
       IssueToken.encode(v!, writer.uint32(18).fork()).ldelim()
@@ -40,6 +45,7 @@ export const GenesisState = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input
     let end = length === undefined ? reader.len : reader.pos + length
     const message = { ...baseGenesisState } as GenesisState
+    message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
     while (reader.pos < end) {
@@ -47,6 +53,9 @@ export const GenesisState = {
       switch (tag >>> 3) {
         case 1:
           message.params = Params.decode(reader, reader.uint32())
+          break
+        case 5:
+          message.outboundTxList.push(OutboundTx.decode(reader, reader.uint32()))
           break
         case 2:
           message.issueTokenList.push(IssueToken.decode(reader, reader.uint32()))
@@ -67,12 +76,18 @@ export const GenesisState = {
 
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState
+    message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params)
     } else {
       message.params = undefined
+    }
+    if (object.outboundTxList !== undefined && object.outboundTxList !== null) {
+      for (const e of object.outboundTxList) {
+        message.outboundTxList.push(OutboundTx.fromJSON(e))
+      }
     }
     if (object.issueTokenList !== undefined && object.issueTokenList !== null) {
       for (const e of object.issueTokenList) {
@@ -95,6 +110,11 @@ export const GenesisState = {
   toJSON(message: GenesisState): unknown {
     const obj: any = {}
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined)
+    if (message.outboundTxList) {
+      obj.outboundTxList = message.outboundTxList.map((e) => (e ? OutboundTx.toJSON(e) : undefined))
+    } else {
+      obj.outboundTxList = []
+    }
     if (message.issueTokenList) {
       obj.issueTokenList = message.issueTokenList.map((e) => (e ? IssueToken.toJSON(e) : undefined))
     } else {
@@ -111,12 +131,18 @@ export const GenesisState = {
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState
+    message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params)
     } else {
       message.params = undefined
+    }
+    if (object.outboundTxList !== undefined && object.outboundTxList !== null) {
+      for (const e of object.outboundTxList) {
+        message.outboundTxList.push(OutboundTx.fromPartial(e))
+      }
     }
     if (object.issueTokenList !== undefined && object.issueTokenList !== null) {
       for (const e of object.issueTokenList) {

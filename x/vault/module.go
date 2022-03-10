@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -101,12 +102,18 @@ type AppModule struct {
 	AppModuleBasic
 
 	keeper keeper.Keeper
+
+	accountKeeper authkeeper.AccountKeeper
+	bankKeeper    types.BankKeeper
 }
 
-func NewAppModule(cdc codec.BinaryCodec, keeper keeper.Keeper) AppModule {
+func NewAppModule(cdc codec.BinaryCodec, keeper keeper.Keeper, accountKeeper authkeeper.AccountKeeper,
+	bankKeeper types.BankKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
+		accountKeeper:  accountKeeper,
+		bankKeeper:     bankKeeper,
 	}
 }
 

@@ -209,5 +209,34 @@ export class Api extends HttpClient {
             format: "json",
             ...params,
         });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryOutboundTxAll
+         * @summary Queries a list of OutboundTx items.
+         * @request GET:/joltify/joltifychain/vault/outbound_tx
+         */
+        this.queryOutboundTxAll = (query, params = {}) => this.request({
+            path: `/joltify/joltifychain/vault/outbound_tx`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryOutboundTx
+         * @summary Queries a OutboundTx by index.
+         * @request GET:/joltify/joltifychain/vault/outbound_tx/{requestID}
+         */
+        this.queryOutboundTx = (requestID, params = {}) => this.request({
+            path: `/joltify/joltifychain/vault/outbound_tx/${requestID}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
     }
 }

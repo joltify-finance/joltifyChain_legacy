@@ -2,9 +2,11 @@
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateOutboundTx } from "./types/vault/tx";
 import { MsgCreateCreatePool } from "./types/vault/tx";
 import { MsgCreateIssueToken } from "./types/vault/tx";
 const types = [
+    ["/joltify.joltifychain.vault.MsgCreateOutboundTx", MsgCreateOutboundTx],
     ["/joltify.joltifychain.vault.MsgCreateCreatePool", MsgCreateCreatePool],
     ["/joltify.joltifychain.vault.MsgCreateIssueToken", MsgCreateIssueToken],
 ];
@@ -27,6 +29,7 @@ const txClient = async (wallet, { addr: addr } = { addr: "http://localhost:26657
     const { address } = (await wallet.getAccounts())[0];
     return {
         signAndBroadcast: (msgs, { fee, memo } = { fee: defaultFee, memo: "" }) => client.signAndBroadcast(address, msgs, fee, memo),
+        msgCreateOutboundTx: (data) => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateOutboundTx", value: MsgCreateOutboundTx.fromPartial(data) }),
         msgCreateCreatePool: (data) => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateCreatePool", value: MsgCreateCreatePool.fromPartial(data) }),
         msgCreateIssueToken: (data) => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateIssueToken", value: MsgCreateIssueToken.fromPartial(data) }),
     };

@@ -99,6 +99,15 @@ export interface VaultMsgCreateIssueTokenResponse {
   successful?: boolean;
 }
 
+export interface VaultMsgCreateOutboundTxResponse {
+  successful?: boolean;
+}
+
+export interface VaultOutboundTx {
+  index?: string;
+  items?: Record<string, Vaultaddress>;
+}
+
 export interface VaultPoolProposal {
   poolPubKey?: string;
 
@@ -137,6 +146,21 @@ export interface VaultQueryAllIssueTokenResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface VaultQueryAllOutboundTxResponse {
+  outboundTx?: VaultOutboundTx[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface VaultQueryGetCreatePoolResponse {
   CreatePool?: VaultPoolProposal;
 }
@@ -145,8 +169,16 @@ export interface VaultQueryGetIssueTokenResponse {
   IssueToken?: VaultIssueToken;
 }
 
+export interface VaultQueryGetOutboundTxResponse {
+  outboundTx?: VaultOutboundTx;
+}
+
 export interface VaultQueryLastPoolResponse {
   pools?: VaultpoolInfo[];
+}
+
+export interface Vaultaddress {
+  address?: string[];
 }
 
 export interface VaultpoolInfo {
@@ -455,6 +487,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryIssueToken = (index: string, params: RequestParams = {}) =>
     this.request<VaultQueryGetIssueTokenResponse, RpcStatus>({
       path: `/joltify/joltifychain/vault/issueToken/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryOutboundTxAll
+   * @summary Queries a list of OutboundTx items.
+   * @request GET:/joltify/joltifychain/vault/outbound_tx
+   */
+  queryOutboundTxAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<VaultQueryAllOutboundTxResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/outbound_tx`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryOutboundTx
+   * @summary Queries a OutboundTx by index.
+   * @request GET:/joltify/joltifychain/vault/outbound_tx/{requestID}
+   */
+  queryOutboundTx = (requestID: string, params: RequestParams = {}) =>
+    this.request<VaultQueryGetOutboundTxResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/outbound_tx/${requestID}`,
       method: "GET",
       format: "json",
       ...params,

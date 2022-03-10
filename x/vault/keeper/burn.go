@@ -26,7 +26,7 @@ func (k Keeper) BurnTokens(ctx sdk.Context, addr sdk.AccAddress) error {
 		}
 	}
 
-	if coins.Empty(){
+	if coins.Empty() {
 		return nil
 	}
 	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coins)
@@ -36,8 +36,8 @@ func (k Keeper) BurnTokens(ctx sdk.Context, addr sdk.AccAddress) error {
 	}
 	defer func() {
 		tick := html.UnescapeString("&#" + "128293" + ";")
-		msg:=tick+" burn"
-		k.Logger(ctx).Info(msg, "coins",coins.String(), "address",addr.String())
+		msg := tick + " burn"
+		k.Logger(ctx).Info(msg, "coins", coins.String(), "address", addr.String())
 	}()
 	return k.bankKeeper.BurnCoins(ctx, types.ModuleName, coins)
 }

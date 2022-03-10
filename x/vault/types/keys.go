@@ -30,5 +30,5 @@ const (
 )
 
 const (
-	IssueTokenKey= "IssueToken-value-"
+	IssueTokenKey = "IssueToken-value-"
 )

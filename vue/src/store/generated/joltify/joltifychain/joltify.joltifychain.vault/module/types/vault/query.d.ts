@@ -1,8 +1,22 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import { IssueToken } from '../vault/issue_token';
+import { OutboundTx } from '../vault/outbound_tx';
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { IssueToken } from '../vault/issue_token';
 import { PoolProposal } from '../vault/create_pool';
 export declare const protobufPackage = "joltify.joltifychain.vault";
+export interface QueryGetOutboundTxRequest {
+    requestID: string;
+}
+export interface QueryGetOutboundTxResponse {
+    outboundTx: OutboundTx | undefined;
+}
+export interface QueryAllOutboundTxRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllOutboundTxResponse {
+    outboundTx: OutboundTx[];
+    pagination: PageResponse | undefined;
+}
 /** this line is used by starport scaffolding # 3 */
 export interface QueryGetIssueTokenRequest {
     index: string;
@@ -40,6 +54,34 @@ export interface QueryAllCreatePoolResponse {
     CreatePool: PoolProposal[];
     pagination: PageResponse | undefined;
 }
+export declare const QueryGetOutboundTxRequest: {
+    encode(message: QueryGetOutboundTxRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetOutboundTxRequest;
+    fromJSON(object: any): QueryGetOutboundTxRequest;
+    toJSON(message: QueryGetOutboundTxRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetOutboundTxRequest>): QueryGetOutboundTxRequest;
+};
+export declare const QueryGetOutboundTxResponse: {
+    encode(message: QueryGetOutboundTxResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetOutboundTxResponse;
+    fromJSON(object: any): QueryGetOutboundTxResponse;
+    toJSON(message: QueryGetOutboundTxResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetOutboundTxResponse>): QueryGetOutboundTxResponse;
+};
+export declare const QueryAllOutboundTxRequest: {
+    encode(message: QueryAllOutboundTxRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllOutboundTxRequest;
+    fromJSON(object: any): QueryAllOutboundTxRequest;
+    toJSON(message: QueryAllOutboundTxRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllOutboundTxRequest>): QueryAllOutboundTxRequest;
+};
+export declare const QueryAllOutboundTxResponse: {
+    encode(message: QueryAllOutboundTxResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllOutboundTxResponse;
+    fromJSON(object: any): QueryAllOutboundTxResponse;
+    toJSON(message: QueryAllOutboundTxResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllOutboundTxResponse>): QueryAllOutboundTxResponse;
+};
 export declare const QueryGetIssueTokenRequest: {
     encode(message: QueryGetIssueTokenRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetIssueTokenRequest;
@@ -119,6 +161,10 @@ export declare const QueryAllCreatePoolResponse: {
 };
 /** Query defines the gRPC querier service. */
 export interface Query {
+    /** Queries a OutboundTx by index. */
+    OutboundTx(request: QueryGetOutboundTxRequest): Promise<QueryGetOutboundTxResponse>;
+    /** Queries a list of OutboundTx items. */
+    OutboundTxAll(request: QueryAllOutboundTxRequest): Promise<QueryAllOutboundTxResponse>;
     /** Queries a issueToken by index. */
     IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>;
     /** Queries a list of issueToken items. */
@@ -133,6 +179,8 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
+    OutboundTx(request: QueryGetOutboundTxRequest): Promise<QueryGetOutboundTxResponse>;
+    OutboundTxAll(request: QueryAllOutboundTxRequest): Promise<QueryAllOutboundTxResponse>;
     IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>;
     IssueTokenAll(request: QueryAllIssueTokenRequest): Promise<QueryAllIssueTokenResponse>;
     CreatePool(request: QueryGetCreatePoolRequest): Promise<QueryGetCreatePoolResponse>;

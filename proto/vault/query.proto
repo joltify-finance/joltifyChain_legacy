@@ -3,7 +3,9 @@ package joltify.joltifychain.vault;
 
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "vault/outbound_tx.proto";
 // this line is used by starport scaffolding # 1
+import "gogoproto/gogo.proto";
 import "vault/issue_token.proto";
 import "vault/create_pool.proto";
 
@@ -11,7 +13,17 @@ option go_package = "gitlab.com/joltify/joltifychain/x/vault/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+    // Queries a OutboundTx by index.
+	rpc OutboundTx(QueryGetOutboundTxRequest) returns (QueryGetOutboundTxResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/outbound_tx/{requestID}";
+	}
+
+	// Queries a list of OutboundTx items.
+	rpc OutboundTxAll(QueryAllOutboundTxRequest) returns (QueryAllOutboundTxResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/outbound_tx";
+	}
+
+// this line is used by starport scaffolding # 2
 
 	// Queries a issueToken by index.
 	rpc IssueToken(QueryGetIssueTokenRequest) returns (QueryGetIssueTokenResponse) {
@@ -39,6 +51,24 @@ service Query {
 		option (google.api.http).get = "/joltify/joltifyChain/vault/getLastPool";
 	}
 
+}
+
+message QueryGetOutboundTxRequest {
+	  string requestID = 1;
+
+}
+
+message QueryGetOutboundTxResponse {
+	OutboundTx outboundTx = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllOutboundTxRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllOutboundTxResponse {
+	repeated OutboundTx outboundTx = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

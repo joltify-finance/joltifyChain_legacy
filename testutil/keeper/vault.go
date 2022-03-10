@@ -151,6 +151,7 @@ func SetupVaultKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	testVaultStaking := testVaultStaking{}
 
 	app := simapp.Setup(false)
+
 	registry := codectypes.NewInterfaceRegistry()
 	keeper := keeper.NewKeeper(
 		codec.NewProtoCodec(registry),
@@ -159,6 +160,7 @@ func SetupVaultKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		testVaultStaking,
 		app.BankKeeper,
 		types2.NewSubspace(app.AppCodec(), app.LegacyAmino(), storeKey, memStoreKey, types.ModuleName),
+		app.AccountKeeper,
 	)
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
 	return keeper, ctx

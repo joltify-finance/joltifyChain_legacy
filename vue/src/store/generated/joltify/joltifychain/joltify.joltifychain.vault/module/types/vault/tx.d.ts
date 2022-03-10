@@ -1,5 +1,14 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "joltify.joltifychain.vault";
+export interface MsgCreateOutboundTx {
+    creator: Uint8Array;
+    requestID: string;
+    outboundTx: string;
+    blockHeight: string;
+}
+export interface MsgCreateOutboundTxResponse {
+    successful: boolean;
+}
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateIssueToken {
     creator: Uint8Array;
@@ -18,6 +27,20 @@ export interface MsgCreateCreatePool {
 export interface MsgCreateCreatePoolResponse {
     successful: boolean;
 }
+export declare const MsgCreateOutboundTx: {
+    encode(message: MsgCreateOutboundTx, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateOutboundTx;
+    fromJSON(object: any): MsgCreateOutboundTx;
+    toJSON(message: MsgCreateOutboundTx): unknown;
+    fromPartial(object: DeepPartial<MsgCreateOutboundTx>): MsgCreateOutboundTx;
+};
+export declare const MsgCreateOutboundTxResponse: {
+    encode(message: MsgCreateOutboundTxResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateOutboundTxResponse;
+    fromJSON(object: any): MsgCreateOutboundTxResponse;
+    toJSON(message: MsgCreateOutboundTxResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreateOutboundTxResponse>): MsgCreateOutboundTxResponse;
+};
 export declare const MsgCreateIssueToken: {
     encode(message: MsgCreateIssueToken, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateIssueToken;
@@ -48,6 +71,7 @@ export declare const MsgCreateCreatePoolResponse: {
 };
 /** Msg defines the Msg service. */
 export interface Msg {
+    CreateOutboundTx(request: MsgCreateOutboundTx): Promise<MsgCreateOutboundTxResponse>;
     /** this line is used by starport scaffolding # proto/tx/rpc */
     CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse>;
     CreateCreatePool(request: MsgCreateCreatePool): Promise<MsgCreateCreatePoolResponse>;
@@ -55,6 +79,7 @@ export interface Msg {
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    CreateOutboundTx(request: MsgCreateOutboundTx): Promise<MsgCreateOutboundTxResponse>;
     CreateIssueToken(request: MsgCreateIssueToken): Promise<MsgCreateIssueTokenResponse>;
     CreateCreatePool(request: MsgCreateCreatePool): Promise<MsgCreateCreatePoolResponse>;
 }

@@ -1,9 +1,239 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal';
-import { IssueToken } from '../vault/issue_token';
+import { OutboundTx } from '../vault/outbound_tx';
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { IssueToken } from '../vault/issue_token';
 import { PoolProposal } from '../vault/create_pool';
 export const protobufPackage = 'joltify.joltifychain.vault';
+const baseQueryGetOutboundTxRequest = { requestID: '' };
+export const QueryGetOutboundTxRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.requestID !== '') {
+            writer.uint32(10).string(message.requestID);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetOutboundTxRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.requestID = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetOutboundTxRequest };
+        if (object.requestID !== undefined && object.requestID !== null) {
+            message.requestID = String(object.requestID);
+        }
+        else {
+            message.requestID = '';
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.requestID !== undefined && (obj.requestID = message.requestID);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetOutboundTxRequest };
+        if (object.requestID !== undefined && object.requestID !== null) {
+            message.requestID = object.requestID;
+        }
+        else {
+            message.requestID = '';
+        }
+        return message;
+    }
+};
+const baseQueryGetOutboundTxResponse = {};
+export const QueryGetOutboundTxResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.outboundTx !== undefined) {
+            OutboundTx.encode(message.outboundTx, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetOutboundTxResponse };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.outboundTx = OutboundTx.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetOutboundTxResponse };
+        if (object.outboundTx !== undefined && object.outboundTx !== null) {
+            message.outboundTx = OutboundTx.fromJSON(object.outboundTx);
+        }
+        else {
+            message.outboundTx = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.outboundTx !== undefined && (obj.outboundTx = message.outboundTx ? OutboundTx.toJSON(message.outboundTx) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetOutboundTxResponse };
+        if (object.outboundTx !== undefined && object.outboundTx !== null) {
+            message.outboundTx = OutboundTx.fromPartial(object.outboundTx);
+        }
+        else {
+            message.outboundTx = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllOutboundTxRequest = {};
+export const QueryAllOutboundTxRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllOutboundTxRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllOutboundTxRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllOutboundTxRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllOutboundTxResponse = {};
+export const QueryAllOutboundTxResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.outboundTx) {
+            OutboundTx.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllOutboundTxResponse };
+        message.outboundTx = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.outboundTx.push(OutboundTx.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllOutboundTxResponse };
+        message.outboundTx = [];
+        if (object.outboundTx !== undefined && object.outboundTx !== null) {
+            for (const e of object.outboundTx) {
+                message.outboundTx.push(OutboundTx.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.outboundTx) {
+            obj.outboundTx = message.outboundTx.map((e) => (e ? OutboundTx.toJSON(e) : undefined));
+        }
+        else {
+            obj.outboundTx = [];
+        }
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllOutboundTxResponse };
+        message.outboundTx = [];
+        if (object.outboundTx !== undefined && object.outboundTx !== null) {
+            for (const e of object.outboundTx) {
+                message.outboundTx.push(OutboundTx.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
 const baseQueryGetIssueTokenRequest = { index: '' };
 export const QueryGetIssueTokenRequest = {
     encode(message, writer = Writer.create()) {
@@ -643,6 +873,16 @@ export const QueryAllCreatePoolResponse = {
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
+    }
+    OutboundTx(request) {
+        const data = QueryGetOutboundTxRequest.encode(request).finish();
+        const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'OutboundTx', data);
+        return promise.then((data) => QueryGetOutboundTxResponse.decode(new Reader(data)));
+    }
+    OutboundTxAll(request) {
+        const data = QueryAllOutboundTxRequest.encode(request).finish();
+        const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'OutboundTxAll', data);
+        return promise.then((data) => QueryAllOutboundTxResponse.decode(new Reader(data)));
     }
     IssueToken(request) {
         const data = QueryGetIssueTokenRequest.encode(request).finish();

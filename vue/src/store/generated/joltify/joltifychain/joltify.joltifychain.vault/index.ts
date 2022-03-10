@@ -5,11 +5,13 @@ import { SpVuexError } from '@starport/vuex'
 import { PoolProposal } from "./module/types/vault/create_pool"
 import { CreatePool } from "./module/types/vault/create_pool"
 import { IssueToken } from "./module/types/vault/issue_token"
+import { address } from "./module/types/vault/outbound_tx"
+import { OutboundTx } from "./module/types/vault/outbound_tx"
 import { poolInfo } from "./module/types/vault/query"
 import { Params } from "./module/types/vault/staking"
 
 
-export { PoolProposal, CreatePool, IssueToken, poolInfo, Params };
+export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, poolInfo, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -47,6 +49,8 @@ function getStructure(template) {
 
 const getDefaultState = () => {
 	return {
+				OutboundTx: {},
+				OutboundTxAll: {},
 				IssueToken: {},
 				IssueTokenAll: {},
 				CreatePool: {},
@@ -57,6 +61,8 @@ const getDefaultState = () => {
 						PoolProposal: getStructure(PoolProposal.fromPartial({})),
 						CreatePool: getStructure(CreatePool.fromPartial({})),
 						IssueToken: getStructure(IssueToken.fromPartial({})),
+						address: getStructure(address.fromPartial({})),
+						OutboundTx: getStructure(OutboundTx.fromPartial({})),
 						poolInfo: getStructure(poolInfo.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
@@ -87,6 +93,18 @@ export default {
 		}
 	},
 	getters: {
+				getOutboundTx: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.OutboundTx[JSON.stringify(params)] ?? {}
+		},
+				getOutboundTxAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.OutboundTxAll[JSON.stringify(params)] ?? {}
+		},
 				getIssueToken: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
 						(<any> params).query=null
@@ -150,6 +168,54 @@ export default {
 				}
 			})
 		},
+		
+		
+		
+		 		
+		
+		
+		async QueryOutboundTx({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryOutboundTx( key.requestID)).data
+				
+					
+				commit('QUERY', { query: 'OutboundTx', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOutboundTx', payload: { options: { all }, params: {...key},query }})
+				return getters['getOutboundTx']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new SpVuexError('QueryClient:QueryOutboundTx', 'API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryOutboundTxAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryOutboundTxAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryOutboundTxAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'OutboundTxAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOutboundTxAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getOutboundTxAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new SpVuexError('QueryClient:QueryOutboundTxAll', 'API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
 		
 		
 		
@@ -273,6 +339,21 @@ export default {
 		},
 		
 		
+		async sendMsgCreateOutboundTx({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateOutboundTx(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Send', 'Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -304,6 +385,20 @@ export default {
 			}
 		},
 		
+		async MsgCreateOutboundTx({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateOutboundTx(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Create', 'Could not create message: ' + e.message)
+					
+				}
+			}
+		},
 		async MsgCreateCreatePool({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)

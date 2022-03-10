@@ -1,10 +1,28 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal'
-import { IssueToken } from '../vault/issue_token'
+import { OutboundTx } from '../vault/outbound_tx'
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
+import { IssueToken } from '../vault/issue_token'
 import { PoolProposal } from '../vault/create_pool'
 
 export const protobufPackage = 'joltify.joltifychain.vault'
+
+export interface QueryGetOutboundTxRequest {
+  requestID: string
+}
+
+export interface QueryGetOutboundTxResponse {
+  outboundTx: OutboundTx | undefined
+}
+
+export interface QueryAllOutboundTxRequest {
+  pagination: PageRequest | undefined
+}
+
+export interface QueryAllOutboundTxResponse {
+  outboundTx: OutboundTx[]
+  pagination: PageResponse | undefined
+}
 
 /** this line is used by starport scaffolding # 3 */
 export interface QueryGetIssueTokenRequest {
@@ -52,6 +70,250 @@ export interface QueryLatestPoolRequest {
 export interface QueryAllCreatePoolResponse {
   CreatePool: PoolProposal[]
   pagination: PageResponse | undefined
+}
+
+const baseQueryGetOutboundTxRequest: object = { requestID: '' }
+
+export const QueryGetOutboundTxRequest = {
+  encode(message: QueryGetOutboundTxRequest, writer: Writer = Writer.create()): Writer {
+    if (message.requestID !== '') {
+      writer.uint32(10).string(message.requestID)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetOutboundTxRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetOutboundTxRequest } as QueryGetOutboundTxRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.requestID = reader.string()
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetOutboundTxRequest {
+    const message = { ...baseQueryGetOutboundTxRequest } as QueryGetOutboundTxRequest
+    if (object.requestID !== undefined && object.requestID !== null) {
+      message.requestID = String(object.requestID)
+    } else {
+      message.requestID = ''
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetOutboundTxRequest): unknown {
+    const obj: any = {}
+    message.requestID !== undefined && (obj.requestID = message.requestID)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetOutboundTxRequest>): QueryGetOutboundTxRequest {
+    const message = { ...baseQueryGetOutboundTxRequest } as QueryGetOutboundTxRequest
+    if (object.requestID !== undefined && object.requestID !== null) {
+      message.requestID = object.requestID
+    } else {
+      message.requestID = ''
+    }
+    return message
+  }
+}
+
+const baseQueryGetOutboundTxResponse: object = {}
+
+export const QueryGetOutboundTxResponse = {
+  encode(message: QueryGetOutboundTxResponse, writer: Writer = Writer.create()): Writer {
+    if (message.outboundTx !== undefined) {
+      OutboundTx.encode(message.outboundTx, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetOutboundTxResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetOutboundTxResponse } as QueryGetOutboundTxResponse
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.outboundTx = OutboundTx.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetOutboundTxResponse {
+    const message = { ...baseQueryGetOutboundTxResponse } as QueryGetOutboundTxResponse
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      message.outboundTx = OutboundTx.fromJSON(object.outboundTx)
+    } else {
+      message.outboundTx = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetOutboundTxResponse): unknown {
+    const obj: any = {}
+    message.outboundTx !== undefined && (obj.outboundTx = message.outboundTx ? OutboundTx.toJSON(message.outboundTx) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetOutboundTxResponse>): QueryGetOutboundTxResponse {
+    const message = { ...baseQueryGetOutboundTxResponse } as QueryGetOutboundTxResponse
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      message.outboundTx = OutboundTx.fromPartial(object.outboundTx)
+    } else {
+      message.outboundTx = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllOutboundTxRequest: object = {}
+
+export const QueryAllOutboundTxRequest = {
+  encode(message: QueryAllOutboundTxRequest, writer: Writer = Writer.create()): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllOutboundTxRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllOutboundTxRequest } as QueryAllOutboundTxRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllOutboundTxRequest {
+    const message = { ...baseQueryAllOutboundTxRequest } as QueryAllOutboundTxRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllOutboundTxRequest): unknown {
+    const obj: any = {}
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllOutboundTxRequest>): QueryAllOutboundTxRequest {
+    const message = { ...baseQueryAllOutboundTxRequest } as QueryAllOutboundTxRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllOutboundTxResponse: object = {}
+
+export const QueryAllOutboundTxResponse = {
+  encode(message: QueryAllOutboundTxResponse, writer: Writer = Writer.create()): Writer {
+    for (const v of message.outboundTx) {
+      OutboundTx.encode(v!, writer.uint32(10).fork()).ldelim()
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllOutboundTxResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllOutboundTxResponse } as QueryAllOutboundTxResponse
+    message.outboundTx = []
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.outboundTx.push(OutboundTx.decode(reader, reader.uint32()))
+          break
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllOutboundTxResponse {
+    const message = { ...baseQueryAllOutboundTxResponse } as QueryAllOutboundTxResponse
+    message.outboundTx = []
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      for (const e of object.outboundTx) {
+        message.outboundTx.push(OutboundTx.fromJSON(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllOutboundTxResponse): unknown {
+    const obj: any = {}
+    if (message.outboundTx) {
+      obj.outboundTx = message.outboundTx.map((e) => (e ? OutboundTx.toJSON(e) : undefined))
+    } else {
+      obj.outboundTx = []
+    }
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllOutboundTxResponse>): QueryAllOutboundTxResponse {
+    const message = { ...baseQueryAllOutboundTxResponse } as QueryAllOutboundTxResponse
+    message.outboundTx = []
+    if (object.outboundTx !== undefined && object.outboundTx !== null) {
+      for (const e of object.outboundTx) {
+        message.outboundTx.push(OutboundTx.fromPartial(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
 }
 
 const baseQueryGetIssueTokenRequest: object = { index: '' }
@@ -733,6 +995,10 @@ export const QueryAllCreatePoolResponse = {
 
 /** Query defines the gRPC querier service. */
 export interface Query {
+  /** Queries a OutboundTx by index. */
+  OutboundTx(request: QueryGetOutboundTxRequest): Promise<QueryGetOutboundTxResponse>
+  /** Queries a list of OutboundTx items. */
+  OutboundTxAll(request: QueryAllOutboundTxRequest): Promise<QueryAllOutboundTxResponse>
   /** Queries a issueToken by index. */
   IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse>
   /** Queries a list of issueToken items. */
@@ -750,6 +1016,18 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
+  OutboundTx(request: QueryGetOutboundTxRequest): Promise<QueryGetOutboundTxResponse> {
+    const data = QueryGetOutboundTxRequest.encode(request).finish()
+    const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'OutboundTx', data)
+    return promise.then((data) => QueryGetOutboundTxResponse.decode(new Reader(data)))
+  }
+
+  OutboundTxAll(request: QueryAllOutboundTxRequest): Promise<QueryAllOutboundTxResponse> {
+    const data = QueryAllOutboundTxRequest.encode(request).finish()
+    const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'OutboundTxAll', data)
+    return promise.then((data) => QueryAllOutboundTxResponse.decode(new Reader(data)))
+  }
+
   IssueToken(request: QueryGetIssueTokenRequest): Promise<QueryGetIssueTokenResponse> {
     const data = QueryGetIssueTokenRequest.encode(request).finish()
     const promise = this.rpc.request('joltify.joltifychain.vault.Query', 'IssueToken', data)

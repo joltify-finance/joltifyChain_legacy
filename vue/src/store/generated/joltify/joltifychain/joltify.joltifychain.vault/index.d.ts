@@ -1,8 +1,10 @@
 import { PoolProposal } from "./module/types/vault/create_pool";
 import { CreatePool } from "./module/types/vault/create_pool";
 import { IssueToken } from "./module/types/vault/issue_token";
+import { address } from "./module/types/vault/outbound_tx";
+import { OutboundTx } from "./module/types/vault/outbound_tx";
 import { poolInfo } from "./module/types/vault/query";
 import { Params } from "./module/types/vault/staking";
-export { PoolProposal, CreatePool, IssueToken, poolInfo, Params };
+export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, poolInfo, Params };
 declare const _default;
 export default _default;

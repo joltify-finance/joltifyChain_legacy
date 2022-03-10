@@ -1,4 +1,5 @@
 import { Params } from '../vault/staking';
+import { OutboundTx } from '../vault/outbound_tx';
 import { IssueToken } from '../vault/issue_token';
 import { CreatePool } from '../vault/create_pool';
 import { Writer, Reader } from 'protobufjs/minimal';
@@ -7,6 +8,7 @@ export declare const protobufPackage = "joltify.joltifychain.vault";
 export interface GenesisState {
     /** params defines all the paramaters of related to deposit. */
     params: Params | undefined;
+    outboundTxList: OutboundTx[];
     /** this line is used by starport scaffolding # genesis/proto/state */
     issueTokenList: IssueToken[];
     /** this line is used by starport scaffolding # genesis/proto/stateField */
