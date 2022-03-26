@@ -35,7 +35,7 @@ func (k msgServer) CreateOutboundTx(goCtx context.Context, msg *types.MsgCreateO
 	}
 	if !isValidator {
 		ctx.Logger().Info("not a validator update tss message", "result", "false")
-		return &types.MsgCreateOutboundTxResponse{Successful: false}, nil
+		return &types.MsgCreateOutboundTxResponse{Successful: false}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintln("not a validator"))
 	}
 
 	index := crypto.Keccak256Hash([]byte(msg.RequestID), []byte(msg.BlockHeight))
@@ -47,7 +47,7 @@ func (k msgServer) CreateOutboundTx(goCtx context.Context, msg *types.MsgCreateO
 			for _, el := range address.Address {
 				if el.Equals(msg.Creator) {
 					ctx.Logger().Info("the creator has already submitted the outbound tx")
-					return &types.MsgCreateOutboundTxResponse{Successful: false}, nil
+					return &types.MsgCreateOutboundTxResponse{Successful: false},  sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintln("already submitted"))
 				}
 			}
 			address.Address = append(address.Address, msg.Creator)
