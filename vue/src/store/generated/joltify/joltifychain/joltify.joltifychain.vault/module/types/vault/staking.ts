@@ -5,18 +5,18 @@ import { util, configure, Writer, Reader } from 'protobufjs/minimal'
 export const protobufPackage = 'joltify.joltifychain.vault'
 
 export interface Params {
-  blockChurnInterval: number
+  block_churn_interval: number
   power: number
   step: number
-  candidateRatio: string
+  candidate_ratio: string
 }
 
-const baseParams: object = { blockChurnInterval: 0, power: 0, step: 0, candidateRatio: '' }
+const baseParams: object = { block_churn_interval: 0, power: 0, step: 0, candidate_ratio: '' }
 
 export const Params = {
   encode(message: Params, writer: Writer = Writer.create()): Writer {
-    if (message.blockChurnInterval !== 0) {
-      writer.uint32(8).int64(message.blockChurnInterval)
+    if (message.block_churn_interval !== 0) {
+      writer.uint32(8).int64(message.block_churn_interval)
     }
     if (message.power !== 0) {
       writer.uint32(16).int64(message.power)
@@ -24,8 +24,8 @@ export const Params = {
     if (message.step !== 0) {
       writer.uint32(24).int64(message.step)
     }
-    if (message.candidateRatio !== '') {
-      writer.uint32(34).string(message.candidateRatio)
+    if (message.candidate_ratio !== '') {
+      writer.uint32(34).string(message.candidate_ratio)
     }
     return writer
   },
@@ -38,7 +38,7 @@ export const Params = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.blockChurnInterval = longToNumber(reader.int64() as Long)
+          message.block_churn_interval = longToNumber(reader.int64() as Long)
           break
         case 2:
           message.power = longToNumber(reader.int64() as Long)
@@ -47,7 +47,7 @@ export const Params = {
           message.step = longToNumber(reader.int64() as Long)
           break
         case 4:
-          message.candidateRatio = reader.string()
+          message.candidate_ratio = reader.string()
           break
         default:
           reader.skipType(tag & 7)
@@ -59,10 +59,10 @@ export const Params = {
 
   fromJSON(object: any): Params {
     const message = { ...baseParams } as Params
-    if (object.blockChurnInterval !== undefined && object.blockChurnInterval !== null) {
-      message.blockChurnInterval = Number(object.blockChurnInterval)
+    if (object.block_churn_interval !== undefined && object.block_churn_interval !== null) {
+      message.block_churn_interval = Number(object.block_churn_interval)
     } else {
-      message.blockChurnInterval = 0
+      message.block_churn_interval = 0
     }
     if (object.power !== undefined && object.power !== null) {
       message.power = Number(object.power)
@@ -74,29 +74,29 @@ export const Params = {
     } else {
       message.step = 0
     }
-    if (object.candidateRatio !== undefined && object.candidateRatio !== null) {
-      message.candidateRatio = String(object.candidateRatio)
+    if (object.candidate_ratio !== undefined && object.candidate_ratio !== null) {
+      message.candidate_ratio = String(object.candidate_ratio)
     } else {
-      message.candidateRatio = ''
+      message.candidate_ratio = ''
     }
     return message
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {}
-    message.blockChurnInterval !== undefined && (obj.blockChurnInterval = message.blockChurnInterval)
+    message.block_churn_interval !== undefined && (obj.block_churn_interval = message.block_churn_interval)
     message.power !== undefined && (obj.power = message.power)
     message.step !== undefined && (obj.step = message.step)
-    message.candidateRatio !== undefined && (obj.candidateRatio = message.candidateRatio)
+    message.candidate_ratio !== undefined && (obj.candidate_ratio = message.candidate_ratio)
     return obj
   },
 
   fromPartial(object: DeepPartial<Params>): Params {
     const message = { ...baseParams } as Params
-    if (object.blockChurnInterval !== undefined && object.blockChurnInterval !== null) {
-      message.blockChurnInterval = object.blockChurnInterval
+    if (object.block_churn_interval !== undefined && object.block_churn_interval !== null) {
+      message.block_churn_interval = object.block_churn_interval
     } else {
-      message.blockChurnInterval = 0
+      message.block_churn_interval = 0
     }
     if (object.power !== undefined && object.power !== null) {
       message.power = object.power
@@ -108,10 +108,10 @@ export const Params = {
     } else {
       message.step = 0
     }
-    if (object.candidateRatio !== undefined && object.candidateRatio !== null) {
-      message.candidateRatio = object.candidateRatio
+    if (object.candidate_ratio !== undefined && object.candidate_ratio !== null) {
+      message.candidate_ratio = object.candidate_ratio
     } else {
-      message.candidateRatio = ''
+      message.candidate_ratio = ''
     }
     return message
   }

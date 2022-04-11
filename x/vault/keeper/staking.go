@@ -318,8 +318,8 @@ func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 
 	//blockHeight := k.GetParams(ctx).BlockChurnInterval
 	//if ctx.BlockHeight() > 10 && ctx.BlockHeight()%blockHeight == 0 {
-	if ctx.BlockHeight() == 40 || ctx.BlockHeight() == 20 || ctx.BlockHeight() == 60 {
-		return k.BlockValidatorUpdates(ctx)
-	}
+	//if ctx.BlockHeight() == 40 || ctx.BlockHeight() == 20 || ctx.BlockHeight() == 60 {
+	//		return k.BlockValidatorUpdates(ctx)
+	//	}
 	return []abci.ValidatorUpdate{}
 }

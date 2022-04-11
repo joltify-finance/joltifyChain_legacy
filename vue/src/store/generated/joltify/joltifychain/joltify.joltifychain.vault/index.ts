@@ -1,6 +1,4 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
-// @ts-ignore
-import { SpVuexError } from '@starport/vuex'
 
 import { PoolProposal } from "./module/types/vault/create_pool"
 import { CreatePool } from "./module/types/vault/create_pool"
@@ -164,7 +162,7 @@ export default {
 					const sub=JSON.parse(subscription)
 					await dispatch(sub.action, sub.payload)
 				}catch(e) {
-					throw new SpVuexError('Subscriptions: ' + e.message)
+					throw new Error('Subscriptions: ' + e.message)
 				}
 			})
 		},
@@ -185,7 +183,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOutboundTx', payload: { options: { all }, params: {...key},query }})
 				return getters['getOutboundTx']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryOutboundTx', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryOutboundTx API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -211,7 +209,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryOutboundTxAll', payload: { options: { all }, params: {...key},query }})
 				return getters['getOutboundTxAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryOutboundTxAll', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryOutboundTxAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -233,7 +231,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryIssueToken', payload: { options: { all }, params: {...key},query }})
 				return getters['getIssueToken']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryIssueToken', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryIssueToken API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -259,7 +257,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryIssueTokenAll', payload: { options: { all }, params: {...key},query }})
 				return getters['getIssueTokenAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryIssueTokenAll', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryIssueTokenAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -281,7 +279,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCreatePool', payload: { options: { all }, params: {...key},query }})
 				return getters['getCreatePool']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryCreatePool', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryCreatePool API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -307,7 +305,7 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCreatePoolAll', payload: { options: { all }, params: {...key},query }})
 				return getters['getCreatePoolAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryCreatePoolAll', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryCreatePoolAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -333,27 +331,12 @@ export default {
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetLastPool', payload: { options: { all }, params: {...key},query }})
 				return getters['getGetLastPool']( { params: {...key}, query}) ?? {}
 			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryGetLastPool', 'API Node Unavailable. Could not perform query: ' + e.message)
+				throw new Error('QueryClient:QueryGetLastPool API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
 		
 		
-		async sendMsgCreateOutboundTx({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateOutboundTx(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Init', 'Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Send', 'Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -363,9 +346,24 @@ export default {
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateCreatePool:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgCreateCreatePool:Send', 'Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreateOutboundTx({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateOutboundTx(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateOutboundTx:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -378,27 +376,13 @@ export default {
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateIssueToken:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgCreateIssueToken:Send', 'Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateIssueToken:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgCreateOutboundTx({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateOutboundTx(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Init', 'Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new SpVuexError('TxClient:MsgCreateOutboundTx:Create', 'Could not create message: ' + e.message)
-					
-				}
-			}
-		},
 		async MsgCreateCreatePool({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -406,10 +390,22 @@ export default {
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateCreatePool:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgCreateCreatePool:Create', 'Could not create message: ' + e.message)
-					
+					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateOutboundTx({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateOutboundTx(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateOutboundTx:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -420,10 +416,9 @@ export default {
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgCreateIssueToken:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgCreateIssueToken:Create', 'Could not create message: ' + e.message)
-					
+					throw new Error('TxClient:MsgCreateIssueToken:Create Could not create message: ' + e.message)
 				}
 			}
 		},

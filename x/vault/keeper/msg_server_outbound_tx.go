@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"github.com/ethereum/go-ethereum/crypto"
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -38,16 +37,14 @@ func (k msgServer) CreateOutboundTx(goCtx context.Context, msg *types.MsgCreateO
 		return &types.MsgCreateOutboundTxResponse{Successful: false}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintln("not a validator"))
 	}
 
-	index := crypto.Keccak256Hash([]byte(msg.RequestID), []byte(msg.BlockHeight))
-
-	info, isFound := k.GetOutboundTx(ctx, index.Hex())
+	info, isFound := k.GetOutboundTx(ctx, msg.RequestID)
 	if isFound {
 		address, ok := info.Items[msg.OutboundTx]
 		if ok {
 			for _, el := range address.Address {
 				if el.Equals(msg.Creator) {
 					ctx.Logger().Info("the creator has already submitted the outbound tx")
-					return &types.MsgCreateOutboundTxResponse{Successful: false},  sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintln("already submitted"))
+					return &types.MsgCreateOutboundTxResponse{Successful: false}, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintln("already submitted"))
 				}
 			}
 			address.Address = append(address.Address, msg.Creator)
@@ -70,7 +67,7 @@ func (k msgServer) CreateOutboundTx(goCtx context.Context, msg *types.MsgCreateO
 	items := make(map[string]types.Address)
 	items[msg.OutboundTx] = types.Address{Address: []sdk.AccAddress{msg.Creator}}
 	newInfo := types.OutboundTx{
-		Index: index.Hex(),
+		Index: msg.RequestID,
 		Items: items,
 	}
 
