@@ -1,7 +1,7 @@
 package simapp
 
 import (
-	cosmoscmd2 "github.com/tendermint/starport/starport/pkg/cosmoscmd"
+	cosmoscmd3 "github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -22,7 +22,7 @@ func New(dir string) cosmoscmd.App {
 
 	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
 
-	a := app.New(logger, db, nil, true, map[int64]bool{}, dir, 0, cosmoscmd2.EncodingConfig(encoding),
+	a := app.New(logger, db, nil, true, map[int64]bool{}, dir, 0, cosmoscmd3.EncodingConfig(encoding),
 		simapp.EmptyAppOptions{})
 	// InitChain updates deliverState which is required when app.NewContext is called
 	a.InitChain(abci.RequestInitChain{

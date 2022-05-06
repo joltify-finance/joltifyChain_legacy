@@ -3,24 +3,23 @@ module gitlab.com/joltify/joltifychain
 go 1.16
 
 require (
-	github.com/cosmos/cosmos-sdk v0.44.5
-	github.com/cosmos/ibc-go/v2 v2.0.2
+	github.com/cosmos/cosmos-sdk v0.45.3
+	github.com/cosmos/ibc-go/v2 v2.0.3
 	github.com/ethereum/go-ethereum v1.9.25
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hashicorp/go-version v1.2.0
+	github.com/ignite-hq/cli v0.20.0
 	github.com/spf13/cast v1.4.1
-	github.com/spf13/cobra v1.3.0
-	github.com/stretchr/testify v1.7.0
+	github.com/spf13/cobra v1.4.0
+	github.com/stretchr/testify v1.7.1
 	github.com/tendermint/spm v0.1.8
-	github.com/tendermint/starport v0.19.2
-	github.com/tendermint/tendermint v0.34.16
+	github.com/tendermint/spn v0.1.1-0.20220407154406-5cfd1bf28150
+	github.com/tendermint/tendermint v0.34.19
 	github.com/tendermint/tm-db v0.6.6
 	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.27.1

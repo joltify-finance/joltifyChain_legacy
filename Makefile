@@ -15,8 +15,8 @@ BUILD_FLAGS := -ldflags '$(ldflags)'
 all: install
 
 install: go.sum
-	@echo "--> Installing joltifyChaind(version $(VERSION))"
-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
+	@echo "--> Installing joltifychaind(version $(VERSION))"
+	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/joltifychaind
 
 protoc:
 	@echo "--->build the protoc"
@@ -24,7 +24,7 @@ protoc:
 
 build: go.sum
 	@echo "--> build joltifyChaind"
-	@go build -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
+	@go build -mod=readonly $(BUILD_FLAGS) ./cmd/joltifychaind
 
 go.sum: go.mod
 	@echo "--> Ensure dependencies have not been modified"

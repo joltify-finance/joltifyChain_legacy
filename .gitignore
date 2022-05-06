@@ -2,3 +2,6 @@ vue/node_modules
 vue/dist
 release/
 .idea/
+config.yml
+config.yml.bak
+coverage.out
