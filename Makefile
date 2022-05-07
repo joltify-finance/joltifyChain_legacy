@@ -16,7 +16,7 @@ all: install
 
 install: go.sum
 	@echo "--> Installing joltifychaind(version $(VERSION))"
-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/joltifychaind
+	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
 
 protoc:
 	@echo "--->build the protoc"
@@ -24,7 +24,7 @@ protoc:
 
 build: go.sum
 	@echo "--> build joltifyChaind"
-	@go build -mod=readonly $(BUILD_FLAGS) ./cmd/joltifychaind
+	@go build -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
 
 go.sum: go.mod
 	@echo "--> Ensure dependencies have not been modified"

@@ -112,7 +112,7 @@ import (
 
 const (
 	AccountAddressPrefix = "jolt"
-	Name                 = "joltifychain"
+	Name                 = "joltifyChain"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
