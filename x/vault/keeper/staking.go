@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
-	costypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/distribution/types"
 	vaultmoduletypes "gitlab.com/joltify/joltifychain/x/vault/types"
 
@@ -263,7 +262,7 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context) []abci.ValidatorUpdate {
 			sdk.NewAttribute(stakingtypes.AttributeKeyDelegator, dvPair.DelegatorAddress),
 		)
 
-		typedEvent, err := costypes.ParseTypedEvent(abci.Event(newEvent))
+		typedEvent, err := sdk.ParseTypedEvent(abci.Event(newEvent))
 		if err != nil {
 			k.Logger(ctx).Error("fail to parse the event")
 		}
@@ -303,7 +302,7 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context) []abci.ValidatorUpdate {
 			sdk.NewAttribute(stakingtypes.AttributeKeyDstValidator, dvvTriplet.ValidatorDstAddress),
 		)
 
-		typedEvent, err := costypes.ParseTypedEvent(abci.Event(newEvent))
+		typedEvent, err := sdk.ParseTypedEvent(abci.Event(newEvent))
 		if err != nil {
 			k.Logger(ctx).Error("fail to parse the event")
 		}
@@ -318,9 +317,18 @@ func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 
 	blockHeight := k.GetParams(ctx).BlockChurnInterval
 	fmt.Printf(">>>block height is %v\n", blockHeight)
-	if ctx.BlockHeight() > 10 && ctx.BlockHeight()%100 == 0 {
-		//if ctx.BlockHeight() == 40 || ctx.BlockHeight() == 20 || ctx.BlockHeight() == 60 {
-		return k.BlockValidatorUpdates(ctx)
+	//if ctx.BlockHeight() > 10 && ctx.BlockHeight()%100 == 0 {
+	if ctx.BlockHeight() == 40 || ctx.BlockHeight() == 20 || ctx.BlockHeight() == 60 {
+
+		ctx.EventManager().EmitEvents(sdk.Events{
+			sdk.NewEvent(
+				vaultmoduletypes.EventTypeCompleteChurn,
+				sdk.NewAttribute(vaultmoduletypes.AttributeValidators, "joltify_churn"),
+			),
+		})
+
+		ret := k.BlockValidatorUpdates(ctx)
+		return ret
 	}
 	return []abci.ValidatorUpdate{}
 }
