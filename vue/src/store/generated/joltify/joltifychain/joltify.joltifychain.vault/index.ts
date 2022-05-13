@@ -5,11 +5,13 @@ import { CreatePool } from "./module/types/vault/create_pool"
 import { IssueToken } from "./module/types/vault/issue_token"
 import { address } from "./module/types/vault/outbound_tx"
 import { OutboundTx } from "./module/types/vault/outbound_tx"
+import { validator } from "./module/types/vault/query"
+import { validators } from "./module/types/vault/query"
 import { poolInfo } from "./module/types/vault/query"
 import { Params } from "./module/types/vault/staking"
 
 
-export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, poolInfo, Params };
+export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, validator, validators, poolInfo, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -49,6 +51,8 @@ const getDefaultState = () => {
 	return {
 				OutboundTx: {},
 				OutboundTxAll: {},
+				GetValidators: {},
+				GetAllValidators: {},
 				IssueToken: {},
 				IssueTokenAll: {},
 				CreatePool: {},
@@ -61,6 +65,8 @@ const getDefaultState = () => {
 						IssueToken: getStructure(IssueToken.fromPartial({})),
 						address: getStructure(address.fromPartial({})),
 						OutboundTx: getStructure(OutboundTx.fromPartial({})),
+						validator: getStructure(validator.fromPartial({})),
+						validators: getStructure(validators.fromPartial({})),
 						poolInfo: getStructure(poolInfo.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
@@ -102,6 +108,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.OutboundTxAll[JSON.stringify(params)] ?? {}
+		},
+				getGetValidators: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.GetValidators[JSON.stringify(params)] ?? {}
+		},
+				getGetAllValidators: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.GetAllValidators[JSON.stringify(params)] ?? {}
 		},
 				getIssueToken: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
@@ -210,6 +228,58 @@ export default {
 				return getters['getOutboundTxAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryOutboundTxAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryGetValidators({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryGetValidators(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryGetValidators({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'GetValidators', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetValidators', payload: { options: { all }, params: {...key},query }})
+				return getters['getGetValidators']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryGetValidators API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryGetAllValidators({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryGetAllValidators(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryGetAllValidators({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'GetAllValidators', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryGetAllValidators', payload: { options: { all }, params: {...key},query }})
+				return getters['getGetAllValidators']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryGetAllValidators API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
@@ -337,18 +407,18 @@ export default {
 		},
 		
 		
-		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateIssueToken({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateCreatePool(value)
+				const msg = await txClient.msgCreateIssueToken(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateIssueToken:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -367,32 +437,32 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateIssueToken({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateIssueToken(value)
+				const msg = await txClient.msgCreateCreatePool(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateIssueToken:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgCreateCreatePool({ rootGetters }, { value }) {
+		async MsgCreateIssueToken({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateCreatePool(value)
+				const msg = await txClient.msgCreateIssueToken(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateIssueToken:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -409,16 +479,16 @@ export default {
 				}
 			}
 		},
-		async MsgCreateIssueToken({ rootGetters }, { value }) {
+		async MsgCreateCreatePool({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateIssueToken(value)
+				const msg = await txClient.msgCreateCreatePool(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateIssueToken:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateIssueToken:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
 				}
 			}
 		},

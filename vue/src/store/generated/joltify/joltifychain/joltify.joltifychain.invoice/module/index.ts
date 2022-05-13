@@ -4,18 +4,18 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgDeleteInvoice } from "./types/invoice/tx";
-import { MsgDeleteSellOrder } from "./types/invoice/tx";
 import { MsgCreateInvoice } from "./types/invoice/tx";
 import { MsgCreatePlaceOrder } from "./types/invoice/tx";
+import { MsgDeleteInvoice } from "./types/invoice/tx";
+import { MsgDeleteSellOrder } from "./types/invoice/tx";
 import { MsgCreateSellOrder } from "./types/invoice/tx";
 
 
 const types = [
-  ["/joltify.joltifychain.invoice.MsgDeleteInvoice", MsgDeleteInvoice],
-  ["/joltify.joltifychain.invoice.MsgDeleteSellOrder", MsgDeleteSellOrder],
   ["/joltify.joltifychain.invoice.MsgCreateInvoice", MsgCreateInvoice],
   ["/joltify.joltifychain.invoice.MsgCreatePlaceOrder", MsgCreatePlaceOrder],
+  ["/joltify.joltifychain.invoice.MsgDeleteInvoice", MsgDeleteInvoice],
+  ["/joltify.joltifychain.invoice.MsgDeleteSellOrder", MsgDeleteSellOrder],
   ["/joltify.joltifychain.invoice.MsgCreateSellOrder", MsgCreateSellOrder],
   
 ];
@@ -49,10 +49,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgDeleteInvoice: (data: MsgDeleteInvoice): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteInvoice", value: MsgDeleteInvoice.fromPartial( data ) }),
-    msgDeleteSellOrder: (data: MsgDeleteSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteSellOrder", value: MsgDeleteSellOrder.fromPartial( data ) }),
     msgCreateInvoice: (data: MsgCreateInvoice): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateInvoice", value: MsgCreateInvoice.fromPartial( data ) }),
     msgCreatePlaceOrder: (data: MsgCreatePlaceOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreatePlaceOrder", value: MsgCreatePlaceOrder.fromPartial( data ) }),
+    msgDeleteInvoice: (data: MsgDeleteInvoice): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteInvoice", value: MsgDeleteInvoice.fromPartial( data ) }),
+    msgDeleteSellOrder: (data: MsgDeleteSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgDeleteSellOrder", value: MsgDeleteSellOrder.fromPartial( data ) }),
     msgCreateSellOrder: (data: MsgCreateSellOrder): EncodeObject => ({ typeUrl: "/joltify.joltifychain.invoice.MsgCreateSellOrder", value: MsgCreateSellOrder.fromPartial( data ) }),
     
   };

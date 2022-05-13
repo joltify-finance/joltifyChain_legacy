@@ -165,6 +165,21 @@ export interface VaultQueryAllOutboundTxResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface VaultQueryAllValidatorsResponse {
+  all_validators?: Vaultvalidators[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface VaultQueryGetCreatePoolResponse {
   CreatePool?: VaultPoolProposal;
 }
@@ -175,6 +190,10 @@ export interface VaultQueryGetIssueTokenResponse {
 
 export interface VaultQueryGetOutboundTxResponse {
   outboundTx?: VaultOutboundTx;
+}
+
+export interface VaultQueryGetValidatorsResponse {
+  validators?: Vaultvalidators;
 }
 
 export interface VaultQueryLastPoolResponse {
@@ -188,6 +207,21 @@ export interface Vaultaddress {
 export interface VaultpoolInfo {
   BlockHeight?: string;
   CreatePool?: VaultPoolProposal;
+}
+
+export interface Vaultvalidator {
+  /** @format byte */
+  pubkey?: string;
+
+  /** @format int64 */
+  power?: string;
+}
+
+export interface Vaultvalidators {
+  all_validators?: Vaultvalidator[];
+
+  /** @format int64 */
+  height?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -458,6 +492,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
+   * @name QueryGetValidators
+   * @summary Queries a list of GetValidators items.
+   * @request GET:/joltify/joltifychain/vault/get_validators
+   */
+  queryGetValidators = (query?: { height?: string }, params: RequestParams = {}) =>
+    this.request<VaultQueryGetValidatorsResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/get_validators`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
    * @name QueryIssueTokenAll
    * @summary Queries a list of issueToken items.
    * @request GET:/joltify/joltifychain/vault/issueToken
@@ -534,6 +585,32 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     this.request<VaultQueryGetOutboundTxResponse, RpcStatus>({
       path: `/joltify/joltifychain/vault/outbound_tx/${requestID}`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryGetAllValidators
+   * @summary Queries a list of GetValidators items.
+   * @request GET:/joltify/joltifychain/vault/validators
+   */
+  queryGetAllValidators = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<VaultQueryAllValidatorsResponse, RpcStatus>({
+      path: `/joltify/joltifychain/vault/validators`,
+      method: "GET",
+      query: query,
       format: "json",
       ...params,
     });

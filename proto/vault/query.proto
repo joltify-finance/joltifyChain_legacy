@@ -23,6 +23,16 @@ service Query {
 		option (google.api.http).get = "/joltify/joltifychain/vault/outbound_tx";
 	}
 
+// Queries a list of GetValidators items.
+	rpc GetValidators(QueryGetValidatorsRequest) returns (QueryGetValidatorsResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/get_validators";
+	}
+
+	// Queries a list of GetValidators items.
+	rpc GetAllValidators(QueryAllValidatorsRequest) returns (QueryAllValidatorsResponse) {
+		option (google.api.http).get = "/joltify/joltifychain/vault/validators";
+	}
+
 // this line is used by starport scaffolding # 2
 
 	// Queries a issueToken by index.
@@ -68,6 +78,34 @@ message QueryAllOutboundTxRequest {
 
 message QueryAllOutboundTxResponse {
 	repeated OutboundTx outboundTx = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+message validator{
+	bytes pubkey = 1;
+	int64 power = 2;
+}
+
+message validators {
+	repeated validator all_validators=1;
+	int64 height = 2;
+}
+
+message QueryGetValidatorsRequest {
+	string height = 1;
+}
+
+message QueryGetValidatorsResponse {
+   validators validators = 1;
+}
+
+message QueryAllValidatorsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllValidatorsResponse{
+	repeated validators all_validators = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

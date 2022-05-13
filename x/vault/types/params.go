@@ -13,8 +13,8 @@ import (
 
 const (
 	DefaultBlockChurnInterval = 20
-	DEFAULTPOWER              = 100
-	DEFAULTSTEP               = 100
+	DEFAULTPOWER              = 1000
+	DEFAULTSTEP               = 10
 	DEFAULTRATIO              = 80
 )
 

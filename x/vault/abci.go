@@ -13,6 +13,5 @@ func BeginBlock(ctx sdk.Context, keeper keeper.Keeper) {
 func EndBlock(ctx sdk.Context, keeper keeper.Keeper) []abci.ValidatorUpdate {
 	//we burn the token after the first churn of the network
 	keeper.ProcessAccountLeft(ctx)
-
 	return keeper.NewUpdate(ctx)
 }
