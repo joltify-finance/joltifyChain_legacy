@@ -18,3 +18,13 @@ message Params{
     (gogoproto.nullable)   = false
   ];
 }
+
+message Validator{
+  bytes pubkey = 1;
+  int64 power = 2;
+}
+
+message Validators {
+  repeated Validator all_validators=1;
+  int64 height = 2;
+}

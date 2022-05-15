@@ -1,6 +1,8 @@
 package vault
 
 import (
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"gitlab.com/joltify/joltifychain/x/vault/keeper"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
@@ -22,6 +24,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the createPool
 	for _, elem := range genState.CreatePoolList {
 		k.SetCreatePool(ctx, *elem)
+	}
+
+	// set all the validator info
+	for _, elem := range genState.ValidatorinfoList {
+		k.SetValidators(ctx, strconv.FormatInt(elem.Height, 10), *elem)
 	}
 
 	k.SetParams(ctx, genState.Params)
@@ -47,6 +54,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	for _, elem := range createPoolList {
 		elem := elem
 		genesis.CreatePoolList = append(genesis.CreatePoolList, &elem)
+	}
+
+	// Get all validator info
+	validators := k.DoGetAllValidators(ctx)
+	for _, elem := range validators {
+		elem := elem
+		genesis.ValidatorinfoList = append(genesis.ValidatorinfoList, &elem)
 	}
 
 	// this line is used by starport scaffolding # ibc/genesis/export

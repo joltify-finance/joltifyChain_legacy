@@ -8,6 +8,7 @@ import "vault/outbound_tx.proto";
 import "gogoproto/gogo.proto";
 import "vault/issue_token.proto";
 import "vault/create_pool.proto";
+import "vault/staking.proto";
 
 option go_package = "gitlab.com/joltify/joltifychain/x/vault/types";
 
@@ -82,22 +83,13 @@ message QueryAllOutboundTxResponse {
 }
 
 
-message validator{
-	bytes pubkey = 1;
-	int64 power = 2;
-}
-
-message validators {
-	repeated validator all_validators=1;
-	int64 height = 2;
-}
 
 message QueryGetValidatorsRequest {
 	string height = 1;
 }
 
 message QueryGetValidatorsResponse {
-   validators validators = 1;
+   Validators validators = 1;
 }
 
 message QueryAllValidatorsRequest {
@@ -105,7 +97,7 @@ message QueryAllValidatorsRequest {
 }
 
 message QueryAllValidatorsResponse{
-	repeated validators all_validators = 1;
+	repeated Validators all_validators = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

@@ -13,12 +13,12 @@ option go_package = "gitlab.com/joltify/joltifychain/x/vault/types";
 // GenesisState defines the vault module's genesis state.
 message GenesisState {
 	// params defines all the paramaters of related to deposit.
-	 Params params = 1 [(gogoproto.nullable) = false];
+	Params params = 1 [(gogoproto.nullable) = false];
 	repeated OutboundTx outboundTxList = 5 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
-		repeated IssueToken issueTokenList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
-		repeated CreatePool createPoolList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
+	repeated IssueToken issueTokenList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
+	repeated CreatePool createPoolList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
     // this line is used by starport scaffolding # ibc/genesis/proto
-
+	repeated Validators  validatorinfoList = 6;
 	bool exported = 4;
 }
