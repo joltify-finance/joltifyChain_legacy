@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	v3 "gitlab.com/joltify/joltifychain/upgrade/v3"
 	"io"
 	"net/http"
 	"os"
@@ -248,6 +249,8 @@ type App struct {
 
 	// sm is the simulation manager
 	sm *module.SimulationManager
+
+	configurator module.Configurator
 }
 
 // New returns a reference to an initialized blockchain app
@@ -564,6 +567,8 @@ func New(
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
 	app.mm.RegisterServices(module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter()))
 
+	app.configurator = module.NewConfigurator(app.AppCodec(), app.MsgServiceRouter(), app.GRPCQueryRouter())
+	app.setupUpgredeHandlers()
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	app.sm = module.NewSimulationManager(
 		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts),
@@ -784,4 +789,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 // SimulationManager implements the SimulationApp interface
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+func (app *App) setupUpgredeHandlers() {
+	app.UpgradeKeeper.SetUpgradeHandler(v3.UpgradeName, v3.CreateUpgradeHandler(app.mm, app.configurator, &app.VaultKeeper))
 }
