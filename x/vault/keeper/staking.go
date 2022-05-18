@@ -140,9 +140,9 @@ func (k Keeper) updateValidators(ctx sdk.Context) error {
 func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 	defer telemetry.ModuleMeasureSince(vaulttypes.ModuleName, time.Now(), telemetry.MetricKeyEndBlocker)
 
-	blockHeight := k.GetParams(ctx).BlockChurnInterval
-	if ctx.BlockHeight() > 10 && ctx.BlockHeight()%blockHeight == 0 {
-
+	//blockHeight := k.GetParams(ctx).BlockChurnInterval
+	//if ctx.BlockHeight() > 10 && ctx.BlockHeight()%blockHeight == 0 {
+	if ctx.BlockHeight() == 20 || ctx.BlockHeight() == 40 || ctx.BlockHeight() == 60 {
 		ctx.EventManager().EmitEvents(sdk.Events{
 			sdk.NewEvent(
 				vaulttypes.EventTypeCompleteChurn,

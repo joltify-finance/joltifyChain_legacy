@@ -12,11 +12,11 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=joltifyChain \
 
 BUILD_FLAGS := -ldflags '$(ldflags)'
 
-all: install
+all: build
 
 install: go.sum
 	@echo "--> Installing joltifychaind(version $(VERSION))"
-	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
+	go build -mod=readonly $(BUILD_FLAGS) ./cmd/joltifyChaind
 
 protoc:
 	@echo "--->build the protoc"
