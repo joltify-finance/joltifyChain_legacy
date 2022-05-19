@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -102,9 +101,6 @@ import (
 	invoicemodule "gitlab.com/joltify/joltifychain/x/invoice"
 	invoicemodulekeeper "gitlab.com/joltify/joltifychain/x/invoice/keeper"
 	invoicemoduletypes "gitlab.com/joltify/joltifychain/x/invoice/types"
-	parammanagermodule "gitlab.com/joltify/joltifychain/x/parammanager"
-	parammanagermodulekeeper "gitlab.com/joltify/joltifychain/x/parammanager/keeper"
-	parammanagermoduletypes "gitlab.com/joltify/joltifychain/x/parammanager/types"
 	vaultmodule "gitlab.com/joltify/joltifychain/x/vault"
 	vaultmodulekeeper "gitlab.com/joltify/joltifychain/x/vault/keeper"
 	vaultmoduletypes "gitlab.com/joltify/joltifychain/x/vault/types"
@@ -162,7 +158,6 @@ var (
 		monitoringp.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		vaultmodule.AppModuleBasic{},
-		parammanagermodule.AppModuleBasic{},
 		invoicemodule.AppModuleBasic{},
 	)
 
@@ -240,9 +235,8 @@ type App struct {
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	//this is the joltifyChain module
-	VaultKeeper        vaultmodulekeeper.Keeper
-	ParammanagerKeeper parammanagermodulekeeper.Keeper
-	InvoiceKeeper      invoicemodulekeeper.Keeper
+	VaultKeeper   vaultmodulekeeper.Keeper
+	InvoiceKeeper invoicemodulekeeper.Keeper
 	// mm is the module manager
 	mm *module.Manager
 
@@ -279,7 +273,6 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		//this is joltifychaion modules
 		vaultmoduletypes.StoreKey,
-		parammanagermoduletypes.StoreKey,
 		invoicemoduletypes.StoreKey,
 
 		// this line is used by starport scaffolding # stargate/app/storeKey
@@ -361,18 +354,6 @@ func New(
 		app.BankKeeper,
 	)
 	invoiceModule := invoicemodule.NewAppModule(appCodec, app.InvoiceKeeper)
-	app.ParammanagerKeeper = *parammanagermodulekeeper.NewKeeper(
-		appCodec,
-		keys[parammanagermoduletypes.StoreKey],
-		keys[parammanagermoduletypes.MemStoreKey],
-		app.MintKeeper,
-	)
-	parammanagerModule := parammanagermodule.NewAppModule(appCodec, app.ParammanagerKeeper)
-	err := parammanagerModule.LoadConfig(DefaultNodeHome)
-	if err != nil {
-		err := fmt.Errorf("fail to init the paramet manager module %v", err)
-		panic(err)
-	}
 
 	app.VaultKeeper = *vaultmodulekeeper.NewKeeper(
 		appCodec,
@@ -470,7 +451,6 @@ func New(
 		monitoringModule,
 		// this is joltifyChain module
 		vaultModule,
-		parammanagerModule,
 		invoiceModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -499,7 +479,6 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
-		parammanagermoduletypes.ModuleName,
 		invoicemoduletypes.ModuleName,
 		vaultmoduletypes.ModuleName,
 	)
@@ -524,7 +503,6 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
-		parammanagermoduletypes.ModuleName,
 		invoicemoduletypes.ModuleName,
 		vaultmoduletypes.ModuleName,
 	)
@@ -555,7 +533,6 @@ func New(
 		monitoringptypes.ModuleName,
 		//this is joltifychain modules
 		vaultmoduletypes.ModuleName,
-		parammanagermoduletypes.ModuleName,
 		invoicemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
@@ -774,7 +751,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	//this is joltifychain module
 	paramsKeeper.Subspace(vaultmoduletypes.ModuleName)
-	paramsKeeper.Subspace(parammanagermoduletypes.ModuleName)
 	paramsKeeper.Subspace(invoicemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
