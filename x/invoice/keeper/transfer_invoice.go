@@ -73,14 +73,14 @@ func (k Keeper) TransferInvoice(ctx sdk.Context, claimedOwner sdk.AccAddress, sh
 	for _, childInvoice := range allNewInvoices {
 		err := k.issueTokens(ctx, childInvoice.InvoiceFinance.Denom, childInvoice.InvoiceFinance.Amount, childInvoice.CurrentOwner)
 		if err != nil {
-			return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, fmt.Sprintf("cannot mint token for new invoice"))
+			return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "cannot mint token for new invoice")
 		}
 		k.SetInvoice(ctx, childInvoice)
 	}
 	// now we burn the amount that deducted from the original owner
 	err := k.burnTokens(ctx, parentInvoice.InvoiceFinance.Denom, totalShares, parentInvoice.CurrentOwner)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, fmt.Sprintf("cannot burn token for parent invoice"))
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "cannot burn token for parent invoice")
 	}
 	//now the locked coin is deducted from the parent invoice
 	k.SetInvoice(ctx, *parentInvoice)

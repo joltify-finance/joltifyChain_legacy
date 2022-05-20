@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/cosmos/cosmos-sdk/codec"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -65,30 +64,8 @@ func (p Params) String() string {
 	return string(out)
 }
 
-// unmarshal the current staking params value from store key or panic
-func MustUnmarshalParams(cdc *codec.LegacyAmino, value []byte) Params {
-	params, err := UnmarshalParams(cdc, value)
-	if err != nil {
-		panic(err)
-	}
-
-	return params
-}
-
-// unmarshal the current staking params value from store key
-func UnmarshalParams(cdc *codec.LegacyAmino, value []byte) (params Params, err error) {
-	//err = cdc.Unmarshal(value, &params)
-	cdc.UnmarshalJSON(value, &params)
-	if err != nil {
-		return
-	}
-
-	return
-}
-
 // validate a set of params
 func (p Params) Validate() error {
-
 	if err := validateInteger(p.BlockChurnInterval); err != nil {
 		return err
 	}
@@ -121,7 +98,6 @@ func validateInteger(i interface{}) error {
 	return nil
 }
 func validateFloat(i interface{}) error {
-
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)

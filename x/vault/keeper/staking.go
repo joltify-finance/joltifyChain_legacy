@@ -39,28 +39,6 @@ func (k Keeper) StakingInfo(ctx sdk.Context) {
 	})
 }
 
-func (k Keeper) getLastValidatorByAddr(ctx sdk.Context) (vaulttypes.ValidatorsByAddr, error) {
-	last := make(vaulttypes.ValidatorsByAddr)
-
-	iterator := k.vaultStaking.LastValidatorsIterator(ctx)
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		// extract the validator address from the key (prefix is 1-byte, addrLen is 1-byte)
-		valAddr := stakingtypes.AddressFromLastValidatorPowerKey(iterator.Key())
-		valAddrStr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32ValidatorAddrPrefix(), valAddr)
-		if err != nil {
-			return nil, err
-		}
-
-		powerBytes := iterator.Value()
-		last[valAddrStr] = make([]byte, len(powerBytes))
-		copy(last[valAddrStr], powerBytes)
-	}
-
-	return last, nil
-}
-
 func (k Keeper) getEligibleValidators(ctx sdk.Context) ([]vaulttypes.ValidatorPowerInfo, error) {
 	params := k.GetParams(ctx)
 
@@ -140,8 +118,8 @@ func (k Keeper) updateValidators(ctx sdk.Context) error {
 func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 	defer telemetry.ModuleMeasureSince(vaulttypes.ModuleName, time.Now(), telemetry.MetricKeyEndBlocker)
 
-	//blockHeight := k.GetParams(ctx).BlockChurnInterval
-	//if ctx.BlockHeight() > 10 && ctx.BlockHeight()%blockHeight == 0 {
+	// blockHeight := k.GetParams(ctx).BlockChurnInterval
+	// if ctx.BlockHeight() > 10 && ctx.BlockHeight()%blockHeight == 0 {
 	if ctx.BlockHeight() == 20 || ctx.BlockHeight() == 40 || ctx.BlockHeight() == 60 {
 		ctx.EventManager().EmitEvents(sdk.Events{
 			sdk.NewEvent(
@@ -149,8 +127,10 @@ func (k Keeper) NewUpdate(ctx sdk.Context) []abci.ValidatorUpdate {
 				sdk.NewAttribute(vaulttypes.AttributeValidators, "joltify_churn"),
 			),
 		})
-		k.updateValidators(ctx)
+		err := k.updateValidators(ctx)
+		if err != nil {
+			ctx.Logger().Error("error in update the validator with err %v", err)
+		}
 	}
-
 	return []abci.ValidatorUpdate{}
 }

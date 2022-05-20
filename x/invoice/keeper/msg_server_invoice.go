@@ -67,7 +67,7 @@ func (k msgServer) doCreateInvoice(ctx sdk.Context, creator, origOwner sdk.AccAd
 
 	invoiceBase, invoiceFinance, err := k.createInvoiceBase(creator, origOwner, name, url, denom, amount, apy)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("fail to construct the invoice basic"))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "fail to construct the invoice basic")
 	}
 	currentMember := types.InvoiceMember{
 		InvoiceID:     invoiceID,

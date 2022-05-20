@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32" //nolint
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
@@ -28,7 +28,7 @@ func (k msgServer) getLastTwoPools(goCtx context.Context) ([]cryptotypes.Address
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "fail to get the last pool address")
 	}
 
-	pk, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, lastPoolsInfo.GetPools()[0].GetCreatePool().PoolPubKey)
+	pk, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, lastPoolsInfo.GetPools()[0].GetCreatePool().PoolPubKey) //nolint
 	if err != nil {
 		return nil, err
 	}
@@ -36,8 +36,7 @@ func (k msgServer) getLastTwoPools(goCtx context.Context) ([]cryptotypes.Address
 
 	// now we get the pool address before the last
 	if len(lastPoolsInfo.GetPools()) == 2 {
-
-		pk, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, lastPoolsInfo.GetPools()[1].GetCreatePool().PoolPubKey)
+		pk, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, lastPoolsInfo.GetPools()[1].GetCreatePool().PoolPubKey) //nolint
 		if err != nil {
 			return nil, err
 		}

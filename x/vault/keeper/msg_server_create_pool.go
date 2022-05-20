@@ -9,14 +9,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32" //nolint
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
 // fixme need to confirm which is correct
 func PubKeyToPoolAddr(pk string) (sdk.AccAddress, error) {
-	poolPubKey, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, pk)
+	poolPubKey, err := legacybech32.UnmarshalPubKey(legacybech32.AccPK, pk) //nolint
 	if err != nil {
 		return nil, err
 	}

@@ -76,7 +76,7 @@ func TestShowSellOrder(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			args := append([]string{tc.id})
+			args := []string{tc.id}
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowSellOrder(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)

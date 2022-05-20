@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32" //nolint
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
@@ -34,7 +34,7 @@ func TestCreateCreatePool(t *testing.T) {
 
 	sk := ed25519.GenPrivKey()
 	sk.PubKey().Address()
-	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, sk.PubKey())
+	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, sk.PubKey()) //nolint
 
 	for _, tc := range []struct {
 		desc   string

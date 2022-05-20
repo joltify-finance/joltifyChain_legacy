@@ -3,6 +3,7 @@ package cli_test
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/testutil"
 	"strings"
 	"testing"
 
@@ -58,12 +59,13 @@ func TestCreateSellOrderUnauthorized(t *testing.T) {
 		},
 	}
 
+	var out testutil.BufferWriter
 	for _, tc := range tcs[1:] {
 		tc2 := tc
 		t.Run(tc2.desc, func(t *testing.T) {
 			args := createInvoiceFields
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
+			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
 			require.Nil(t, err)
 			var args2 []string
 			args2 = append(args2, createSellBookFields...)
@@ -121,13 +123,13 @@ func TestCreateSellOrderNotEnoughMoney(t *testing.T) {
 			code: 0x12,
 		},
 	}
-
+	var out testutil.BufferWriter
 	for _, tc := range tcs[1:] {
 		tc2 := tc
 		t.Run(tc2.desc, func(t *testing.T) {
 			args := createInvoiceFields
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
+			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
 			require.Nil(t, err)
 			var args2 []string
 			args2 = append(args2, createSellBookFields...)
@@ -184,13 +186,13 @@ func TestCreateSellOrder(t *testing.T) {
 			},
 		},
 	}
-
+	var out testutil.BufferWriter
 	for _, tc := range tcs[1:] {
 		tc2 := tc
 		t.Run(tc2.desc, func(t *testing.T) {
 			args := createInvoiceFields
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
+			out, err = clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateInvoice(), args)
 			require.Nil(t, err)
 			var args2 []string
 			args2 = append(args2, createSellBookFields...)

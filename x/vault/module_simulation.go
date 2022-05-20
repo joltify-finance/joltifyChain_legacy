@@ -56,11 +56,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		panic(err)
 	}
 
-	var ss1 map[string]types.Address
+	ss1 := make(map[string]types.Address)
 	a1 := types.Address{Address: []sdk.AccAddress{s1}}
 	ss1["00"] = a1
 
-	var ss2 map[string]types.Address
+	ss2 := make(map[string]types.Address)
 	a2 := types.Address{Address: []sdk.AccAddress{s2}}
 	ss2["11"] = a2
 

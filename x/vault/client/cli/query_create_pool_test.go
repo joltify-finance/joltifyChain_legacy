@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32" //nolint
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
@@ -43,7 +43,7 @@ func networkWithCreatePoolObjects(t *testing.T, n int, maxValidator uint32) (*ne
 		require.NoError(t, err)
 
 		randPoolSk := ed25519.GenPrivKey()
-		poolPubKey, err := legacybech32.MarshalPubKey(legacybech32.AccPK, randPoolSk.PubKey())
+		poolPubKey, err := legacybech32.MarshalPubKey(legacybech32.AccPK, randPoolSk.PubKey()) //nolint
 		require.NoError(t, err)
 
 		pro := types.PoolProposal{

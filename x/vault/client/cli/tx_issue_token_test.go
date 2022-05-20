@@ -9,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32"
+	"github.com/cosmos/cosmos-sdk/types/bech32/legacybech32" //nolint
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -31,13 +31,13 @@ func preparePool(t *testing.T) (*network.Network, []*types.CreatePool) {
 	operatorStr := "joltval1yu5wjall4atm29puasahplrkvyz3vplmngm7kk"
 	operator, err := sdk.ValAddressFromBech32(operatorStr)
 	require.NoError(t, err)
-	var validators []*stakingtypes.Validator
-	for _, el := range height {
+	validators := make([]*stakingtypes.Validator, len(height))
+	for i, el := range height {
 		sk := ed25519.GenPrivKey()
 		desc := stakingtypes.NewDescription("tester", "testId", "www.test.com", "aaa", "aaa")
 		testValidator, err := stakingtypes.NewValidator(operator, sk.PubKey(), desc)
 		require.NoError(t, err)
-		validators = append(validators, &testValidator)
+		validators[i] = &testValidator
 		pro := types.PoolProposal{
 			PoolPubKey: poolPubKey,
 			Nodes:      []sdk.AccAddress{operator.Bytes()},
@@ -140,7 +140,7 @@ func TestCreateIssue(t *testing.T) {
 	info, err := key.List()
 	assert.Nil(t, err)
 
-	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, info[0].GetPubKey())
+	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, info[0].GetPubKey()) //nolint
 	createPoolFields := []string{pubkey, "1"}
 
 	commonArgs := []string{
