@@ -2,6 +2,7 @@ package app
 
 import (
 	v1 "gitlab.com/joltify/joltifychain/upgrade/v1"
+	"gitlab.com/joltify/joltifychain/x/epochs"
 	"io"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
+
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -88,6 +90,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+	epochskeeper "gitlab.com/joltify/joltifychain/x/epochs/keeper"
+	epochstypes "gitlab.com/joltify/joltifychain/x/epochs/types"
 
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
@@ -160,6 +164,7 @@ var (
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		vaultmodule.AppModuleBasic{},
 		invoicemodule.AppModuleBasic{},
+		epochs.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -238,6 +243,8 @@ type App struct {
 	//this is the joltifyChain module
 	VaultKeeper   vaultmodulekeeper.Keeper
 	InvoiceKeeper invoicemodulekeeper.Keeper
+	EpochsKeeper  epochskeeper.Keeper
+
 	// mm is the module manager
 	mm *module.Manager
 
@@ -277,6 +284,7 @@ func New(
 		//this is joltifychaion modules
 		vaultmoduletypes.StoreKey,
 		invoicemoduletypes.StoreKey,
+		epochstypes.StoreKey,
 
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
@@ -367,7 +375,11 @@ func New(
 		app.GetSubspace(vaultmoduletypes.ModuleName),
 		app.AccountKeeper,
 	)
+
+	app.EpochsKeeper = *epochskeeper.NewKeeper(appCodec, keys[epochstypes.StoreKey])
+
 	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper, app.AccountKeeper, app.BankKeeper)
+	epochModule := epochs.NewAppModule(appCodec, app.EpochsKeeper)
 
 	// register the proposal types
 	govRouter := govtypes.NewRouter()
@@ -455,6 +467,7 @@ func New(
 		// this is joltifyChain module
 		vaultModule,
 		invoiceModule,
+		epochModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -464,6 +477,7 @@ func New(
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName,
+		epochstypes.ModuleName,
 		capabilitytypes.ModuleName,
 		minttypes.ModuleName,
 		distrtypes.ModuleName,
@@ -508,6 +522,7 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 		invoicemoduletypes.ModuleName,
 		vaultmoduletypes.ModuleName,
+		epochstypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -535,6 +550,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		//this is joltifychain modules
+		epochstypes.ModuleName,
 		vaultmoduletypes.ModuleName,
 		invoicemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
@@ -561,9 +577,10 @@ func New(
 		transferModule,
 		monitoringModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
-		//	vaultModule,
+		vaultModule,
 		//	parammanagerModule,
-		//	invoiceModule,
+		invoiceModule,
+		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -759,6 +776,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	//this is joltifychain module
 	paramsKeeper.Subspace(vaultmoduletypes.ModuleName)
 	paramsKeeper.Subspace(invoicemoduletypes.ModuleName)
+	paramsKeeper.Subspace(epochstypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
