@@ -5,13 +5,13 @@ import { CreatePool } from "./module/types/vault/create_pool"
 import { IssueToken } from "./module/types/vault/issue_token"
 import { address } from "./module/types/vault/outbound_tx"
 import { OutboundTx } from "./module/types/vault/outbound_tx"
-import { validator } from "./module/types/vault/query"
-import { validators } from "./module/types/vault/query"
 import { poolInfo } from "./module/types/vault/query"
 import { Params } from "./module/types/vault/staking"
+import { Validator } from "./module/types/vault/staking"
+import { Validators } from "./module/types/vault/staking"
 
 
-export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, validator, validators, poolInfo, Params };
+export { PoolProposal, CreatePool, IssueToken, address, OutboundTx, poolInfo, Params, Validator, Validators };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -65,10 +65,10 @@ const getDefaultState = () => {
 						IssueToken: getStructure(IssueToken.fromPartial({})),
 						address: getStructure(address.fromPartial({})),
 						OutboundTx: getStructure(OutboundTx.fromPartial({})),
-						validator: getStructure(validator.fromPartial({})),
-						validators: getStructure(validators.fromPartial({})),
 						poolInfo: getStructure(poolInfo.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						Validator: getStructure(Validator.fromPartial({})),
+						Validators: getStructure(Validators.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -407,6 +407,21 @@ export default {
 		},
 		
 		
+		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateCreatePool(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateIssueToken({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -437,22 +452,20 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgCreateCreatePool({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
 				const msg = await txClient.msgCreateCreatePool(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
+				} else{
+					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		
 		async MsgCreateIssueToken({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -476,19 +489,6 @@ export default {
 					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCreateOutboundTx:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgCreateCreatePool({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateCreatePool(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
 				}
 			}
 		},

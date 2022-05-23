@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Params } from '../vault/staking'
+import { Params, Validators } from '../vault/staking'
 import { OutboundTx } from '../vault/outbound_tx'
 import { IssueToken } from '../vault/issue_token'
 import { CreatePool } from '../vault/create_pool'
@@ -16,6 +16,8 @@ export interface GenesisState {
   issueTokenList: IssueToken[]
   /** this line is used by starport scaffolding # genesis/proto/stateField */
   createPoolList: CreatePool[]
+  /** this line is used by starport scaffolding # ibc/genesis/proto */
+  validatorinfoList: Validators[]
   exported: boolean
 }
 
@@ -35,6 +37,9 @@ export const GenesisState = {
     for (const v of message.createPoolList) {
       CreatePool.encode(v!, writer.uint32(26).fork()).ldelim()
     }
+    for (const v of message.validatorinfoList) {
+      Validators.encode(v!, writer.uint32(50).fork()).ldelim()
+    }
     if (message.exported === true) {
       writer.uint32(32).bool(message.exported)
     }
@@ -48,6 +53,7 @@ export const GenesisState = {
     message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
+    message.validatorinfoList = []
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
@@ -62,6 +68,9 @@ export const GenesisState = {
           break
         case 3:
           message.createPoolList.push(CreatePool.decode(reader, reader.uint32()))
+          break
+        case 6:
+          message.validatorinfoList.push(Validators.decode(reader, reader.uint32()))
           break
         case 4:
           message.exported = reader.bool()
@@ -79,6 +88,7 @@ export const GenesisState = {
     message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
+    message.validatorinfoList = []
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params)
     } else {
@@ -97,6 +107,11 @@ export const GenesisState = {
     if (object.createPoolList !== undefined && object.createPoolList !== null) {
       for (const e of object.createPoolList) {
         message.createPoolList.push(CreatePool.fromJSON(e))
+      }
+    }
+    if (object.validatorinfoList !== undefined && object.validatorinfoList !== null) {
+      for (const e of object.validatorinfoList) {
+        message.validatorinfoList.push(Validators.fromJSON(e))
       }
     }
     if (object.exported !== undefined && object.exported !== null) {
@@ -125,6 +140,11 @@ export const GenesisState = {
     } else {
       obj.createPoolList = []
     }
+    if (message.validatorinfoList) {
+      obj.validatorinfoList = message.validatorinfoList.map((e) => (e ? Validators.toJSON(e) : undefined))
+    } else {
+      obj.validatorinfoList = []
+    }
     message.exported !== undefined && (obj.exported = message.exported)
     return obj
   },
@@ -134,6 +154,7 @@ export const GenesisState = {
     message.outboundTxList = []
     message.issueTokenList = []
     message.createPoolList = []
+    message.validatorinfoList = []
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params)
     } else {
@@ -152,6 +173,11 @@ export const GenesisState = {
     if (object.createPoolList !== undefined && object.createPoolList !== null) {
       for (const e of object.createPoolList) {
         message.createPoolList.push(CreatePool.fromPartial(e))
+      }
+    }
+    if (object.validatorinfoList !== undefined && object.validatorinfoList !== null) {
+      for (const e of object.validatorinfoList) {
+        message.validatorinfoList.push(Validators.fromPartial(e))
       }
     }
     if (object.exported !== undefined && object.exported !== null) {

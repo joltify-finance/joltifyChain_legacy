@@ -4,15 +4,15 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateCreatePool } from "./types/vault/tx";
 import { MsgCreateIssueToken } from "./types/vault/tx";
 import { MsgCreateOutboundTx } from "./types/vault/tx";
-import { MsgCreateCreatePool } from "./types/vault/tx";
 
 
 const types = [
+  ["/joltify.joltifychain.vault.MsgCreateCreatePool", MsgCreateCreatePool],
   ["/joltify.joltifychain.vault.MsgCreateIssueToken", MsgCreateIssueToken],
   ["/joltify.joltifychain.vault.MsgCreateOutboundTx", MsgCreateOutboundTx],
-  ["/joltify.joltifychain.vault.MsgCreateCreatePool", MsgCreateCreatePool],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -45,9 +45,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgCreateCreatePool: (data: MsgCreateCreatePool): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateCreatePool", value: MsgCreateCreatePool.fromPartial( data ) }),
     msgCreateIssueToken: (data: MsgCreateIssueToken): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateIssueToken", value: MsgCreateIssueToken.fromPartial( data ) }),
     msgCreateOutboundTx: (data: MsgCreateOutboundTx): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateOutboundTx", value: MsgCreateOutboundTx.fromPartial( data ) }),
-    msgCreateCreatePool: (data: MsgCreateCreatePool): EncodeObject => ({ typeUrl: "/joltify.joltifychain.vault.MsgCreateCreatePool", value: MsgCreateCreatePool.fromPartial( data ) }),
     
   };
 };

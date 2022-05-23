@@ -1,0 +1,27 @@
+syntax = "proto3";
+package joltify.joltifychain.swap.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "swap/v1beta1/pool.proto";
+import "swap/pool_models/balancer/balancerPool.proto";
+option go_package = "gitlab.com/joltify/joltifychain/x/swap/pool_models/balancer";
+
+service Msg {
+  rpc CreateBalancerPool(MsgCreateBalancerPool)
+      returns (MsgCreateBalancerPoolResponse);
+}
+
+// ===================== MsgCreatePool
+message MsgCreateBalancerPool {
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+
+  PoolParams poolParams = 2 [ (gogoproto.moretags) = "yaml:\"pool_params\"" ];
+
+  repeated swap.v1beta1.PoolAsset poolAssets = 3
+      [ (gogoproto.nullable) = false ];
+
+  string future_pool_governor = 4
+      [ (gogoproto.moretags) = "yaml:\"future_pool_governor\"" ];
+}
+
+message MsgCreateBalancerPoolResponse {}

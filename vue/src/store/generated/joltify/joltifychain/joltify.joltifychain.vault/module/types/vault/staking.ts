@@ -11,6 +11,16 @@ export interface Params {
   candidate_ratio: string
 }
 
+export interface Validator {
+  pubkey: Uint8Array
+  power: number
+}
+
+export interface Validators {
+  all_validators: Validator[]
+  height: number
+}
+
 const baseParams: object = { block_churn_interval: 0, power: 0, step: 0, candidate_ratio: '' }
 
 export const Params = {
@@ -117,6 +127,155 @@ export const Params = {
   }
 }
 
+const baseValidator: object = { power: 0 }
+
+export const Validator = {
+  encode(message: Validator, writer: Writer = Writer.create()): Writer {
+    if (message.pubkey.length !== 0) {
+      writer.uint32(10).bytes(message.pubkey)
+    }
+    if (message.power !== 0) {
+      writer.uint32(16).int64(message.power)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Validator {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseValidator } as Validator
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.pubkey = reader.bytes()
+          break
+        case 2:
+          message.power = longToNumber(reader.int64() as Long)
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): Validator {
+    const message = { ...baseValidator } as Validator
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = bytesFromBase64(object.pubkey)
+    }
+    if (object.power !== undefined && object.power !== null) {
+      message.power = Number(object.power)
+    } else {
+      message.power = 0
+    }
+    return message
+  },
+
+  toJSON(message: Validator): unknown {
+    const obj: any = {}
+    message.pubkey !== undefined && (obj.pubkey = base64FromBytes(message.pubkey !== undefined ? message.pubkey : new Uint8Array()))
+    message.power !== undefined && (obj.power = message.power)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<Validator>): Validator {
+    const message = { ...baseValidator } as Validator
+    if (object.pubkey !== undefined && object.pubkey !== null) {
+      message.pubkey = object.pubkey
+    } else {
+      message.pubkey = new Uint8Array()
+    }
+    if (object.power !== undefined && object.power !== null) {
+      message.power = object.power
+    } else {
+      message.power = 0
+    }
+    return message
+  }
+}
+
+const baseValidators: object = { height: 0 }
+
+export const Validators = {
+  encode(message: Validators, writer: Writer = Writer.create()): Writer {
+    for (const v of message.all_validators) {
+      Validator.encode(v!, writer.uint32(10).fork()).ldelim()
+    }
+    if (message.height !== 0) {
+      writer.uint32(16).int64(message.height)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Validators {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseValidators } as Validators
+    message.all_validators = []
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.all_validators.push(Validator.decode(reader, reader.uint32()))
+          break
+        case 2:
+          message.height = longToNumber(reader.int64() as Long)
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): Validators {
+    const message = { ...baseValidators } as Validators
+    message.all_validators = []
+    if (object.all_validators !== undefined && object.all_validators !== null) {
+      for (const e of object.all_validators) {
+        message.all_validators.push(Validator.fromJSON(e))
+      }
+    }
+    if (object.height !== undefined && object.height !== null) {
+      message.height = Number(object.height)
+    } else {
+      message.height = 0
+    }
+    return message
+  },
+
+  toJSON(message: Validators): unknown {
+    const obj: any = {}
+    if (message.all_validators) {
+      obj.all_validators = message.all_validators.map((e) => (e ? Validator.toJSON(e) : undefined))
+    } else {
+      obj.all_validators = []
+    }
+    message.height !== undefined && (obj.height = message.height)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<Validators>): Validators {
+    const message = { ...baseValidators } as Validators
+    message.all_validators = []
+    if (object.all_validators !== undefined && object.all_validators !== null) {
+      for (const e of object.all_validators) {
+        message.all_validators.push(Validator.fromPartial(e))
+      }
+    }
+    if (object.height !== undefined && object.height !== null) {
+      message.height = object.height
+    } else {
+      message.height = 0
+    }
+    return message
+  }
+}
+
 declare var self: any | undefined
 declare var window: any | undefined
 var globalThis: any = (() => {
@@ -126,6 +285,25 @@ var globalThis: any = (() => {
   if (typeof global !== 'undefined') return global
   throw 'Unable to locate global object'
 })()
+
+const atob: (b64: string) => string = globalThis.atob || ((b64) => globalThis.Buffer.from(b64, 'base64').toString('binary'))
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64)
+  const arr = new Uint8Array(bin.length)
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i)
+  }
+  return arr
+}
+
+const btoa: (bin: string) => string = globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'))
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = []
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]))
+  }
+  return btoa(bin.join(''))
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined
 export type DeepPartial<T> = T extends Builtin

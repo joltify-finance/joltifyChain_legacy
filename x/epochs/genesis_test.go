@@ -1,8 +1,7 @@
 package epochs_test
 
 import (
-	"fmt"
-	app2 "gitlab.com/joltify/joltifychain/app"
+	joltifyapp "gitlab.com/joltify/joltifychain/app"
 	"os"
 	path2 "path"
 	"testing"
@@ -20,10 +19,9 @@ func TestEpochsExportGenesis(t *testing.T) {
 	tempPath := path2.Join(dir, "testgen")
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
-		fmt.Printf(">>>>%v\n", dir)
 		require.NoError(t, err)
 	}(tempPath)
-	app := simapp.New(tempPath).(*app2.App)
+	app := simapp.New(tempPath).(*joltifyapp.App)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	chainStartTime := ctx.BlockTime()
@@ -53,7 +51,7 @@ func TestEpochsInitGenesis(t *testing.T) {
 	defer func(p string) {
 		os.RemoveAll(p)
 	}(p)
-	app := simapp.New(p).(*app2.App)
+	app := simapp.New(p).(*joltifyapp.App)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	// On init genesis, default epochs information is set

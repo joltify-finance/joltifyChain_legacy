@@ -1,107 +1,87 @@
 /* eslint-disable */
-import { SignatureCounts } from "../types/monitoring";
-import { Writer, Reader } from "protobufjs/minimal";
+import { SignatureCounts } from '../types/monitoring'
+import { Writer, Reader } from 'protobufjs/minimal'
 
-export const protobufPackage = "tendermint.spn.monitoringp";
+export const protobufPackage = 'tendermint.spn.monitoringp'
 
 export interface MonitoringInfo {
-  transmitted: boolean;
-  signatureCounts: SignatureCounts | undefined;
+  transmitted: boolean
+  signatureCounts: SignatureCounts | undefined
 }
 
-const baseMonitoringInfo: object = { transmitted: false };
+const baseMonitoringInfo: object = { transmitted: false }
 
 export const MonitoringInfo = {
   encode(message: MonitoringInfo, writer: Writer = Writer.create()): Writer {
     if (message.transmitted === true) {
-      writer.uint32(8).bool(message.transmitted);
+      writer.uint32(8).bool(message.transmitted)
     }
     if (message.signatureCounts !== undefined) {
-      SignatureCounts.encode(
-        message.signatureCounts,
-        writer.uint32(18).fork()
-      ).ldelim();
+      SignatureCounts.encode(message.signatureCounts, writer.uint32(18).fork()).ldelim()
     }
-    return writer;
+    return writer
   },
 
   decode(input: Reader | Uint8Array, length?: number): MonitoringInfo {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMonitoringInfo } as MonitoringInfo;
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseMonitoringInfo } as MonitoringInfo
     while (reader.pos < end) {
-      const tag = reader.uint32();
+      const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.transmitted = reader.bool();
-          break;
+          message.transmitted = reader.bool()
+          break
         case 2:
-          message.signatureCounts = SignatureCounts.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
+          message.signatureCounts = SignatureCounts.decode(reader, reader.uint32())
+          break
         default:
-          reader.skipType(tag & 7);
-          break;
+          reader.skipType(tag & 7)
+          break
       }
     }
-    return message;
+    return message
   },
 
   fromJSON(object: any): MonitoringInfo {
-    const message = { ...baseMonitoringInfo } as MonitoringInfo;
+    const message = { ...baseMonitoringInfo } as MonitoringInfo
     if (object.transmitted !== undefined && object.transmitted !== null) {
-      message.transmitted = Boolean(object.transmitted);
+      message.transmitted = Boolean(object.transmitted)
     } else {
-      message.transmitted = false;
+      message.transmitted = false
     }
-    if (
-      object.signatureCounts !== undefined &&
-      object.signatureCounts !== null
-    ) {
-      message.signatureCounts = SignatureCounts.fromJSON(
-        object.signatureCounts
-      );
+    if (object.signatureCounts !== undefined && object.signatureCounts !== null) {
+      message.signatureCounts = SignatureCounts.fromJSON(object.signatureCounts)
     } else {
-      message.signatureCounts = undefined;
+      message.signatureCounts = undefined
     }
-    return message;
+    return message
   },
 
   toJSON(message: MonitoringInfo): unknown {
-    const obj: any = {};
-    message.transmitted !== undefined &&
-      (obj.transmitted = message.transmitted);
-    message.signatureCounts !== undefined &&
-      (obj.signatureCounts = message.signatureCounts
-        ? SignatureCounts.toJSON(message.signatureCounts)
-        : undefined);
-    return obj;
+    const obj: any = {}
+    message.transmitted !== undefined && (obj.transmitted = message.transmitted)
+    message.signatureCounts !== undefined && (obj.signatureCounts = message.signatureCounts ? SignatureCounts.toJSON(message.signatureCounts) : undefined)
+    return obj
   },
 
   fromPartial(object: DeepPartial<MonitoringInfo>): MonitoringInfo {
-    const message = { ...baseMonitoringInfo } as MonitoringInfo;
+    const message = { ...baseMonitoringInfo } as MonitoringInfo
     if (object.transmitted !== undefined && object.transmitted !== null) {
-      message.transmitted = object.transmitted;
+      message.transmitted = object.transmitted
     } else {
-      message.transmitted = false;
+      message.transmitted = false
     }
-    if (
-      object.signatureCounts !== undefined &&
-      object.signatureCounts !== null
-    ) {
-      message.signatureCounts = SignatureCounts.fromPartial(
-        object.signatureCounts
-      );
+    if (object.signatureCounts !== undefined && object.signatureCounts !== null) {
+      message.signatureCounts = SignatureCounts.fromPartial(object.signatureCounts)
     } else {
-      message.signatureCounts = undefined;
+      message.signatureCounts = undefined
     }
-    return message;
-  },
-};
+    return message
+  }
+}
 
-type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | undefined
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -110,4 +90,4 @@ export type DeepPartial<T> = T extends Builtin
   ? ReadonlyArray<DeepPartial<U>>
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+  : Partial<T>

@@ -166,7 +166,7 @@ export interface VaultQueryAllOutboundTxResponse {
 }
 
 export interface VaultQueryAllValidatorsResponse {
-  all_validators?: Vaultvalidators[];
+  all_validators?: VaultValidators[];
 
   /**
    * PageResponse is to be embedded in gRPC response messages where the
@@ -193,11 +193,26 @@ export interface VaultQueryGetOutboundTxResponse {
 }
 
 export interface VaultQueryGetValidatorsResponse {
-  validators?: Vaultvalidators;
+  validators?: VaultValidators;
 }
 
 export interface VaultQueryLastPoolResponse {
   pools?: VaultpoolInfo[];
+}
+
+export interface VaultValidator {
+  /** @format byte */
+  pubkey?: string;
+
+  /** @format int64 */
+  power?: string;
+}
+
+export interface VaultValidators {
+  all_validators?: VaultValidator[];
+
+  /** @format int64 */
+  height?: string;
 }
 
 export interface Vaultaddress {
@@ -207,21 +222,6 @@ export interface Vaultaddress {
 export interface VaultpoolInfo {
   BlockHeight?: string;
   CreatePool?: VaultPoolProposal;
-}
-
-export interface Vaultvalidator {
-  /** @format byte */
-  pubkey?: string;
-
-  /** @format int64 */
-  power?: string;
-}
-
-export interface Vaultvalidators {
-  all_validators?: Vaultvalidator[];
-
-  /** @format int64 */
-  height?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;

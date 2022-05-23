@@ -26,8 +26,16 @@ import CosmosIbcGoIbcCoreChannelV1 from './cosmos/ibc-go/ibc.core.channel.v1'
 import CosmosIbcGoIbcCoreClientV1 from './cosmos/ibc-go/ibc.core.client.v1'
 import CosmosIbcGoIbcCoreConnectionV1 from './cosmos/ibc-go/ibc.core.connection.v1'
 import CosmosIbcGoIbcCorePortV1 from './cosmos/ibc-go/ibc.core.port.v1'
+import IbcGoV2IbcApplicationsTransferV1 from './ibc-go/v2/ibc.applications.transfer.v1'
+import IbcGoV2IbcCoreChannelV1 from './ibc-go/v2/ibc.core.channel.v1'
+import IbcGoV2IbcCoreClientV1 from './ibc-go/v2/ibc.core.client.v1'
+import IbcGoV2IbcCoreConnectionV1 from './ibc-go/v2/ibc.core.connection.v1'
+import IbcGoV2IbcCorePortV1 from './ibc-go/v2/ibc.core.port.v1'
+import JoltifyJoltifychainJoltifyJoltifychainEpochs from './joltify/joltifychain/joltify.joltifychain.epochs'
 import JoltifyJoltifychainJoltifyJoltifychainInvoice from './joltify/joltifychain/joltify.joltifychain.invoice'
+import JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1 from './joltify/joltifychain/joltify.joltifychain.swap.v1beta1'
 import JoltifyJoltifychainJoltifyJoltifychainVault from './joltify/joltifychain/joltify.joltifychain.vault'
+import TendermintSpnTendermintSpnMonitoringp from './tendermint/spn/tendermint.spn.monitoringp'
 
 
 export default { 
@@ -57,8 +65,16 @@ export default {
   CosmosIbcGoIbcCoreClientV1: load(CosmosIbcGoIbcCoreClientV1, 'ibc.core.client.v1'),
   CosmosIbcGoIbcCoreConnectionV1: load(CosmosIbcGoIbcCoreConnectionV1, 'ibc.core.connection.v1'),
   CosmosIbcGoIbcCorePortV1: load(CosmosIbcGoIbcCorePortV1, 'ibc.core.port.v1'),
+  IbcGoV2IbcApplicationsTransferV1: load(IbcGoV2IbcApplicationsTransferV1, 'ibc.applications.transfer.v1'),
+  IbcGoV2IbcCoreChannelV1: load(IbcGoV2IbcCoreChannelV1, 'ibc.core.channel.v1'),
+  IbcGoV2IbcCoreClientV1: load(IbcGoV2IbcCoreClientV1, 'ibc.core.client.v1'),
+  IbcGoV2IbcCoreConnectionV1: load(IbcGoV2IbcCoreConnectionV1, 'ibc.core.connection.v1'),
+  IbcGoV2IbcCorePortV1: load(IbcGoV2IbcCorePortV1, 'ibc.core.port.v1'),
+  JoltifyJoltifychainJoltifyJoltifychainEpochs: load(JoltifyJoltifychainJoltifyJoltifychainEpochs, 'joltify.joltifychain.epochs'),
   JoltifyJoltifychainJoltifyJoltifychainInvoice: load(JoltifyJoltifychainJoltifyJoltifychainInvoice, 'joltify.joltifychain.invoice'),
+  JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1: load(JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1, 'joltify.joltifychain.swap.v1beta1'),
   JoltifyJoltifychainJoltifyJoltifychainVault: load(JoltifyJoltifychainJoltifyJoltifychainVault, 'joltify.joltifychain.vault'),
+  TendermintSpnTendermintSpnMonitoringp: load(TendermintSpnTendermintSpnMonitoringp, 'tendermint.spn.monitoringp'),
   
 }
 

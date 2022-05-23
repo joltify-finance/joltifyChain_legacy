@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { Reader, util, configure, Writer } from 'protobufjs/minimal'
-import * as Long from 'long'
+import { Reader, Writer } from 'protobufjs/minimal'
 import { OutboundTx } from '../vault/outbound_tx'
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
+import { Validators } from '../vault/staking'
 import { IssueToken } from '../vault/issue_token'
 import { PoolProposal } from '../vault/create_pool'
 
@@ -25,22 +25,12 @@ export interface QueryAllOutboundTxResponse {
   pagination: PageResponse | undefined
 }
 
-export interface validator {
-  pubkey: Uint8Array
-  power: number
-}
-
-export interface validators {
-  all_validators: validator[]
-  height: number
-}
-
 export interface QueryGetValidatorsRequest {
   height: string
 }
 
 export interface QueryGetValidatorsResponse {
-  validators: validators | undefined
+  validators: Validators | undefined
 }
 
 export interface QueryAllValidatorsRequest {
@@ -48,7 +38,7 @@ export interface QueryAllValidatorsRequest {
 }
 
 export interface QueryAllValidatorsResponse {
-  all_validators: validators[]
+  all_validators: Validators[]
   pagination: PageResponse | undefined
 }
 
@@ -344,155 +334,6 @@ export const QueryAllOutboundTxResponse = {
   }
 }
 
-const basevalidator: object = { power: 0 }
-
-export const validator = {
-  encode(message: validator, writer: Writer = Writer.create()): Writer {
-    if (message.pubkey.length !== 0) {
-      writer.uint32(10).bytes(message.pubkey)
-    }
-    if (message.power !== 0) {
-      writer.uint32(16).int64(message.power)
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): validator {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...basevalidator } as validator
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.pubkey = reader.bytes()
-          break
-        case 2:
-          message.power = longToNumber(reader.int64() as Long)
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): validator {
-    const message = { ...basevalidator } as validator
-    if (object.pubkey !== undefined && object.pubkey !== null) {
-      message.pubkey = bytesFromBase64(object.pubkey)
-    }
-    if (object.power !== undefined && object.power !== null) {
-      message.power = Number(object.power)
-    } else {
-      message.power = 0
-    }
-    return message
-  },
-
-  toJSON(message: validator): unknown {
-    const obj: any = {}
-    message.pubkey !== undefined && (obj.pubkey = base64FromBytes(message.pubkey !== undefined ? message.pubkey : new Uint8Array()))
-    message.power !== undefined && (obj.power = message.power)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<validator>): validator {
-    const message = { ...basevalidator } as validator
-    if (object.pubkey !== undefined && object.pubkey !== null) {
-      message.pubkey = object.pubkey
-    } else {
-      message.pubkey = new Uint8Array()
-    }
-    if (object.power !== undefined && object.power !== null) {
-      message.power = object.power
-    } else {
-      message.power = 0
-    }
-    return message
-  }
-}
-
-const basevalidators: object = { height: 0 }
-
-export const validators = {
-  encode(message: validators, writer: Writer = Writer.create()): Writer {
-    for (const v of message.all_validators) {
-      validator.encode(v!, writer.uint32(10).fork()).ldelim()
-    }
-    if (message.height !== 0) {
-      writer.uint32(16).int64(message.height)
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): validators {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...basevalidators } as validators
-    message.all_validators = []
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.all_validators.push(validator.decode(reader, reader.uint32()))
-          break
-        case 2:
-          message.height = longToNumber(reader.int64() as Long)
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): validators {
-    const message = { ...basevalidators } as validators
-    message.all_validators = []
-    if (object.all_validators !== undefined && object.all_validators !== null) {
-      for (const e of object.all_validators) {
-        message.all_validators.push(validator.fromJSON(e))
-      }
-    }
-    if (object.height !== undefined && object.height !== null) {
-      message.height = Number(object.height)
-    } else {
-      message.height = 0
-    }
-    return message
-  },
-
-  toJSON(message: validators): unknown {
-    const obj: any = {}
-    if (message.all_validators) {
-      obj.all_validators = message.all_validators.map((e) => (e ? validator.toJSON(e) : undefined))
-    } else {
-      obj.all_validators = []
-    }
-    message.height !== undefined && (obj.height = message.height)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<validators>): validators {
-    const message = { ...basevalidators } as validators
-    message.all_validators = []
-    if (object.all_validators !== undefined && object.all_validators !== null) {
-      for (const e of object.all_validators) {
-        message.all_validators.push(validator.fromPartial(e))
-      }
-    }
-    if (object.height !== undefined && object.height !== null) {
-      message.height = object.height
-    } else {
-      message.height = 0
-    }
-    return message
-  }
-}
-
 const baseQueryGetValidatorsRequest: object = { height: '' }
 
 export const QueryGetValidatorsRequest = {
@@ -553,7 +394,7 @@ const baseQueryGetValidatorsResponse: object = {}
 export const QueryGetValidatorsResponse = {
   encode(message: QueryGetValidatorsResponse, writer: Writer = Writer.create()): Writer {
     if (message.validators !== undefined) {
-      validators.encode(message.validators, writer.uint32(10).fork()).ldelim()
+      Validators.encode(message.validators, writer.uint32(10).fork()).ldelim()
     }
     return writer
   },
@@ -566,7 +407,7 @@ export const QueryGetValidatorsResponse = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.validators = validators.decode(reader, reader.uint32())
+          message.validators = Validators.decode(reader, reader.uint32())
           break
         default:
           reader.skipType(tag & 7)
@@ -579,7 +420,7 @@ export const QueryGetValidatorsResponse = {
   fromJSON(object: any): QueryGetValidatorsResponse {
     const message = { ...baseQueryGetValidatorsResponse } as QueryGetValidatorsResponse
     if (object.validators !== undefined && object.validators !== null) {
-      message.validators = validators.fromJSON(object.validators)
+      message.validators = Validators.fromJSON(object.validators)
     } else {
       message.validators = undefined
     }
@@ -588,14 +429,14 @@ export const QueryGetValidatorsResponse = {
 
   toJSON(message: QueryGetValidatorsResponse): unknown {
     const obj: any = {}
-    message.validators !== undefined && (obj.validators = message.validators ? validators.toJSON(message.validators) : undefined)
+    message.validators !== undefined && (obj.validators = message.validators ? Validators.toJSON(message.validators) : undefined)
     return obj
   },
 
   fromPartial(object: DeepPartial<QueryGetValidatorsResponse>): QueryGetValidatorsResponse {
     const message = { ...baseQueryGetValidatorsResponse } as QueryGetValidatorsResponse
     if (object.validators !== undefined && object.validators !== null) {
-      message.validators = validators.fromPartial(object.validators)
+      message.validators = Validators.fromPartial(object.validators)
     } else {
       message.validators = undefined
     }
@@ -663,7 +504,7 @@ const baseQueryAllValidatorsResponse: object = {}
 export const QueryAllValidatorsResponse = {
   encode(message: QueryAllValidatorsResponse, writer: Writer = Writer.create()): Writer {
     for (const v of message.all_validators) {
-      validators.encode(v!, writer.uint32(10).fork()).ldelim()
+      Validators.encode(v!, writer.uint32(10).fork()).ldelim()
     }
     if (message.pagination !== undefined) {
       PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim()
@@ -680,7 +521,7 @@ export const QueryAllValidatorsResponse = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.all_validators.push(validators.decode(reader, reader.uint32()))
+          message.all_validators.push(Validators.decode(reader, reader.uint32()))
           break
         case 2:
           message.pagination = PageResponse.decode(reader, reader.uint32())
@@ -698,7 +539,7 @@ export const QueryAllValidatorsResponse = {
     message.all_validators = []
     if (object.all_validators !== undefined && object.all_validators !== null) {
       for (const e of object.all_validators) {
-        message.all_validators.push(validators.fromJSON(e))
+        message.all_validators.push(Validators.fromJSON(e))
       }
     }
     if (object.pagination !== undefined && object.pagination !== null) {
@@ -712,7 +553,7 @@ export const QueryAllValidatorsResponse = {
   toJSON(message: QueryAllValidatorsResponse): unknown {
     const obj: any = {}
     if (message.all_validators) {
-      obj.all_validators = message.all_validators.map((e) => (e ? validators.toJSON(e) : undefined))
+      obj.all_validators = message.all_validators.map((e) => (e ? Validators.toJSON(e) : undefined))
     } else {
       obj.all_validators = []
     }
@@ -725,7 +566,7 @@ export const QueryAllValidatorsResponse = {
     message.all_validators = []
     if (object.all_validators !== undefined && object.all_validators !== null) {
       for (const e of object.all_validators) {
-        message.all_validators.push(validators.fromPartial(e))
+        message.all_validators.push(Validators.fromPartial(e))
       }
     }
     if (object.pagination !== undefined && object.pagination !== null) {
@@ -1500,35 +1341,6 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>
 }
 
-declare var self: any | undefined
-declare var window: any | undefined
-var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis
-  if (typeof self !== 'undefined') return self
-  if (typeof window !== 'undefined') return window
-  if (typeof global !== 'undefined') return global
-  throw 'Unable to locate global object'
-})()
-
-const atob: (b64: string) => string = globalThis.atob || ((b64) => globalThis.Buffer.from(b64, 'base64').toString('binary'))
-function bytesFromBase64(b64: string): Uint8Array {
-  const bin = atob(b64)
-  const arr = new Uint8Array(bin.length)
-  for (let i = 0; i < bin.length; ++i) {
-    arr[i] = bin.charCodeAt(i)
-  }
-  return arr
-}
-
-const btoa: (bin: string) => string = globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'))
-function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = []
-  for (let i = 0; i < arr.byteLength; ++i) {
-    bin.push(String.fromCharCode(arr[i]))
-  }
-  return btoa(bin.join(''))
-}
-
 type Builtin = Date | Function | Uint8Array | string | number | undefined
 export type DeepPartial<T> = T extends Builtin
   ? T
@@ -1539,15 +1351,3 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>
-
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER')
-  }
-  return long.toNumber()
-}
-
-if (util.Long !== Long) {
-  util.Long = Long as any
-  configure()
-}
