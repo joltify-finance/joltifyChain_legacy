@@ -28,7 +28,7 @@ var (
 )
 
 func MustGetPoolIdFromShareDenom(denom string) uint64 {
-	numberStr := strings.TrimLeft(denom, "gamm/pool/")
+	numberStr := strings.TrimLeft(denom, "jswap/pool/")
 	number, err := strconv.Atoi(numberStr)
 	if err != nil {
 		panic(err)
@@ -37,7 +37,7 @@ func MustGetPoolIdFromShareDenom(denom string) uint64 {
 }
 
 func ValidatePoolShareDenom(denom string) error {
-	numberStr := strings.TrimLeft(denom, "gamm/pool/")
+	numberStr := strings.TrimLeft(denom, "jswap/pool/")
 	_, err := strconv.Atoi(numberStr)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func GetDenomPrefix(denom string) []byte {
 }
 
 func GetPoolShareDenom(poolId uint64) string {
-	return fmt.Sprintf("gamm/pool/%d", poolId)
+	return fmt.Sprintf("jswap/pool/%d", poolId)
 }
 
 func GetKeyPrefixPools(poolId uint64) []byte {

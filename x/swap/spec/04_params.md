@@ -4,7 +4,7 @@ order: 4
 
 # Parameters
 
-The gamm module contains the following parameters:
+The swap module contains the following parameters:
 
 | Key             | Type          | Example                                  |
 | --------------- | ------------- | ---------------------------------------- |

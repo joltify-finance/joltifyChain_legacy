@@ -48,6 +48,6 @@ Start time included
 
 ## Example CLI tx
 
-`osmosisd tx gamm create-pool --pool-file="path/to/lbp-pool.json" --from myKey`
+`osmosisd tx swap create-pool --pool-file="path/to/lbp-pool.json" --from myKey`
 
 NOTE: The command to create a liquidity bootstrapping pool is the same as creating a normal pool. However, if the pool has valid `lbp-params` in the pool file (json), it will be created as a liquidity bootstrapping pool.

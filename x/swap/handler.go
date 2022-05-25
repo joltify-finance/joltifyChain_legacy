@@ -8,7 +8,7 @@ import (
 	"gitlab.com/joltify/joltifychain/x/swap/types"
 )
 
-// NewHandler returns a handler for "gamm" type messages.
+// NewHandler returns a handler for "swap" type messages.
 func NewHandler(k *keeper.Keeper) sdk.Handler {
 	msgServer := keeper.NewMsgServerImpl(k)
 	msgBalancerServer := keeper.NewBalancerMsgServerImpl(k)

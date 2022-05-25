@@ -250,7 +250,7 @@ func (suite *KeeperTestSuite) TestJoinPool() {
 				balancesBefore := suite.app.BankKeeper.GetAllBalances(suite.ctx, acc2)
 				err := keeper.JoinPool(suite.ctx, acc2, poolId, types.OneShare.MulRaw(50), sdk.Coins{})
 				suite.Require().NoError(err)
-				suite.Require().Equal(types.OneShare.MulRaw(50).String(), suite.app.BankKeeper.GetBalance(suite.ctx, acc2, "swap/pool/1").Amount.String())
+				suite.Require().Equal(types.OneShare.MulRaw(50).String(), suite.app.BankKeeper.GetBalance(suite.ctx, acc2, "jswap/pool/1").Amount.String())
 				balancesAfter := suite.app.BankKeeper.GetAllBalances(suite.ctx, acc2)
 
 				deltaBalances, _ := balancesBefore.SafeSub(balancesAfter)
@@ -346,7 +346,7 @@ func (suite *KeeperTestSuite) TestExitPool() {
 				_, err := keeper.ExitPool(suite.ctx, acc1, poolId, types.InitPoolSharesSupply.QuoRaw(2), sdk.Coins{})
 				suite.Require().NoError(err)
 				// (100 - 50) * OneShare should remain.
-				suite.Require().Equal(types.InitPoolSharesSupply.QuoRaw(2).String(), suite.app.BankKeeper.GetBalance(suite.ctx, acc1, "swap/pool/1").Amount.String())
+				suite.Require().Equal(types.InitPoolSharesSupply.QuoRaw(2).String(), suite.app.BankKeeper.GetBalance(suite.ctx, acc1, "jswap/pool/1").Amount.String())
 				balancesAfter := suite.app.BankKeeper.GetAllBalances(suite.ctx, acc1)
 
 				deltaBalances, _ := balancesBefore.SafeSub(balancesAfter)

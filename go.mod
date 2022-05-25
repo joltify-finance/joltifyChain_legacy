@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.3
+	github.com/cosmos/iavl v0.17.3
 	github.com/cosmos/ibc-go/v2 v2.0.3
 	github.com/dgraph-io/badger/v2 v2.2007.3 // indirect
 	github.com/ethereum/go-ethereum v1.9.25

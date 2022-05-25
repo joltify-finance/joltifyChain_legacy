@@ -7,7 +7,7 @@ import (
 )
 
 // AccountKeeper defines the account contract that must be fulfilled when
-// creating a x/gamm keeper.
+// creating a x/swap keeper.
 type AccountKeeper interface {
 	NewAccount(sdk.Context, authtypes.AccountI) authtypes.AccountI
 	NewAccountWithAddress(ctx sdk.Context, addr sdk.AccAddress) authtypes.AccountI
@@ -30,7 +30,7 @@ type AccountKeeper interface {
 }
 
 // BankKeeper defines the banking contract that must be fulfilled when
-// creating a x/gamm keeper.
+// creating a x/swap keeper.
 type BankKeeper interface {
 	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 	SendCoinsFromModuleToModule(ctx sdk.Context, senderPool, recipientPool string, amt sdk.Coins) error

@@ -4,7 +4,7 @@ order: 3
 
 # Messages
 
-This details the types of messages supported by the x/gamm module.
+This details the types of messages supported by the x/swap module.
 
 ## MsgCreatePool
 

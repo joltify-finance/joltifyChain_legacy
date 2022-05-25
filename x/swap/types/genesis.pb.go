@@ -72,7 +72,7 @@ func (m *Params) GetPoolCreationFee() github_com_cosmos_cosmos_sdk_types.Coins {
 	return nil
 }
 
-// GenesisState defines the gamm module's genesis state.
+// GenesisState defines the swap module's genesis state.
 type GenesisState struct {
 	Pools          []*types1.Any `protobuf:"bytes,1,rep,name=pools,proto3" json:"pools,omitempty"`
 	NextPoolNumber uint64        `protobuf:"varint,2,opt,name=next_pool_number,json=nextPoolNumber,proto3" json:"next_pool_number,omitempty"`

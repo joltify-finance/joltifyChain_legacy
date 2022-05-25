@@ -9,17 +9,17 @@ import (
 	types "gitlab.com/joltify/joltifychain/x/swap/types"
 )
 
-// RegisterLegacyAminoCodec registers the necessary x/gamm interfaces and concrete types
+// RegisterLegacyAminoCodec registers the necessary x/swap interfaces and concrete types
 // on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&Pool{}, "osmosis/gamm/BalancerPool", nil)
-	cdc.RegisterConcrete(&MsgCreateBalancerPool{}, "osmosis/gamm/create-balancer-pool", nil)
-	cdc.RegisterConcrete(&PoolParams{}, "osmosis/gamm/BalancerPoolParams", nil)
+	cdc.RegisterConcrete(&Pool{}, "joltify/swap/BalancerPool", nil)
+	cdc.RegisterConcrete(&MsgCreateBalancerPool{}, "joltify/swap/create-balancer-pool", nil)
+	cdc.RegisterConcrete(&PoolParams{}, "joltify/swap/BalancerPoolParams", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterInterface(
-		"osmosis.gamm.v1beta1.PoolI",
+		"jolt.joltifychain.swap.v1beta1.PoolI",
 		(*types.PoolI)(nil),
 		&Pool{},
 	)

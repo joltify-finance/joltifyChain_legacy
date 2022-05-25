@@ -52,7 +52,7 @@ func NewCreatePoolCmd() *cobra.Command {
 Pool initialization parameters must be provided through a pool JSON file.
 
 Example:
-$ %s tx gamm create-pool --pool-file="path/to/pool.json" --from mykey
+$ %s tx swap create-pool --pool-file="path/to/pool.json" --from mykey
 
 Where pool.json contains:
 {

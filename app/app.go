@@ -3,6 +3,9 @@ package app
 import (
 	v1 "gitlab.com/joltify/joltifychain/upgrade/v1"
 	"gitlab.com/joltify/joltifychain/x/epochs"
+	"gitlab.com/joltify/joltifychain/x/lockup"
+	lockupmoduletypes "gitlab.com/joltify/joltifychain/x/lockup/types"
+	lockuptypes "gitlab.com/joltify/joltifychain/x/lockup/types"
 	"gitlab.com/joltify/joltifychain/x/swap"
 	swapmoduletypes "gitlab.com/joltify/joltifychain/x/swap/types"
 	"io"
@@ -112,6 +115,7 @@ import (
 	vaultmodulekeeper "gitlab.com/joltify/joltifychain/x/vault/keeper"
 	vaultmoduletypes "gitlab.com/joltify/joltifychain/x/vault/types"
 
+	lockupkeeper "gitlab.com/joltify/joltifychain/x/lockup/keeper"
 	swapkeeper "gitlab.com/joltify/joltifychain/x/swap/keeper"
 )
 
@@ -170,6 +174,7 @@ var (
 		invoicemodule.AppModuleBasic{},
 		epochs.AppModuleBasic{},
 		swap.AppModuleBasic{},
+		lockup.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -185,6 +190,7 @@ var (
 		vaultmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 		invoicemoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		swapmoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		lockuptypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -251,6 +257,7 @@ type App struct {
 	InvoiceKeeper invoicemodulekeeper.Keeper
 	EpochsKeeper  epochskeeper.Keeper
 	SwapKeeper    swapkeeper.Keeper
+	LockupKeeper  lockupkeeper.Keeper
 
 	// mm is the module manager
 	mm *module.Manager
@@ -293,6 +300,7 @@ func New(
 		invoicemoduletypes.StoreKey,
 		epochsmoduletypes.StoreKey,
 		swapmoduletypes.StoreKey,
+		lockupmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -390,9 +398,16 @@ func New(
 		app.GetSubspace(swapmoduletypes.ModuleName),
 		app.AccountKeeper, app.BankKeeper, app.DistrKeeper)
 
+	app.LockupKeeper = *lockupkeeper.NewKeeper(appCodec, keys[lockupmoduletypes.StoreKey],
+		// TODO: Visit why this needs to be deref'd
+		app.AccountKeeper, app.BankKeeper, app.DistrKeeper)
+
+	// ################################################################
 	vaultModule := vaultmodule.NewAppModule(appCodec, app.VaultKeeper, app.AccountKeeper, app.BankKeeper)
 	epochModule := epochs.NewAppModule(appCodec, app.EpochsKeeper)
 	swapModule := swap.NewAppModule(appCodec, app.SwapKeeper, app.AccountKeeper, app.BankKeeper)
+	lockupModule := lockup.NewAppModule(appCodec, app.LockupKeeper, app.AccountKeeper, app.BankKeeper)
+	// ################################################################
 
 	// register the proposal types
 	govRouter := govtypes.NewRouter()
@@ -482,6 +497,7 @@ func New(
 		invoiceModule,
 		epochModule,
 		swapModule,
+		lockupModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -491,6 +507,7 @@ func New(
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName,
+		// Note: epochs' begin should be "real" start of epochs, we keep epochs beginblock at the beginning
 		epochsmoduletypes.ModuleName,
 		capabilitytypes.ModuleName,
 		minttypes.ModuleName,
@@ -513,9 +530,11 @@ func New(
 		invoicemoduletypes.ModuleName,
 		vaultmoduletypes.ModuleName,
 		swapmoduletypes.ModuleName,
+		lockupmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
+		lockupmoduletypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -537,8 +556,10 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 		invoicemoduletypes.ModuleName,
 		vaultmoduletypes.ModuleName,
-		epochsmoduletypes.ModuleName,
 		swapmoduletypes.ModuleName,
+
+		// Note: epochs' endblock should be "real" end of epochs, we keep epochs endblock at the end
+		epochsmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -570,6 +591,7 @@ func New(
 		vaultmoduletypes.ModuleName,
 		invoicemoduletypes.ModuleName,
 		swapmoduletypes.ModuleName,
+		lockuptypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -597,6 +619,7 @@ func New(
 		vaultModule,
 		//	parammanagerModule,
 		invoiceModule,
+		lockup.NewAppModule(appCodec, app.LockupKeeper, app.AccountKeeper, app.BankKeeper),
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		swap.NewAppModule(appCodec, app.SwapKeeper, app.AccountKeeper, app.BankKeeper),
 	)

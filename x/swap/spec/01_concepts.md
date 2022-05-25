@@ -4,13 +4,13 @@ order: 1
 
 # Concepts
 
-The concept of the `gamm` module is designed to handle assets of a chain using the AMM and its concept of pool shares. 
+The concept of the `swap` module is designed to handle assets of a chain using the AMM and its concept of pool shares. 
 
 ## Pool
 
 ### Creation of Pool
 
-At an initial creation of the pool, a fixed amount of 100 share token is minted in the pool and sent to the creator of the pool's account. Pool share denom is in the format of gamm/pool/{poolId} and is displayed in the format of GAMM-{poolId} to the user. Pool assets are sorted in alphabetical order by defualt.
+At an initial creation of the pool, a fixed amount of 100 share token is minted in the pool and sent to the creator of the pool's account. Pool share denom is in the format of swap/pool/{poolId} and is displayed in the format of swap-{poolId} to the user. Pool assets are sorted in alphabetical order by defualt.
 
 ### Joining Pool
 
@@ -20,7 +20,7 @@ When joining a pool, users provide maximum amount of tokens willing to deposit, 
 
 When exiting the pool, the user also probides the minimum amount of tokens they are willing to receive as they are returning the share of the pool. However, unlike joining a pool, exiting a pool requires the user to pay the exit fee, which is set as the param of the pool. The share of the user gets burnt. Exiting the pool using a single asset is also possible. 
 
-+++[https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/pool_service.go](https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/pool_service.go)
++++[https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/pool_service.go](https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/pool_service.go)
 
 ## Swap
 
@@ -44,10 +44,10 @@ where spotPrice is
 
 - `(tokenBalanceIn / tokenWeightIn) / (tokenBalanceOut / tokenWeightOut)`
 
-+++[https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/swap.go](https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/swap.go)
++++[https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/swap.go](https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/swap.go)
 
 ### Multihop
 
 All tokens are swapped using multi-hop. That is, all swaps are routed via the ultimate cost-efficient way, swapping in and out from multiple pools in the process.
 
-+++[https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/multihop.go](https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/keeper/multihop.go)
++++[https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/multihop.go](https://github.com/osmosis-labs/osmosis/blob/main/x/swap/keeper/multihop.go)

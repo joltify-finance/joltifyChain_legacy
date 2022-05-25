@@ -4,7 +4,7 @@ order: 2
 
 # Pool parameters
 
-This details the types of messages supported by the x/gamm module.
+This details the types of messages supported by the x/swap module.
 
 At launch, Pools have the following parameters:
 

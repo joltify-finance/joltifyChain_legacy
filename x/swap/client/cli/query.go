@@ -17,7 +17,7 @@ import (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd() *cobra.Command {
-	// Group gamm queries under a subcommand
+	// Group swap queries under a subcommand
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
@@ -50,7 +50,7 @@ func GetCmdPool() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query pool.
 Example:
-$ %s query gamm pool 1
+$ %s query swap pool 1
 `,
 				version.AppName,
 			),
@@ -113,7 +113,7 @@ func GetCmdPools() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query pools.
 Example:
-$ %s query gamm pools
+$ %s query swap pools
 `,
 				version.AppName,
 			),
@@ -156,7 +156,7 @@ func GetCmdNumPools() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query number of pools.
 Example:
-$ %s query gamm num-pools
+$ %s query swap num-pools
 `,
 				version.AppName,
 			),
@@ -191,7 +191,7 @@ func GetCmdPoolParams() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query pool-params.
 Example:
-$ %s query gamm pool-params 1
+$ %s query swap pool-params 1
 `,
 				version.AppName,
 			),
@@ -252,7 +252,7 @@ func GetCmdTotalShares() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query total-share.
 Example:
-$ %s query gamm total-share 1
+$ %s query swap total-share 1
 `,
 				version.AppName,
 			),
@@ -294,7 +294,7 @@ func GetCmdQueryTotalLiquidity() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query total-liquidity.
 Example:
-$ %s query gamm total-liquidity
+$ %s query swap total-liquidity
 `,
 				version.AppName,
 			),
@@ -329,7 +329,7 @@ func GetCmdPoolAssets() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query pool assets.
 Example:
-$ %s query gamm pool-assets 1
+$ %s query swap pool-assets 1
 `,
 				version.AppName,
 			),
@@ -371,7 +371,7 @@ func GetCmdSpotPrice() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query spot-price.
 Example:
-$ %s query gamm spot-price 1 stake stake2
+$ %s query swap spot-price 1 stake stake2
 `,
 				version.AppName,
 			),
@@ -415,7 +415,7 @@ func GetCmdEstimateSwapExactAmountIn() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query estimate-swap-exact-amount-in.
 Example:
-$ %s query gamm estimate-swap-exact-amount-in 1 osm11vmx8jtggpd9u7qr0t8vxclycz85u925sazglr7 stake --swap-route-pool-ids=2 --swap-route-amounts=100stake2 --swap-route-pool-ids=3 --swap-route-amounts=100stake
+$ %s query swap estimate-swap-exact-amount-in 1 osm11vmx8jtggpd9u7qr0t8vxclycz85u925sazglr7 stake --swap-route-pool-ids=2 --swap-route-amounts=100stake2 --swap-route-pool-ids=3 --swap-route-amounts=100stake
 `,
 				version.AppName,
 			),
@@ -468,7 +468,7 @@ func GetCmdEstimateSwapExactAmountOut() *cobra.Command {
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query estimate-swap-exact-amount-out.
 Example:
-$ %s query gamm estimate-swap-exact-amount-out 1 osm11vmx8jtggpd9u7qr0t8vxclycz85u925sazglr7 stake --swap-route-pool-ids=2 --swap-route-amounts=100stake2 --swap-route-pool-ids=3 --swap-route-amounts=100stake
+$ %s query swap estimate-swap-exact-amount-out 1 osm11vmx8jtggpd9u7qr0t8vxclycz85u925sazglr7 stake --swap-route-pool-ids=2 --swap-route-amounts=100stake2 --swap-route-pool-ids=3 --swap-route-amounts=100stake
 `,
 				version.AppName,
 			),

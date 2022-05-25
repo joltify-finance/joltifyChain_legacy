@@ -41,7 +41,7 @@ func TestBalancerPoolShareDenom(t *testing.T) {
 	pacc, err := NewBalancerPool(poolId, defaultBalancerPoolParams, dummyPoolAssets, defaultFutureGovernor, defaultCurBlockTime)
 	require.NoError(t, err)
 
-	require.Equal(t, "gamm/pool/10", pacc.GetTotalShares().Denom)
+	require.Equal(t, "jswap/pool/10", pacc.GetTotalShares().Denom)
 }
 
 func TestBalancerPoolParams(t *testing.T) {

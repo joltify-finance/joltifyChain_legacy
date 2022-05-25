@@ -13,7 +13,7 @@ var (
 	KeyPoolCreationFee = []byte("PoolCreationFee")
 )
 
-// ParamTable for gamm module.
+// ParamTable for swap module.
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
@@ -24,7 +24,7 @@ func NewParams(poolCreationFee sdk.Coins) Params {
 	}
 }
 
-// default gamm module parameters
+// default swap module parameters
 func DefaultParams() Params {
 	return Params{
 		PoolCreationFee: sdk.Coins{sdk.NewInt64Coin(utils.BaseCoinUnit, 1000_000_000)}, // 1000 OSMO

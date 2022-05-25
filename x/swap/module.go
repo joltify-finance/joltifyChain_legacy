@@ -36,22 +36,22 @@ type AppModuleBasic struct {
 	cdc codec.Codec
 }
 
-// Name returns the gamm module's name.
+// Name returns the swap module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
 
-// RegisterLegacyAminoCodec registers the gamm module's types on the LegacyAmino codec.
+// RegisterLegacyAminoCodec registers the swap module's types on the LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	types.RegisterLegacyAminoCodec(cdc)
 	balancer.RegisterLegacyAminoCodec(cdc)
 }
 
-// DefaultGenesis returns default genesis state as raw bytes for the gamm
+// DefaultGenesis returns default genesis state as raw bytes for the swap
 // module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesis())
 }
 
-// ValidateGenesis performs genesis state validation for the gamm module.
+// ValidateGenesis performs genesis state validation for the swap module.
 func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
 	var genState types.GenesisState
 	if err := cdc.UnmarshalJSON(bz, &genState); err != nil {
@@ -78,7 +78,7 @@ func (b AppModuleBasic) GetQueryCmd() *cobra.Command {
 	return cli.GetQueryCmd()
 }
 
-// RegisterInterfaces registers interfaces and implementations of the gamm module.
+// RegisterInterfaces registers interfaces and implementations of the swap module.
 func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
 	balancer.RegisterInterfaces(registry)
@@ -111,25 +111,25 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper,
 	}
 }
 
-// RegisterInvariants registers the gamm module invariants.
+// RegisterInvariants registers the swap module invariants.
 func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
 	keeper.RegisterInvariants(ir, am.keeper, am.bk)
 }
 
-// Route returns the message routing key for the gamm module.
+// Route returns the message routing key for the swap module.
 func (am AppModule) Route() sdk.Route {
 	return sdk.NewRoute(types.RouterKey, NewHandler(&am.keeper))
 }
 
-// QuerierRoute returns the gamm module's querier route name.
+// QuerierRoute returns the swap module's querier route name.
 func (AppModule) QuerierRoute() string { return types.RouterKey }
 
-// LegacyQuerierHandler returns the gamm module sdk.Querier.
+// LegacyQuerierHandler returns the swap module sdk.Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 	return nil
 }
 
-// InitGenesis performs genesis initialization for the gamm module. It returns
+// InitGenesis performs genesis initialization for the swap module. It returns
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
 	var genState types.GenesisState
@@ -149,7 +149,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 // BeginBlock performs a no-op.
 func (AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
 
-// EndBlock returns the end blocker for the gamm module. It returns no validator
+// EndBlock returns the end blocker for the swap module. It returns no validator
 // updates.
 func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
@@ -159,8 +159,8 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 
 // AppModuleSimulation functions
 
-// GenerateGenesisState creates a randomized GenState of the gamm module.
-// However, at launch the gamm module has no state, hence this is a no-op
+// GenerateGenesisState creates a randomized GenState of the swap module.
+// However, at launch the swap module has no state, hence this is a no-op
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	// simulation.RandomizedGenState(simState)
 }
@@ -170,7 +170,7 @@ func (AppModule) ProposalContents(simState module.SimulationState) []simtypes.We
 	return nil
 }
 
-// RandomizedParams creates randomized gamm param changes for the simulator.
+// RandomizedParams creates randomized swap param changes for the simulator.
 // There are no params that we view as sensible to randomize at the moment.
 func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	return nil

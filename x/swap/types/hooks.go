@@ -15,10 +15,10 @@ type SwapHooks interface {
 
 var _ SwapHooks = MultiGammHooks{}
 
-// combine multiple gamm hooks, all hook functions are run in array sequence
+// combine multiple swap hooks, all hook functions are run in array sequence
 type MultiGammHooks []SwapHooks
 
-// Creates hooks for the Gamm Module
+// Creates hooks for the swap Module
 func NewMultiSwapHooks(hooks ...SwapHooks) MultiGammHooks {
 	return hooks
 }
