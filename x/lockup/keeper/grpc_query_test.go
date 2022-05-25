@@ -1,15 +1,15 @@
 package keeper_test
 
 import (
-	"gitlab.com/joltify/joltifychain/x/lockup/simulation"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"gitlab.com/joltify/joltifychain/testutil/simapp"
 	"gitlab.com/joltify/joltifychain/x/lockup/types"
 )
 
 func (suite *KeeperTestSuite) LockTokens(addr sdk.AccAddress, coins sdk.Coins, duration time.Duration) {
-	err := simulation.FundAccount(suite.app.BankKeeper, suite.ctx, addr, coins)
+	err := simapp.FundAccount(suite.app.BankKeeper, suite.ctx, addr, coins)
 	suite.Require().NoError(err)
 	_, err = suite.app.LockupKeeper.LockTokens(suite.ctx, addr, coins, duration)
 	suite.Require().NoError(err)

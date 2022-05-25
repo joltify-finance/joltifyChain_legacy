@@ -3,8 +3,6 @@ package keeper_test
 import (
 	"fmt"
 	"github.com/stretchr/testify/require"
-	joltifyapp "gitlab.com/joltify/joltifychain/app"
-	"gitlab.com/joltify/joltifychain/testutil/simapp"
 	"os"
 	path2 "path"
 	"runtime"
@@ -14,6 +12,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	joltifyapp "gitlab.com/joltify/joltifychain/app"
+	"gitlab.com/joltify/joltifychain/testutil/simapp"
 )
 
 type KeeperTestSuite struct {
@@ -22,7 +23,6 @@ type KeeperTestSuite struct {
 	ctx     sdk.Context
 	querier sdk.Querier
 	app     *joltifyapp.App
-	cleanup func()
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
@@ -39,10 +39,10 @@ func (suite *KeeperTestSuite) SetupTest() {
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "osmosis-1", Time: time.Now().UTC()})
 	suite.app = app
 	suite.ctx = ctx
-}
 
-func (suite *KeeperTestSuite) Cleanup() {
-	suite.cleanup()
+	lockableDurations := suite.app.IncentivesKeeper.GetLockableDurations(suite.ctx)
+	lockableDurations = append(lockableDurations, 2*time.Second)
+	suite.app.IncentivesKeeper.SetLockableDurations(suite.ctx, lockableDurations)
 }
 
 func TestKeeperTestSuite(t *testing.T) {

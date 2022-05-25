@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	"fmt"
-	"gitlab.com/joltify/joltifychain/x/lockup/simulation"
 	"math/rand"
 	"os"
 	path2 "path"
@@ -51,7 +50,7 @@ func benchmarkResetLogic(numLockups int, b *testing.B) {
 	}(tempPath)
 
 	app := simapp.New(tempPath).(*joltifyapp.App)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "oppy-1", Time: blockStartTime})
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "joltify-1", Time: blockStartTime})
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	numAccts := 100
@@ -67,7 +66,7 @@ func benchmarkResetLogic(numLockups int, b *testing.B) {
 		for j := 0; j < numDenoms; j++ {
 			coins = coins.Add(sdk.NewInt64Coin(fmt.Sprintf("token%d", j), r.Int63n(100000000)))
 		}
-		_ = simulation.FundAccount(app.BankKeeper, ctx, addr, coins)
+		_ = simapp.FundAccount(app.BankKeeper, ctx, addr, coins)
 		app.AccountKeeper.SetAccount(ctx, authtypes.NewBaseAccount(addr, nil, 0, 0))
 		addrs = append(addrs, addr)
 	}

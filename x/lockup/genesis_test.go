@@ -3,7 +3,6 @@ package lockup_test
 import (
 	"fmt"
 	"github.com/tendermint/spm/cosmoscmd"
-	"gitlab.com/joltify/joltifychain/x/lockup/simulation"
 	"os"
 	path2 "path"
 	"runtime"
@@ -75,14 +74,14 @@ func TestInitGenesis(t *testing.T) {
 	// coins = app.LockupKeeper.GetModuleBalance(ctx)
 	// require.Equal(t, coins.String(), sdk.NewInt64Coin("foo", 30000000).String())
 
-	lastLockId := app.LockupKeeper.GetLastLockID(ctx)
-	require.Equal(t, lastLockId, uint64(10))
+	lastLockID := app.LockupKeeper.GetLastLockID(ctx)
+	require.Equal(t, lastLockID, uint64(10))
 }
 
 func TestExportGenesis(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, "%s", runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)
@@ -94,7 +93,7 @@ func TestExportGenesis(t *testing.T) {
 	genesis := testGenesis
 	lockup.InitGenesis(ctx, app.LockupKeeper, genesis)
 
-	err := simulation.FundAccount(app.BankKeeper, ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)})
+	err := simapp.FundAccount(app.BankKeeper, ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)})
 	require.NoError(t, err)
 	_, err = app.LockupKeeper.LockTokens(ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)}, time.Second*5)
 	require.NoError(t, err)
@@ -154,7 +153,7 @@ func TestMarshalUnmarshalGenesis(t *testing.T) {
 
 	am := lockup.NewAppModule(appCodec, app.LockupKeeper, app.AccountKeeper, app.BankKeeper)
 
-	err := simulation.FundAccount(app.BankKeeper, ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)})
+	err := simapp.FundAccount(app.BankKeeper, ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)})
 	require.NoError(t, err)
 	_, err = app.LockupKeeper.LockTokens(ctx, acc2, sdk.Coins{sdk.NewInt64Coin("foo", 5000000)}, time.Second*5)
 	require.NoError(t, err)
