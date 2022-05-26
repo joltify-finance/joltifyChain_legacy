@@ -63,7 +63,9 @@ func (k Keeper) FinishDistribution(ctx sdk.Context, gauge types.Gauge) error {
 	if err := k.deleteGaugeIDForDenom(ctx, gauge.Id, gauge.DistributeTo.Denom); err != nil {
 		return err
 	}
-	k.hooks.AfterFinishDistribution(ctx, gauge.Id)
+	if k.hooks != nil {
+		k.hooks.AfterFinishDistribution(ctx, gauge.Id)
+	}
 	return nil
 }
 
@@ -432,7 +434,9 @@ func (k Keeper) Distribute(ctx sdk.Context, gauges []types.Gauge) (sdk.Coins, er
 	if err != nil {
 		return nil, err
 	}
-	k.hooks.AfterEpochDistribution(ctx)
+	if k.hooks != nil {
+		k.hooks.AfterEpochDistribution(ctx)
+	}
 
 	k.checkFinishDistribution(ctx, gauges)
 	return totalDistributedCoins, nil

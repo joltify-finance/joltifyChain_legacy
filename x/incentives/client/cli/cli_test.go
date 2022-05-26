@@ -2,13 +2,10 @@ package cli_test
 
 import (
 	"fmt"
-
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/suite"
-
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/cosmos/cosmos-sdk/testutil/network"
-	"gitlab.com/joltify/joltifychain/app"
+	"gitlab.com/joltify/joltifychain/testutil/network"
 	"gitlab.com/joltify/joltifychain/x/incentives/client/cli"
 	"gitlab.com/joltify/joltifychain/x/incentives/types"
 )
@@ -23,7 +20,8 @@ type IntegrationTestSuite struct {
 func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
 
-	s.cfg = app.DefaultConfig()
+	s.cfg = network.DefaultConfig()
+	// modification to pay fee with test bond denom "stake"
 
 	s.network = network.New(s.T(), s.cfg)
 
@@ -33,7 +31,6 @@ func (s *IntegrationTestSuite) SetupSuite() {
 
 func (s *IntegrationTestSuite) TearDownSuite() {
 	s.T().Log("tearing down integration test suite")
-	s.network.Cleanup()
 }
 
 func (s *IntegrationTestSuite) TestGetCmdGauges() {

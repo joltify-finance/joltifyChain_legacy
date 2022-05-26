@@ -53,7 +53,7 @@ var testGenesis = types.GenesisState{
 func TestInitGenesis(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, "%s", runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)

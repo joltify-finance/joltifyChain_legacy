@@ -113,7 +113,7 @@ func (k Keeper) CreateGauge(ctx sdk.Context, isPerpetual bool, owner sdk.AccAddr
 	}
 
 	// Ensure that the denom this gauge pays out to exists on-chain
-	if !k.bk.HasSupply(ctx, distrTo.Denom) && !strings.Contains(distrTo.Denom, "osmovaloper") {
+	if !k.bk.HasSupply(ctx, distrTo.Denom) && !strings.Contains(distrTo.Denom, "oppyvaloper") {
 		return 0, fmt.Errorf("denom does not exist: %s", distrTo.Denom)
 	}
 
@@ -165,7 +165,9 @@ func (k Keeper) AddToGaugeRewards(ctx sdk.Context, owner sdk.AccAddress, coins s
 	if err != nil {
 		return err
 	}
-	k.hooks.AfterAddToGauge(ctx, gauge.Id)
+	if k.hooks != nil {
+		k.hooks.AfterAddToGauge(ctx, gauge.Id)
+	}
 	return nil
 }
 
