@@ -631,7 +631,8 @@ func (suite *KeeperTestSuite) TestSlashTokensFromLockByID() {
 	})
 	suite.Require().Equal(int64(10), acc.Int64())
 
-	suite.app.LockupKeeper.SlashTokensFromLockByID(suite.ctx, 1, sdk.Coins{sdk.NewInt64Coin("stake", 1)})
+	_, err = suite.app.LockupKeeper.SlashTokensFromLockByID(suite.ctx, 1, sdk.Coins{sdk.NewInt64Coin("stake", 1)})
+	suite.Require().NoError(err)
 	acc = suite.app.LockupKeeper.GetPeriodLocksAccumulation(suite.ctx, types.QueryCondition{
 		Denom:    "stake",
 		Duration: time.Second,

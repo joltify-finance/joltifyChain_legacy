@@ -27,8 +27,8 @@ var (
 	KeyTotalLiquidity = []byte{0x03}
 )
 
-func MustGetPoolIdFromShareDenom(denom string) uint64 {
-	numberStr := strings.TrimLeft(denom, "jswap/pool/")
+func MustGetPoolIdFromShareDenom(denom string) uint64 { //nolint
+	numberStr := strings.TrimLeft(denom, "jswap/pool/") //nolint
 	number, err := strconv.Atoi(numberStr)
 	if err != nil {
 		panic(err)
@@ -36,8 +36,8 @@ func MustGetPoolIdFromShareDenom(denom string) uint64 {
 	return uint64(number)
 }
 
-func ValidatePoolShareDenom(denom string) error {
-	numberStr := strings.TrimLeft(denom, "jswap/pool/")
+func ValidatePoolShareDenom(denom string) error { //nolint
+	numberStr := strings.TrimLeft(denom, "jswap/pool/") //nolint
 	_, err := strconv.Atoi(numberStr)
 	if err != nil {
 		return err

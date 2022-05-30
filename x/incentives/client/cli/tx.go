@@ -53,7 +53,7 @@ func NewCreateGaugeCmd() *cobra.Command {
 				return err
 			}
 
-			startTime := time.Time{}
+			var startTime time.Time
 			timeStr, err := cmd.Flags().GetString(FlagStartTime)
 			if err != nil {
 				return err

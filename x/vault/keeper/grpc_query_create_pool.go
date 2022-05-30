@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -80,6 +81,10 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 
 	churnHeight := k.GetParams(ctx).BlockChurnInterval
 
+	if blockHeight < churnHeight {
+		return nil, status.Error(codes.Internal, "the block height is small than the churn height")
+	}
+
 	poolBlock := (blockHeight / churnHeight) * churnHeight
 
 	var valLatest types.CreatePool
@@ -129,7 +134,7 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 			break
 		}
 	}
-
+	fmt.Printf(">>>>>>>%v\n", allProposal)
 	return &types.QueryLastPoolResponse{Pools: allProposal}, nil
 }
 

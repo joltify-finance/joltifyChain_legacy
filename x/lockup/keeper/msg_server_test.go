@@ -1,11 +1,11 @@
 package keeper_test
 
 import (
+	"gitlab.com/joltify/joltifychain/x/lockup/keeper"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"gitlab.com/joltify/joltifychain/x/lockup/keeper"
 	"gitlab.com/joltify/joltifychain/x/lockup/types"
 )
 
@@ -25,6 +25,7 @@ func (suite *KeeperTestSuite) TestMsgLockTokens() {
 	// creation of lock via LockTokens
 	msgServer := keeper.NewMsgServerImpl(&suite.app.LockupKeeper)
 	_, err = msgServer.LockTokens(sdk.WrapSDKContext(suite.ctx), types.NewMsgLockTokens(addr1, time.Second, coins))
+	suite.Require().Error(err, "")
 
 	// check locks
 	locks, err := suite.app.LockupKeeper.GetPeriodLocks(suite.ctx)

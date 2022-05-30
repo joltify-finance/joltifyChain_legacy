@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/require"
 	joltifyapp "gitlab.com/joltify/joltifychain/app"
 	"gitlab.com/joltify/joltifychain/testutil/simapp"
@@ -18,25 +17,22 @@ import (
 
 type KeeperTestSuite struct {
 	suite.Suite
-
 	ctx     sdk.Context
-	querier sdk.Querier
 	app     *joltifyapp.App
 	cleanup func()
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(suite.T(), err)
 	}(tempPath)
 
 	app := simapp.New(tempPath).(*joltifyapp.App)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "osmosis-1", Time: time.Now().UTC()})
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "oppy-1", Time: time.Now().UTC()})
 	suite.app = app
 	suite.ctx = ctx
 }

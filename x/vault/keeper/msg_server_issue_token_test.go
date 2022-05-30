@@ -11,7 +11,8 @@ import (
 )
 
 func TstIssueTokenMsgServerCreate(t *testing.T) {
-	k, srv, wctx := setupMsgServer(t)
+	app, srv, wctx := setupMsgServer(t)
+	k := &app.VaultKeeper
 	ctx := sdk.UnwrapSDKContext(wctx)
 	creator := "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg"
 	creatorAddr, err := sdk.AccAddressFromBech32(creator)

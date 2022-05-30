@@ -35,10 +35,10 @@ func createNOutboundTx(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Ou
 
 func TestOutboundTxGet(t *testing.T) {
 	setupBech32Prefix()
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items := createNOutboundTx(keeper, ctx, 10)
+	app, ctx := keepertest.SetupVaultApp(t)
+	items := createNOutboundTx(&app.VaultKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetOutboundTx(ctx,
+		rst, found := app.VaultKeeper.GetOutboundTx(ctx,
 			item.Index,
 		)
 		require.True(t, found)
@@ -50,10 +50,10 @@ func TestOutboundTxGet(t *testing.T) {
 }
 
 func TestOutboundTxGetAll(t *testing.T) {
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items := createNOutboundTx(keeper, ctx, 10)
+	app, ctx := keepertest.SetupVaultApp(t)
+	items := createNOutboundTx(&app.VaultKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllOutboundTx(ctx)),
+		nullify.Fill(app.VaultKeeper.GetAllOutboundTx(ctx)),
 	)
 }

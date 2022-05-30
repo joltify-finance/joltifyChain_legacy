@@ -101,7 +101,7 @@ func queryAccountUnlockableCoins(ctx sdk.Context, req abci.RequestQuery, k Keepe
 	return res, nil
 }
 
-func queryAccountUnlockingCoins(ctx sdk.Context, req abci.RequestQuery, k Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+func queryAccountUnlockingCoins(ctx sdk.Context, req abci.RequestQuery, k Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) { //nolint
 	var params types.AccountUnlockableCoinsRequest
 
 	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)

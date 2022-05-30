@@ -1,8 +1,10 @@
 package keeper_test
 
 import (
+	"encoding/hex"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/ethereum/go-ethereum/crypto"
+	types2 "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/assert"
 	"strconv"
 	"testing"
@@ -23,9 +25,27 @@ var _ = strconv.IntSize
 
 func TestOutboundTxMsgServerCreate(t *testing.T) {
 	setupBech32Prefix()
-	k, ctx := keepertest.SetupVaultKeeper(t)
-	srv := keeper.NewMsgServerImpl(*k)
+	app, ctx := keepertest.SetupVaultApp(t)
+	k := app.VaultKeeper
+	srv := keeper.NewMsgServerImpl(k)
 	wctx := sdk.WrapSDKContext(ctx)
+
+	sk := ed25519.GenPrivKey()
+	desc := types2.NewDescription("tester", "testId", "www.test.com", "aaa", "aaa")
+
+	creatorStr := "jolt1f0atl7egduue8a07j42hyklct0sqa68wxem3lg"
+	creator, err := sdk.AccAddressFromBech32(creatorStr)
+	assert.Nil(t, err)
+
+	valAddr, err := sdk.ValAddressFromHex(hex.EncodeToString(creator.Bytes()))
+	assert.Nil(t, err)
+	testValidator, err := types2.NewValidator(valAddr, sk.PubKey(), desc)
+	require.NoError(t, err)
+
+	historyInfo := types2.HistoricalInfo{
+		Valset: types2.Validators{testValidator},
+	}
+	app.StakingKeeper.SetHistoricalInfo(ctx, int64(100), &historyInfo)
 
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	accs := simulation.RandomAccounts(r, 1)
@@ -35,14 +55,9 @@ func TestOutboundTxMsgServerCreate(t *testing.T) {
 		BlockHeight: "100",
 		OutboundTx:  "123",
 	}
-	//if it is not the validator, it should fail to submit the proposal
-	ret, err := srv.CreateOutboundTx(wctx, expected)
-	require.NoError(t, err)
-	require.Equal(t, ret.Successful, false)
-
-	creatorStr := "jolt1f0atl7egduue8a07j42hyklct0sqa68wxem3lg"
-	creator, err := sdk.AccAddressFromBech32(creatorStr)
-	assert.Nil(t, err)
+	// if it is not the validator, it should fail to submit the proposal
+	_, err = srv.CreateOutboundTx(wctx, expected)
+	require.Error(t, err)
 
 	for i := 0; i < 5; i++ {
 		expected := &types.MsgCreateOutboundTx{Creator: creator,
@@ -54,9 +69,9 @@ func TestOutboundTxMsgServerCreate(t *testing.T) {
 		require.True(t, ret.Successful)
 		require.NoError(t, err)
 
-		index := crypto.Keccak256Hash([]byte(expected.RequestID), []byte(expected.BlockHeight))
+		index := strconv.Itoa(i)
 		rst, found := k.GetOutboundTx(ctx,
-			index.Hex(),
+			index,
 		)
 		require.True(t, found)
 		require.Equal(t, len(rst.Items), 1)

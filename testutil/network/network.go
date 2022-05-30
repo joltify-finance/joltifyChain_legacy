@@ -38,6 +38,7 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 	} else {
 		cfg = configs[0]
 	}
+	cfg.EnableLogging = true
 	net := network.New(t, cfg)
 	t.Cleanup(net.Cleanup)
 	return net

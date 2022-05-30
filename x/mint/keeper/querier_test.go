@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	joltifyapp "gitlab.com/joltify/joltifychain/app"
 	"os"
@@ -25,7 +24,7 @@ import (
 func TestNewQuerier(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)
@@ -57,7 +56,7 @@ func TestNewQuerier(t *testing.T) {
 func TestQueryParams(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, "%s", runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)
@@ -80,7 +79,7 @@ func TestQueryParams(t *testing.T) {
 func TestQueryEpochProvisions(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, "%s", runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)

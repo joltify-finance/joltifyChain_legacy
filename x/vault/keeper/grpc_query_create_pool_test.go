@@ -14,7 +14,8 @@ import (
 )
 
 func TestCreatePoolQuerySingle(t *testing.T) {
-	k, _, wctx := setupMsgServer(t)
+	app, _, wctx := setupMsgServer(t)
+	k := &app.VaultKeeper
 	ctx := sdk.UnwrapSDKContext(wctx)
 	addressesStr := []string{"jolt1rfmwldwrm3652shx3a7say0v4vvtglast0l05d", "jolt1xdpg5l3pxpyhxqg4ey4krq2pf9d3sphmmuuugg", "jolt17fczazdur0g04jtedlwp837r0vzktvwc0gx0fg"}
 	addresses := make([]sdk.AccAddress, 3)
@@ -71,8 +72,9 @@ func TestCreatePoolQueryPaginated(t *testing.T) {
 		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
 		assert.Nil(t, err)
 	}
-	k, _, wctx := setupMsgServer(t)
+	app, _, wctx := setupMsgServer(t)
 	ctx := sdk.UnwrapSDKContext(wctx)
+	k := &app.VaultKeeper
 	msgs := createNCreatePool(k, ctx, 5, addresses)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllCreatePoolRequest {

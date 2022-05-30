@@ -3,6 +3,7 @@ package cli_test
 import (
 	stderr "errors"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -28,12 +29,17 @@ func setupBech32Prefix() {
 
 func TestCreateCreatePool(t *testing.T) {
 	setupBech32Prefix()
-	net := network.New(t)
+
+	cfg := network.DefaultConfig()
+	cfg.EnableLogging = true
+	// modification to pay fee with test bond denom "stake"
+	net := network.New(t, cfg)
+
 	val := net.Validators[0]
 	ctx := val.ClientCtx
-
+	_, err := net.WaitForHeight(6)
+	assert.Nil(t, err)
 	sk := ed25519.GenPrivKey()
-	sk.PubKey().Address()
 	pubkey := legacybech32.MustMarshalPubKey(legacybech32.AccPK, sk.PubKey()) //nolint
 
 	for _, tc := range []struct {
@@ -58,9 +64,10 @@ func TestCreateCreatePool(t *testing.T) {
 		},
 
 		{
-			id:     "1",
-			desc:   "valid",
-			fields: []string{pubkey, "1"},
+			id:   "1",
+			desc: "valid",
+			// the block height should be lar
+			fields: []string{pubkey, "5"},
 			args: []string{
 				fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
 				fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),

@@ -19,9 +19,9 @@ import (
 var _ = strconv.IntSize
 
 func TestOutboundTxQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
+	app, ctx := keepertest.SetupVaultApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOutboundTx(keeper, ctx, 2)
+	msgs := createNOutboundTx(&app.VaultKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetOutboundTxRequest
@@ -55,7 +55,7 @@ func TestOutboundTxQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.OutboundTx(wctx, tc.request)
+			response, err := app.VaultKeeper.OutboundTx(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -70,9 +70,9 @@ func TestOutboundTxQuerySingle(t *testing.T) {
 }
 
 func TestOutboundTxQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
+	app, ctx := keepertest.SetupVaultApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOutboundTx(keeper, ctx, 5)
+	msgs := createNOutboundTx(&app.VaultKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllOutboundTxRequest {
 		return &types.QueryAllOutboundTxRequest{
@@ -87,7 +87,7 @@ func TestOutboundTxQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.OutboundTxAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := app.VaultKeeper.OutboundTxAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.OutboundTx), step)
 			require.Subset(t,
@@ -100,7 +100,7 @@ func TestOutboundTxQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.OutboundTxAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := app.VaultKeeper.OutboundTxAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.OutboundTx), step)
 			require.Subset(t,
@@ -111,7 +111,7 @@ func TestOutboundTxQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.OutboundTxAll(wctx, request(nil, 0, 0, true))
+		resp, err := app.VaultKeeper.OutboundTxAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -120,7 +120,7 @@ func TestOutboundTxQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.OutboundTxAll(wctx, nil)
+		_, err := app.VaultKeeper.OutboundTxAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

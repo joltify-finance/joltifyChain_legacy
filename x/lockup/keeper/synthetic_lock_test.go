@@ -275,7 +275,7 @@ func (suite *KeeperTestSuite) TestResetAllSyntheticLocks() {
 	suite.Require().Len(locks, 1)
 	suite.Require().Equal(locks[0].Coins, coins)
 
-	suite.app.LockupKeeper.ResetAllSyntheticLocks(suite.ctx, []types.SyntheticLock{
+	err = suite.app.LockupKeeper.ResetAllSyntheticLocks(suite.ctx, []types.SyntheticLock{
 		{
 			UnderlyingLockId: 1,
 			SynthDenom:       "synthstakestakedtovalidator1",
@@ -289,6 +289,8 @@ func (suite *KeeperTestSuite) TestResetAllSyntheticLocks() {
 			Duration:         time.Second,
 		},
 	})
+
+	suite.Require().NoError(err)
 
 	synthLock, err := suite.app.LockupKeeper.GetSyntheticLockup(suite.ctx, 1, "synthstakestakedtovalidator1")
 	suite.Require().NoError(err)

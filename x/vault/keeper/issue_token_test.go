@@ -26,11 +26,11 @@ func createNIssueToken(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]types.I
 }
 
 func TestIssueTokenGet(t *testing.T) {
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items, err := createNIssueToken(keeper, ctx, 10)
+	app, ctx := keepertest.SetupVaultApp(t)
+	items, err := createNIssueToken(&app.VaultKeeper, ctx, 10)
 	assert.Nil(t, err)
 	for _, item := range items {
-		rst, found := keeper.GetIssueToken(ctx, item.Index)
+		rst, found := app.VaultKeeper.GetIssueToken(ctx, item.Index)
 		assert.True(t, found)
 		assert.Equal(t, item, rst)
 	}
@@ -38,7 +38,7 @@ func TestIssueTokenGet(t *testing.T) {
 
 //fixme how can we remove the issue token
 //func TestIssueTokenRemove(t *testing.T) {
-//	keeper, ctx := keepertest.SetupVaultKeeper(t)
+//	keeper, ctx := keepertest.SetupVaultApp(t)
 //	items := createNIssueToken(keeper, ctx, 10)
 //	for _, item := range items {
 //		keeper.RemoveIssueToken(ctx, item.Index)
@@ -48,8 +48,8 @@ func TestIssueTokenGet(t *testing.T) {
 //}
 
 func TestIssueTokenGetAll(t *testing.T) {
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items, err := createNIssueToken(keeper, ctx, 10)
+	app, ctx := keepertest.SetupVaultApp(t)
+	items, err := createNIssueToken(&app.VaultKeeper, ctx, 10)
 	assert.Nil(t, err)
-	assert.Equal(t, items, keeper.GetAllIssueToken(ctx))
+	assert.Equal(t, items, app.VaultKeeper.GetAllIssueToken(ctx))
 }

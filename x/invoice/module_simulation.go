@@ -21,7 +21,6 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simulation.ParamChange {
 }
 
 func (am AppModule) RegisterStoreDecoder(registry sdk.StoreDecoderRegistry) {
-	return
 }
 
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simulation.WeightedOperation {

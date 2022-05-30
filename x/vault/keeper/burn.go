@@ -43,7 +43,6 @@ func (k Keeper) BurnTokens(ctx sdk.Context, addr sdk.AccAddress) error {
 }
 
 func (k Keeper) ProcessAccountLeft(ctx sdk.Context) {
-
 	req := types.QueryLatestPoolRequest{}
 	wctx := sdk.WrapSDKContext(ctx)
 	ret, err := k.GetLastPool(wctx, &req)
@@ -60,7 +59,6 @@ func (k Keeper) ProcessAccountLeft(ctx sdk.Context) {
 		if err != nil {
 			k.Logger(ctx).Error("fail to burn the token")
 		}
-
 	}
 
 }

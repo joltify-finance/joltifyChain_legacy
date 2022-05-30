@@ -138,7 +138,6 @@ func TestDeleteInvoice(t *testing.T) {
 				require.NoError(t, err)
 				var resp sdk.TxResponse
 				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				fmt.Printf(">>>>>>>>%v\n", resp.RawLog)
 				require.Equal(t, tc.code, resp.Code)
 			}
 		})

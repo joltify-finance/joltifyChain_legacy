@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/cosmos-sdk/testutil/network"
-	"github.com/osmosis-labs/osmosis/v7/app"
+	"gitlab.com/joltify/joltifychain/app"
 	minttypes "gitlab.com/joltify/joltifychain/x/mint/types"
 )
 

@@ -12,17 +12,6 @@ import (
 	"gitlab.com/joltify/joltifychain/x/swap/types"
 )
 
-var ymlAssetTest = []types.PoolAsset{
-	{
-		Weight: sdk.NewInt(200),
-		Token:  sdk.NewCoin("test2", sdk.NewInt(50000)),
-	},
-	{
-		Weight: sdk.NewInt(100),
-		Token:  sdk.NewCoin("test1", sdk.NewInt(10000)),
-	},
-}
-
 func TestPoolJson(t *testing.T) {
 	var poolId uint64 = 10
 

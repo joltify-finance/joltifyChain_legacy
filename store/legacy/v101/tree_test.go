@@ -76,6 +76,7 @@ func compareLeaf(oldValueBz []byte, valueBz []byte) (err error) {
 func comparePair(oldKeyBz, oldValueBz, keyBz, valueBz []byte) (err error) {
 	if !bytes.Equal(oldKeyBz, keyBz) {
 		err = fmt.Errorf("key bytes mismatch: %x / %x", oldKeyBz, keyBz)
+		return err
 	}
 
 	// TODO: properly select error

@@ -55,7 +55,7 @@ func setupPools(maxNumPoolsToGen int) []swaptypes.PoolI {
 	return pools
 }
 
-func BenchmarkswapPoolSerialization(b *testing.B) {
+func BenchmarkSwapPoolSerialization(b *testing.B) {
 	tempDir := b.TempDir()
 	app := simapp.New(tempDir).(*joltifyapp.App)
 
@@ -72,11 +72,14 @@ func BenchmarkswapPoolSerialization(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := i % maxNumPoolsToGen
-		app.SwapKeeper.MarshalPool(pools[j])
+		_, err := app.SwapKeeper.MarshalPool(pools[j])
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
-func BenchmarkswapPoolDeserialization(b *testing.B) {
+func BenchmarkSwapPoolDeserialization(b *testing.B) {
 	tempDir := b.TempDir()
 	app := simapp.New(tempDir).(*joltifyapp.App)
 	maxNumPoolsToGen := 5000
@@ -90,6 +93,9 @@ func BenchmarkswapPoolDeserialization(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := i % maxNumPoolsToGen
-		app.SwapKeeper.UnmarshalPool(marshals[j])
+		_, err := app.SwapKeeper.UnmarshalPool(marshals[j])
+		if err != nil {
+			panic(err)
+		}
 	}
 }

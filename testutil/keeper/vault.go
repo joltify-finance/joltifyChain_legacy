@@ -1,29 +1,26 @@
 package keeper
 
 import (
+	"github.com/stretchr/testify/require"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	joltifyapp "gitlab.com/joltify/joltifychain/app"
 	"testing"
+
+	"gitlab.com/joltify/joltifychain/testutil/simapp"
+
+	"os"
+	path2 "path"
+	"runtime"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	types2 "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmdb "github.com/tendermint/tm-db"
-
-	"gitlab.com/joltify/joltifychain/x/vault/keeper"
-	"gitlab.com/joltify/joltifychain/x/vault/types"
 )
 
 type testVaultStaking struct{}
+
+var _ testVaultStaking
 
 func (t testVaultStaking) GetHistoricalInfo(ctx sdk.Context, height int64) (stakingtypes.HistoricalInfo, bool) {
 	operatorStr := "joltval1f0atl7egduue8a07j42hyklct0sqa68wyh02h6"
@@ -44,10 +41,6 @@ func (t testVaultStaking) GetHistoricalInfo(ctx sdk.Context, height int64) (stak
 	return historicalInfo, true
 }
 
-func (t testVaultStaking) IterateBondedValidatorsByPower(context sdk.Context, f func(index int64, validator stakingtypes.ValidatorI) (stop bool)) {
-	panic("implement me")
-}
-
 func (t testVaultStaking) IterateLastValidators(context sdk.Context, f func(index int64, validator stakingtypes.ValidatorI) (stop bool)) {
 	panic("implement me")
 }
@@ -60,27 +53,11 @@ func (t testVaultStaking) ValidatorsPowerStoreIterator(ctx sdk.Context) sdk.Iter
 	panic("implement me")
 }
 
-func (t testVaultStaking) SetLastValidatorPower(ctx sdk.Context, operator sdk.ValAddress, power int64) {
-	panic("implement me")
-}
-
-func (t testVaultStaking) BlockValidatorUpdates(ctx sdk.Context) []abci.ValidatorUpdate {
-	panic("implement me")
-}
-
 func (t testVaultStaking) UnbondAllMatureValidators(ctx sdk.Context) {
 	panic("implement me")
 }
 
 func (t testVaultStaking) DequeueAllMatureUBDQueue(ctx sdk.Context, currTime time.Time) (matureUnbonds []stakingtypes.DVPair) {
-	panic("implement me")
-}
-
-func (t testVaultStaking) CompleteUnbonding(ctx sdk.Context, delAddr sdk.AccAddress, valAddr sdk.ValAddress) (sdk.Coins, error) {
-	panic("implement me")
-}
-
-func (t testVaultStaking) DequeueAllMatureRedelegationQueue(ctx sdk.Context, currTime time.Time) (matureRedelegations []stakingtypes.DVVTriplet) {
 	panic("implement me")
 }
 
@@ -110,10 +87,6 @@ func (t testVaultStaking) SetValidatorByPowerIndex(ctx sdk.Context, validator st
 	panic("implement me")
 }
 
-func (t testVaultStaking) DeleteValidatorQueue(ctx sdk.Context, val stakingtypes.Validator) {
-	panic("implement me")
-}
-
 func (t testVaultStaking) AfterValidatorBonded(ctx sdk.Context, consAddr sdk.ConsAddress, valAddr sdk.ValAddress) {
 	panic("implement me")
 }
@@ -138,30 +111,20 @@ func (t testVaultStaking) BondDenom(ctx sdk.Context) (res string) {
 	panic("implement me")
 }
 
-func SetupVaultKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
-	storeKey := sdk.NewKVStoreKey(types.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+// setup the general vault app
+func SetupVaultApp(t testing.TB) (*joltifyapp.App, sdk.Context) {
+	dir := os.TempDir()
+	pc, _, _, _ := runtime.Caller(1)
+	tempPath := path2.Join(dir, runtime.FuncForPC(pc).Name())
+	defer func(tempPath string) {
+		err := os.RemoveAll(tempPath)
+		require.NoError(t, err)
+	}(tempPath)
+	app := simapp.New(tempPath).(*joltifyapp.App)
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 10, Time: time.Now().UTC()})
+	params := app.StakingKeeper.GetParams(ctx)
+	params.MaxValidators = 3
+	app.StakingKeeper.SetParams(ctx, params)
 
-	db := tmdb.NewMemDB()
-	stateStore := store.NewCommitMultiStore(db)
-	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
-	require.NoError(t, stateStore.LoadLatestVersion())
-
-	testVaultStaking := testVaultStaking{}
-
-	app := simapp.Setup(false)
-
-	registry := codectypes.NewInterfaceRegistry()
-	keeper := keeper.NewKeeper(
-		codec.NewProtoCodec(registry),
-		storeKey,
-		memStoreKey,
-		testVaultStaking,
-		app.BankKeeper,
-		types2.NewSubspace(app.AppCodec(), app.LegacyAmino(), storeKey, memStoreKey, types.ModuleName),
-		app.AccountKeeper,
-	)
-	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
-	return keeper, ctx
+	return app, ctx
 }

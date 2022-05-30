@@ -155,7 +155,7 @@ func (k Keeper) CleanupBalancerPool(ctx sdk.Context, poolIds []uint64, excludedM
 				continue
 			}
 			err = k.bankKeeper.SendCoins(
-				ctx, pool.GetAddress(), addr, sdk.Coins{{asset.Token.Denom, lpShareEquivalentTokens}})
+				ctx, pool.GetAddress(), addr, sdk.Coins{sdk.Coin{Denom: asset.Token.Denom, Amount: lpShareEquivalentTokens}})
 			if err != nil {
 				return true
 			}

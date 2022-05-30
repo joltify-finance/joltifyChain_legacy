@@ -170,16 +170,6 @@ type testCase struct {
 	swapFee, exitFee                sdk.Dec
 }
 
-func (tc testCase) reverse() testCase {
-	return testCase{
-		tc.tokenBalanceOut, tc.tokenWeightOut,
-		tc.tokenBalanceIn, tc.tokenWeightIn,
-		tc.totalWeight,
-		tc.poolSupply,
-		tc.swapFee, tc.exitFee,
-	}
-}
-
 func tc(t *testing.T, tokenBalanceIn, tokenWeightIn, tokenBalanceOut, tokenWeightOut, totalWeight, poolSupply, swapFee, exitFee string) (res testCase) {
 	var err error
 	res.tokenBalanceIn, err = sdk.NewDecFromStr(tokenBalanceIn)

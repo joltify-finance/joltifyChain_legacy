@@ -89,7 +89,6 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 			newProposal.Nodes = []sdk.AccAddress{msg.Creator}
 			info.Proposal = append(info.Proposal, &newProposal)
 		}
-
 	} else {
 		addr, err := PubKeyToPoolAddr(msg.PoolPubKey)
 		if err != nil {
@@ -105,7 +104,7 @@ func (k msgServer) CreateCreatePool(goCtx context.Context, msg *types.MsgCreateC
 
 		err = k.setupAccount(ctx, addr)
 		if err != nil {
-			ctx.Logger().Info("account exist!!", "result")
+			ctx.Logger().Error("account exist!!", "result")
 			return nil, err
 		}
 	}

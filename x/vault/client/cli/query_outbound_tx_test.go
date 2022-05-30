@@ -87,9 +87,8 @@ func TestShowOutboundTx(t *testing.T) {
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.OutboundTx)
 				require.Equal(t,
-					nullify.Fill(&tc.obj),
-					nullify.Fill(&resp.OutboundTx),
-				)
+					tc.obj.String(),
+					resp.OutboundTx.String())
 			}
 		})
 	}
@@ -123,10 +122,17 @@ func TestListOutboundTx(t *testing.T) {
 			var resp types.QueryAllOutboundTxResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.OutboundTx), step)
-			require.Subset(t,
-				nullify.Fill(objs),
-				nullify.Fill(resp.OutboundTx),
-			)
+
+			var a []string
+			for _, el := range objs {
+				a = append(a, el.String())
+			}
+
+			var b []string
+			for _, el := range resp.OutboundTx {
+				b = append(b, el.String())
+			}
+			require.Subset(t, a, b)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -139,10 +145,18 @@ func TestListOutboundTx(t *testing.T) {
 			var resp types.QueryAllOutboundTxResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.OutboundTx), step)
-			require.Subset(t,
-				nullify.Fill(objs),
-				nullify.Fill(resp.OutboundTx),
-			)
+
+			var a []string
+			for _, el := range objs {
+				a = append(a, el.String())
+			}
+
+			var b []string
+			for _, el := range resp.OutboundTx {
+				b = append(b, el.String())
+			}
+
+			require.Subset(t, a, b)
 			next = resp.Pagination.NextKey
 		}
 	})
@@ -154,9 +168,17 @@ func TestListOutboundTx(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t,
-			nullify.Fill(objs),
-			nullify.Fill(resp.OutboundTx),
-		)
+
+		var a []string
+		for _, el := range objs {
+			a = append(a, el.String())
+		}
+
+		var b []string
+		for _, el := range resp.OutboundTx {
+			b = append(b, el.String())
+		}
+
+		require.ElementsMatch(t, a, b)
 	})
 }

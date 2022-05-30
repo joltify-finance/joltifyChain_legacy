@@ -15,7 +15,8 @@ import (
 
 func TestIssueTokenQuerySingle(t *testing.T) {
 	setupBech32Prefix()
-	k, _, wctx := setupMsgServer(t)
+	app, _, wctx := setupMsgServer(t)
+	k := &app.VaultKeeper
 	ctx := sdk.UnwrapSDKContext(wctx)
 	msgs, err := createNIssueToken(k, ctx, 2)
 	assert.Nil(t, err)
@@ -59,7 +60,8 @@ func TestIssueTokenQuerySingle(t *testing.T) {
 
 func TestIssueTokenQueryPaginated(t *testing.T) {
 	setupBech32Prefix()
-	k, _, wctx := setupMsgServer(t)
+	app, _, wctx := setupMsgServer(t)
+	k := &app.VaultKeeper
 	ctx := sdk.UnwrapSDKContext(wctx)
 	msgs, err := createNIssueToken(k, ctx, 5)
 	assert.Nil(t, err)

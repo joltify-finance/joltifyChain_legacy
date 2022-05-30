@@ -35,10 +35,10 @@ func TestCreatePoolGet(t *testing.T) {
 		assert.Nil(t, err)
 	}
 
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10, addresses)
+	app, ctx := keepertest.SetupVaultApp(t)
+	items := createNCreatePool(&app.VaultKeeper, ctx, 10, addresses)
 	for _, item := range items {
-		rst, found := keeper.GetCreatePool(ctx, item.BlockHeight)
+		rst, found := app.VaultKeeper.GetCreatePool(ctx, item.BlockHeight)
 		assert.True(t, found)
 		assert.Equal(t, item, rst)
 	}
@@ -53,11 +53,12 @@ func TestCreatePoolRemove(t *testing.T) {
 		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
 		assert.Nil(t, err)
 	}
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10, addresses)
+	app, ctx := keepertest.SetupVaultApp(t)
+
+	items := createNCreatePool(&app.VaultKeeper, ctx, 10, addresses)
 	for _, item := range items {
-		keeper.RemoveCreatePool(ctx, item.BlockHeight)
-		_, found := keeper.GetCreatePool(ctx, item.BlockHeight)
+		app.VaultKeeper.RemoveCreatePool(ctx, item.BlockHeight)
+		_, found := app.VaultKeeper.GetCreatePool(ctx, item.BlockHeight)
 		assert.False(t, found)
 	}
 }
@@ -71,7 +72,7 @@ func TestCreatePoolGetAll(t *testing.T) {
 		addresses[i], err = sdk.AccAddressFromBech32(addressesStr[i])
 		assert.Nil(t, err)
 	}
-	keeper, ctx := keepertest.SetupVaultKeeper(t)
-	items := createNCreatePool(keeper, ctx, 10, addresses)
-	assert.Equal(t, items, keeper.GetAllCreatePool(ctx))
+	app, ctx := keepertest.SetupVaultApp(t)
+	items := createNCreatePool(&app.VaultKeeper, ctx, 10, addresses)
+	assert.Equal(t, items, app.VaultKeeper.GetAllCreatePool(ctx))
 }

@@ -1,7 +1,6 @@
 package swap_test
 
 import (
-	"fmt"
 	"os"
 	path2 "path"
 	"runtime"
@@ -83,7 +82,7 @@ func TestSwapInitGenesis(t *testing.T) {
 func TestSwapExportGenesis(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)
@@ -131,7 +130,7 @@ func TestSwapExportGenesis(t *testing.T) {
 func TestMarshalUnmarshalGenesis(t *testing.T) {
 	dir := os.TempDir()
 	pc, _, _, _ := runtime.Caller(1)
-	tempPath := path2.Join(dir, fmt.Sprintf("%s", runtime.FuncForPC(pc).Name()))
+	tempPath := path2.Join(dir, runtime.FuncForPC(pc).Name())
 	defer func(tempPath string) {
 		err := os.RemoveAll(tempPath)
 		require.NoError(t, err)
