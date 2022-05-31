@@ -504,7 +504,7 @@ func (s IntegrationTestSuite) TestNewSwapExactAmountOutCmd() {
 		expectedCode uint32
 	}{
 		{
-			"swap exact amount out", // osmosisd tx swap swap-exact-amount-out 10stake 20 --swap-route-pool-ids=1 --swap-route-denoms=node0token --from=validator --keyring-backend=test --chain-id=testing --yes
+			"swap exact amount out", // joltifyd tx swap swap-exact-amount-out 10stake 20 --swap-route-pool-ids=1 --swap-route-denoms=node0token --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"10stake", "20",
 				fmt.Sprintf("--%s=%d", cli.FlagSwapRoutePoolIds, 1),
@@ -567,7 +567,7 @@ func (s IntegrationTestSuite) TestNewJoinSwapExternAmountInCmd() {
 		expectedCode uint32
 	}{
 		{
-			"join swap extern amount in", // osmosisd tx swap join-swap-extern-amount-in --pool-id=1 10stake 1 --from=validator --keyring-backend=test --chain-id=testing --yes
+			"join swap extern amount in", // joltifyd tx swap join-swap-extern-amount-in --pool-id=1 10stake 1 --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"10stake", "1",
 				fmt.Sprintf("--%s=%d", cli.FlagPoolId, 1),
@@ -613,7 +613,7 @@ func (s IntegrationTestSuite) TestNewExitSwapExternAmountOutCmd() {
 		expectedCode uint32
 	}{
 		{
-			"exit swap extern amount out", // osmosisd tx swap exit-swap-extern-amount-out --pool-id=1 10stake 1 --from=validator --keyring-backend=test --chain-id=testing --yes
+			"exit swap extern amount out", // joltifyd tx swap exit-swap-extern-amount-out --pool-id=1 10stake 1 --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"10stake", "10000000000000000000",
 				fmt.Sprintf("--%s=%d", cli.FlagPoolId, 1),
@@ -675,7 +675,7 @@ func (s IntegrationTestSuite) TestNewJoinSwapShareAmountOutCmd() {
 		expectedCode uint32
 	}{
 		{
-			"join swap share amount out", // osmosisd tx swap join-swap-share-amount-out --pool-id=1 stake 10 1 --from=validator --keyring-backend=test --chain-id=testing --yes
+			"join swap share amount out", // joltifyd tx swap join-swap-share-amount-out --pool-id=1 stake 10 1 --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"stake", "50", "5000000000000000000",
 				fmt.Sprintf("--%s=%d", cli.FlagPoolId, 1),
@@ -721,7 +721,7 @@ func (s IntegrationTestSuite) TestNewExitSwapShareAmountInCmd() {
 		expectedCode uint32
 	}{
 		{
-			"exit swap share amount in", // osmosisd tx swap exit-swap-share-amount-in --pool-id=1 stake 10 1 --from=validator --keyring-backend=test --chain-id=testing --yes
+			"exit swap share amount in", // joltifyd tx swap exit-swap-share-amount-in --pool-id=1 stake 10 1 --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"stake", "10000000000000000000", "1",
 				fmt.Sprintf("--%s=%d", cli.FlagPoolId, 1),
@@ -777,7 +777,7 @@ func (s *IntegrationTestSuite) TestGetCmdPools() {
 		tc := tc
 
 		s.Run(tc.name, func() {
-			cmd := cli.GetCmdPools() // osmosisd query swap pools
+			cmd := cli.GetCmdPools() // joltifyd query swap pools
 			clientCtx := val.ClientCtx
 
 			out, err := clitestutil.ExecTestCLICmd(clientCtx, cmd, tc.args)
@@ -815,7 +815,7 @@ func (s *IntegrationTestSuite) TestGetCmdNumPools() {
 		tc := tc
 
 		s.Run(tc.name, func() {
-			cmd := cli.GetCmdNumPools() // osmosisd query swap num-pools
+			cmd := cli.GetCmdNumPools() // joltifyd query swap num-pools
 			clientCtx := val.ClientCtx
 
 			out, err := clitestutil.ExecTestCLICmd(clientCtx, cmd, tc.args)
@@ -841,7 +841,7 @@ func (s *IntegrationTestSuite) TestGetCmdPool() {
 		expectErr bool
 	}{
 		{
-			"query pool by id", // osmosisd query swap pool 1
+			"query pool by id", // joltifyd query swap pool 1
 			[]string{
 				"1",
 				fmt.Sprintf("--%s=%s", tmcli.OutputFlag, "json"),
@@ -879,7 +879,7 @@ func (s *IntegrationTestSuite) TestGetCmdPoolAssets() {
 		expectErr bool
 	}{
 		{
-			"query pool assets by pool id", // osmosisd query swap pool-assets 1
+			"query pool assets by pool id", // joltifyd query swap pool-assets 1
 			[]string{
 				"1",
 				fmt.Sprintf("--%s=%s", tmcli.OutputFlag, "json"),
@@ -916,7 +916,7 @@ func (s *IntegrationTestSuite) TestGetCmdTotalShares() {
 		expectErr bool
 	}{
 		{
-			"query pool total share by id", // osmosisd query swap total-share 1
+			"query pool total share by id", // joltifyd query swap total-share 1
 			[]string{
 				"1",
 				fmt.Sprintf("--%s=%s", tmcli.OutputFlag, "json"),
@@ -953,7 +953,7 @@ func (s *IntegrationTestSuite) TestGetCmdTotalLiquidity() {
 		expectErr bool
 	}{
 		{
-			"query total liquidity", // osmosisd query swap total-liquidity
+			"query total liquidity", // joltifyd query swap total-liquidity
 			[]string{
 				fmt.Sprintf("--%s=%s", tmcli.OutputFlag, "json"),
 			},
@@ -989,7 +989,7 @@ func (s *IntegrationTestSuite) TestGetCmdSpotPrice() {
 		expectErr bool
 	}{
 		{
-			"query pool spot price", // osmosisd query swap spot-price 1 stake node0token
+			"query pool spot price", // joltifyd query swap spot-price 1 stake node0token
 			[]string{
 				"1", "stake", "node0token",
 				fmt.Sprintf("--%s=%s", tmcli.OutputFlag, "json"),
@@ -1026,7 +1026,7 @@ func (s *IntegrationTestSuite) TestGetCmdSpotPrice() {
 // 		expectErr bool
 // 	}{
 // 		{
-// 			"query pool estimate swap exact amount in", // osmosisd query swap estimate-swap-exact-amount-in 1 cosmos1n8skk06h3kyh550ad9qketlfhc2l5dsdevd3hq 10.0stake --swap-route-pool-ids=1 --swap-route-denoms=node0token
+// 			"query pool estimate swap exact amount in", // joltifyd query swap estimate-swap-exact-amount-in 1 cosmos1n8skk06h3kyh550ad9qketlfhc2l5dsdevd3hq 10.0stake --swap-route-pool-ids=1 --swap-route-denoms=node0token
 // 			[]string{
 // 				"1",
 // 				"cosmos1n8skk06h3kyh550ad9qketlfhc2l5dsdevd3hq",
@@ -1067,7 +1067,7 @@ func (s *IntegrationTestSuite) TestGetCmdSpotPrice() {
 // 		expectErr bool
 // 	}{
 // 		{
-// 			"query pool estimate swap exact amount in", // osmosisd query swap estimate-swap-exact-amount-in 1 cosmos1n8skk06h3kyh550ad9qketlfhc2l5dsdevd3hq 10.0stake --swap-route-pool-ids=1 --swap-route-denoms=node0token
+// 			"query pool estimate swap exact amount in", // joltifyd query swap estimate-swap-exact-amount-in 1 cosmos1n8skk06h3kyh550ad9qketlfhc2l5dsdevd3hq 10.0stake --swap-route-pool-ids=1 --swap-route-denoms=node0token
 // 			[]string{
 // 				"1",
 // 				val.Address.String(),
@@ -1127,7 +1127,7 @@ func (s IntegrationTestSuite) TestNewSwapExactAmountInCmd() {
 		expectedCode uint32
 	}{
 		{
-			"swap exact amount in", // osmosisd tx swap swap-exact-amount-in 10stake 3 --swap-route-pool-ids=1 --swap-route-denoms=node0token --from=validator --keyring-backend=test --chain-id=testing --yes
+			"swap exact amount in", // joltifyd tx swap swap-exact-amount-in 10stake 3 --swap-route-pool-ids=1 --swap-route-denoms=node0token --from=validator --keyring-backend=test --chain-id=testing --yes
 			[]string{
 				"10stake", "3",
 				fmt.Sprintf("--%s=%d", cli.FlagSwapRoutePoolIds, 1),

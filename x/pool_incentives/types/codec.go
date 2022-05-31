@@ -7,7 +7,7 @@ import (
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&UpdatePoolIncentivesProposal{}, "osmosis/UpdatePoolIncentivesProposal", nil)
+	cdc.RegisterConcrete(&UpdatePoolIncentivesProposal{}, "joltify/UpdatePoolIncentivesProposal", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {

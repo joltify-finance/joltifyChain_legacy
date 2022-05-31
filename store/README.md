@@ -55,7 +55,7 @@ TODO: Improve diagrams showing this accumulated weight concept with a binary tre
 
 ## Implementation Details
 
-The B-Tree implementation under `osmosis/store` is designed specifically for allowing efficient computation of a random prefix sum, with the underlying data being updatable as explained above.
+The B-Tree implementation under `joltify/store` is designed specifically for allowing efficient computation of a random prefix sum, with the underlying data being updatable as explained above.
 
 
 

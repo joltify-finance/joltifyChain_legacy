@@ -11,12 +11,12 @@ To initialize a gauge, the creator should decide the following parameters:
 - Distribution condition: denom to incentivize and minimum lockup duration.
 - Rewards: tokens to be distributed to the lockup owners.
 - Start time: time when the distribution will begin.
-- Total epochs: number of epochs to distribute over. (Osmosis epochs are 1 day each, ending at 5PM UTC everyday)
+- Total epochs: number of epochs to distribute over. (joltify epochs are 1 day each, ending at 5PM UTC everyday)
 
 Making transaction is done in the following format:
 
 ```bash
-osmosisd tx incentives create-gauge [denom] [reward] 
+joltifyd tx incentives create-gauge [denom] [reward] 
   --duration [minimum duration for lockups, nullable]
   --start-time [start time in RFC3339 or unix format, nullable]
   # one of --perpetual or --epochs
@@ -39,7 +39,7 @@ MsgCreateGauge:
 - Total epochs: 2 (days)
 
 ```bash
-osmosisd tx incentives create-gauge LPToken 1000MyToken \
+joltifyd tx incentives create-gauge LPToken 1000MyToken \
   --duration 24h \
   --start-time 2022-01-01T00:00:00Z \
   --epochs 2
@@ -58,7 +58,7 @@ MsgCreateGauge:
 - Total epochs: 1 (perpetual)
 
 ```bash
-osmosisd tx incentives create-gauge atom 1000MyToken
+joltifyd tx incentives create-gauge atom 1000MyToken
   --perpetual \  
   --duration 168h 
 ```
@@ -70,5 +70,5 @@ MsgAddToGauge:
 - Rewards: 500 MyTokens
 
 ```bash
-osmosisd tx incentives add-to-gauge $GAUGE_ID 500MyToken
+joltifyd tx incentives add-to-gauge $GAUGE_ID 500MyToken
 ```

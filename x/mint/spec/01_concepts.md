@@ -5,7 +5,7 @@ order: 0
 # Concepts
 
 The `x/mint` module is designed to handle the regular printing of new tokens within a chain.
-The design taken within Osmosis is to
+The design taken within joltify is to
 
 - Mint new tokens once per epoch (default one week)
 - To have a "Reductioning factor" every period, which reduces the amount of rewards per epoch.

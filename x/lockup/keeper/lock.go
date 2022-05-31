@@ -91,7 +91,7 @@ func (k Keeper) addTokensToLock(ctx sdk.Context, lock *types.PeriodLock, coins s
 
 // removeTokensFromLock is called by lockup slash function - called by superfluid module only
 func (k Keeper) removeTokensFromLock(ctx sdk.Context, lock *types.PeriodLock, coins sdk.Coins) error {
-	// TODO: Handle 100% slash eventually, not needed for osmosis codebase atm.
+	// TODO: Handle 100% slash eventually, not needed for joltify codebase atm.
 	lock.Coins = lock.Coins.Sub(coins)
 
 	err := k.setLock(ctx, *lock)
@@ -523,13 +523,13 @@ func (k Keeper) BreakAllSyntheticLocks(ctx sdk.Context, lock types.PeriodLock, s
 	}
 
 	// Synth locks have data set in two places, accumulation store & setSyntheticLockAndResetRefs
-	// see that [CreateSyntheticLock](https://github.com/osmosis-labs/osmosis/blob/v7.3.0/x/lockup/keeper/synthetic_lock.go#L105)
+	// see that [CreateSyntheticLock](https://github.com/joltify-labs/joltify/blob/v7.3.0/x/lockup/keeper/synthetic_lock.go#L105)
 	// only has 3 set locations:
 	// - k.setSyntheticLockupObject(ctx, &synthLock)
 	// - k.addSyntheticLockRefs(ctx, *lock, synthLock)
 	// - k.accumulationStore(ctx, synthLock.SynthDenom).Increase(accumulationKey(unlockDuration), coin.Amount)
 	// ALL of which are reverted in the method DeleteSyntheticLock, here:
-	// https://github.com/osmosis-labs/osmosis/blob/v7.3.0/x/lockup/keeper/synthetic_lock.go#L156
+	// https://github.com/joltify-labs/joltify/blob/v7.3.0/x/lockup/keeper/synthetic_lock.go#L156
 	for _, synthLock := range synthLocks {
 		err := k.DeleteSyntheticLockup(ctx, lock.ID, synthLock.SynthDenom)
 		if err != nil {

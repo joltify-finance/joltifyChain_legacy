@@ -33,7 +33,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 	}(tempPath)
 
 	app := simapp.New(tempPath).(*joltifyapp.App)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "osmosis-1", Time: time.Now().UTC()})
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "joltify-1", Time: time.Now().UTC()})
 	suite.app = app
 	suite.ctx = ctx
 

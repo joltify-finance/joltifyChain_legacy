@@ -32,7 +32,11 @@ import IbcGoV2IbcCoreClientV1 from './ibc-go/v2/ibc.core.client.v1'
 import IbcGoV2IbcCoreConnectionV1 from './ibc-go/v2/ibc.core.connection.v1'
 import IbcGoV2IbcCorePortV1 from './ibc-go/v2/ibc.core.port.v1'
 import JoltifyJoltifychainJoltifyJoltifychainEpochs from './joltify/joltifychain/joltify.joltifychain.epochs'
+import JoltifyJoltifychainJoltifyJoltifychainIncentives from './joltify/joltifychain/joltify.joltifychain.incentives'
 import JoltifyJoltifychainJoltifyJoltifychainInvoice from './joltify/joltifychain/joltify.joltifychain.invoice'
+import JoltifyJoltifychainJoltifyJoltifychainLockup from './joltify/joltifychain/joltify.joltifychain.lockup'
+import JoltifyJoltifychainJoltifyJoltifychainMintV1Beta1 from './joltify/joltifychain/joltify.joltifychain.mint.v1beta1'
+import JoltifyJoltifychainJoltifyJoltifychainPoolincentivesV1Beta1 from './joltify/joltifychain/joltify.joltifychain.poolincentives.v1beta1'
 import JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1 from './joltify/joltifychain/joltify.joltifychain.swap.v1beta1'
 import JoltifyJoltifychainJoltifyJoltifychainVault from './joltify/joltifychain/joltify.joltifychain.vault'
 import TendermintSpnTendermintSpnMonitoringp from './tendermint/spn/tendermint.spn.monitoringp'
@@ -71,7 +75,11 @@ export default {
   IbcGoV2IbcCoreConnectionV1: load(IbcGoV2IbcCoreConnectionV1, 'ibc.core.connection.v1'),
   IbcGoV2IbcCorePortV1: load(IbcGoV2IbcCorePortV1, 'ibc.core.port.v1'),
   JoltifyJoltifychainJoltifyJoltifychainEpochs: load(JoltifyJoltifychainJoltifyJoltifychainEpochs, 'joltify.joltifychain.epochs'),
+  JoltifyJoltifychainJoltifyJoltifychainIncentives: load(JoltifyJoltifychainJoltifyJoltifychainIncentives, 'joltify.joltifychain.incentives'),
   JoltifyJoltifychainJoltifyJoltifychainInvoice: load(JoltifyJoltifychainJoltifyJoltifychainInvoice, 'joltify.joltifychain.invoice'),
+  JoltifyJoltifychainJoltifyJoltifychainLockup: load(JoltifyJoltifychainJoltifyJoltifychainLockup, 'joltify.joltifychain.lockup'),
+  JoltifyJoltifychainJoltifyJoltifychainMintV1Beta1: load(JoltifyJoltifychainJoltifyJoltifychainMintV1Beta1, 'joltify.joltifychain.mint.v1beta1'),
+  JoltifyJoltifychainJoltifyJoltifychainPoolincentivesV1Beta1: load(JoltifyJoltifychainJoltifyJoltifychainPoolincentivesV1Beta1, 'joltify.joltifychain.poolincentives.v1beta1'),
   JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1: load(JoltifyJoltifychainJoltifyJoltifychainSwapV1Beta1, 'joltify.joltifychain.swap.v1beta1'),
   JoltifyJoltifychainJoltifyJoltifychainVault: load(JoltifyJoltifychainJoltifyJoltifychainVault, 'joltify.joltifychain.vault'),
   TendermintSpnTendermintSpnMonitoringp: load(TendermintSpnTendermintSpnMonitoringp, 'tendermint.spn.monitoringp'),

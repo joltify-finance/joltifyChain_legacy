@@ -407,18 +407,18 @@ export default {
 		},
 		
 		
-		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateOutboundTx({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateCreatePool(value)
+				const msg = await txClient.msgCreateOutboundTx(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateOutboundTx:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -437,32 +437,32 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateOutboundTx({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateCreatePool({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateOutboundTx(value)
+				const msg = await txClient.msgCreateCreatePool(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateOutboundTx:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateCreatePool:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgCreateCreatePool({ rootGetters }, { value }) {
+		async MsgCreateOutboundTx({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateCreatePool(value)
+				const msg = await txClient.msgCreateOutboundTx(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateOutboundTx:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -479,16 +479,16 @@ export default {
 				}
 			}
 		},
-		async MsgCreateOutboundTx({ rootGetters }, { value }) {
+		async MsgCreateCreatePool({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateOutboundTx(value)
+				const msg = await txClient.msgCreateCreatePool(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateOutboundTx:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateCreatePool:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateOutboundTx:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateCreatePool:Create Could not create message: ' + e.message)
 				}
 			}
 		},

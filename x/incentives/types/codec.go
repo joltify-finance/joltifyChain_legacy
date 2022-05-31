@@ -11,8 +11,8 @@ import (
 // concrete types on the provided LegacyAmino codec. These types are used for
 // Amino JSON serialization.
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgCreateGauge{}, "osmosis/incentives/create-gauge", nil)
-	cdc.RegisterConcrete(&MsgAddToGauge{}, "osmosis/incentives/add-to-gauge", nil)
+	cdc.RegisterConcrete(&MsgCreateGauge{}, "joltify/incentives/create-gauge", nil)
+	cdc.RegisterConcrete(&MsgAddToGauge{}, "joltify/incentives/add-to-gauge", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {

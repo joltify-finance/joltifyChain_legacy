@@ -17,44 +17,44 @@ service Query {
   rpc ModuleToDistributeCoins(ModuleToDistributeCoinsRequest)
       returns (ModuleToDistributeCoinsResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/module_to_distribute_coins";
+        "/joltify/incentives/v1beta1/module_to_distribute_coins";
   }
   // returns coins that are distributed by module so far
   rpc ModuleDistributedCoins(ModuleDistributedCoinsRequest)
       returns (ModuleDistributedCoinsResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/module_distributed_coins";
+        "/joltify/incentives/v1beta1/module_distributed_coins";
   }
 
   // returns Gauge by id
   rpc GaugeByID(GaugeByIDRequest) returns (GaugeByIDResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/gauge_by_id/{id}";
+        "/joltify/incentives/v1beta1/gauge_by_id/{id}";
   }
   // returns gauges both upcoming and active
   rpc Gauges(GaugesRequest) returns (GaugesResponse) {
-    option (google.api.http).get = "/osmosis/incentives/v1beta1/gauges";
+    option (google.api.http).get = "/joltify/incentives/v1beta1/gauges";
   }
   // returns active gauges
   rpc ActiveGauges(ActiveGaugesRequest) returns (ActiveGaugesResponse) {
-    option (google.api.http).get = "/osmosis/incentives/v1beta1/active_gauges";
+    option (google.api.http).get = "/joltify/incentives/v1beta1/active_gauges";
   }
   // returns active gauges per denom
   rpc ActiveGaugesPerDenom(ActiveGaugesPerDenomRequest)
       returns (ActiveGaugesPerDenomResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/active_gauges_per_denom";
+        "/joltify/incentives/v1beta1/active_gauges_per_denom";
   }
   // returns scheduled gauges
   rpc UpcomingGauges(UpcomingGaugesRequest) returns (UpcomingGaugesResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/upcoming_gauges";
+        "/joltify/incentives/v1beta1/upcoming_gauges";
   }
   // returns scheduled gauges per denom
   rpc UpcomingGaugesPerDenom(UpcomingGaugesPerDenomRequest)
       returns (UpcomingGaugesPerDenomResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/upcoming_gauges_per_denom";
+        "/joltify/incentives/v1beta1/upcoming_gauges_per_denom";
   }
 
   // RewardsEst returns an estimate of the rewards at a future specific time.
@@ -62,13 +62,13 @@ service Query {
   // for which they want to find the associated rewards.
   rpc RewardsEst(RewardsEstRequest) returns (RewardsEstResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/rewards_est/{owner}";
+        "/joltify/incentives/v1beta1/rewards_est/{owner}";
   }
   // returns lockable durations that are valid to give incentives
   rpc LockableDurations(QueryLockableDurationsRequest)
       returns (QueryLockableDurationsResponse) {
     option (google.api.http).get =
-        "/osmosis/incentives/v1beta1/lockable_durations";
+        "/joltify/incentives/v1beta1/lockable_durations";
   }
 }
 

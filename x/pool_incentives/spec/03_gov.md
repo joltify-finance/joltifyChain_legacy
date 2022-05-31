@@ -30,11 +30,11 @@ type UpdatePoolIncentivesProposal struct {
 `UpdatePoolIncentivesProposal` can be used by governance to update `DistrRecord`s.
 
 ```shell
-osmosisd tx gov submit-proposal update-pool-incentives [gaugeIds] [weights]
+joltifyd tx gov submit-proposal update-pool-incentives [gaugeIds] [weights]
 ```
 Proposals can be proposed in using the CLI command format above.  
 For example, to designate 100 weight to gauge id 2 and 200 weight to gauge id 3, the following command can be used.
 
 ```shell
-osmosisd tx gov submit-proposal update-pool-incentives 2,3 100,200
+joltifyd tx gov submit-proposal update-pool-incentives 2,3 100,200
 ```

@@ -1,5 +1,5 @@
 # swap Module
-This document introduces the [Queries](#queries) and [Transactions](#transactions) of the **G**eneralized **A**utomated **M**arket **M**aker (swap) module. The swap module provides the logic to create and interact with liquidity pools on the Osmosis DEX.
+This document introduces the [Queries](#queries) and [Transactions](#transactions) of the **G**eneralized **A**utomated **M**arket **M**aker (swap) module. The swap module provides the logic to create and interact with liquidity pools on the joltify DEX.
 
 
 
@@ -20,12 +20,12 @@ The **Query** submodule of the swap module provides the logic to request informa
 Query the estimated result of the [Swap Exact Amount In](#swap-exact-amount-in) transaction. Note that the flags *swap-route-pool* and *swap-route-denoms* are required.
 ### Usage
 ```sh
-osmosisd query swap estimate-swap-exact-amount-in <poolID> <sender> <tokenIn> [flags]
+joltifyd query swap estimate-swap-exact-amount-in <poolID> <sender> <tokenIn> [flags]
 ```
 ### Example
 Query the amount of ATOM the sender would receive for swapping 1 OSMO in pool 1.
 ```sh
-osmosisd query swap estimate-swap-exact-amount-in 1 osmo123nfq6m8f88m4g3sky570unsnk4zng4uqv7cm8 1000000uosmo --swap-route-pool-ids 1 --swap-route-denoms ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 
+joltifyd query swap estimate-swap-exact-amount-in 1 osmo123nfq6m8f88m4g3sky570unsnk4zng4uqv7cm8 1000000uosmo --swap-route-pool-ids 1 --swap-route-denoms ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 
 ```
 
 
@@ -33,12 +33,12 @@ osmosisd query swap estimate-swap-exact-amount-in 1 osmo123nfq6m8f88m4g3sky570un
 Query the estimated result of the [Swap Exact Amount Out](#swap-exact-amount-out) transaction. Note that the flags *swap-route-pool* and *swap-route-denoms* are required.
 ### Usage
 ```sh
-osmosisd query swap estimate-swap-exact-amount-out <poolID> <sender> <tokenOut> [flags]
+joltifyd query swap estimate-swap-exact-amount-out <poolID> <sender> <tokenOut> [flags]
 ```
 ### Example
 Query the amount of OSMO the sender would require to swap 1 ATOM out of pool 1.
 ```sh
-osmosisd query swap estimate-swap-exact-amount-out 1 osmo123nfq6m8f88m4g3sky570unsnk4zng4uqv7cm8 1000000ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 --swap-route-pool-ids 1 --swap-route-denoms uosmo
+joltifyd query swap estimate-swap-exact-amount-out 1 osmo123nfq6m8f88m4g3sky570unsnk4zng4uqv7cm8 1000000ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 --swap-route-pool-ids 1 --swap-route-denoms uosmo
 ```
 
 
@@ -46,7 +46,7 @@ osmosisd query swap estimate-swap-exact-amount-out 1 osmo123nfq6m8f88m4g3sky570u
 Query the number of active pools.
 ### Usage
 ```sh
-osmosisd query swap num-pools
+joltifyd query swap num-pools
 ```
 
 
@@ -54,12 +54,12 @@ osmosisd query swap num-pools
 Query the parameter and assets of a specific pool. 
 ### Usage
 ```sh
-osmosisd query swap pool <poolID> [flags]
+joltifyd query swap pool <poolID> [flags]
 ```
 ### Example
 Query parameters and assets from pool 1.
 ```sh
-osmosisd query swap pool 1
+joltifyd query swap pool 1
 ```
 
 
@@ -67,12 +67,12 @@ osmosisd query swap pool 1
 Query the assets of a specific pool. This query is a reduced form of the [Pool](#pool) query.
 ### Usage
 ```sh
-osmosisd query swap pool-assets <poolID> [flags]
+joltifyd query swap pool-assets <poolID> [flags]
 ```
 Query the assets from pool 1.
 ### Example
 ```sh
-osmosisd query swap pool-assets 1
+joltifyd query swap pool-assets 1
 ```
 
 
@@ -80,12 +80,12 @@ osmosisd query swap pool-assets 1
 Query the parameters of a specific pool. This query is a reduced form of the [Pool](#pool) query.
 ### Usage
 ```sh
-osmosisd query swap pool-params <poolID> [flags]
+joltifyd query swap pool-params <poolID> [flags]
 ```
 Query the parameters from pool 1.
 ### Example
 ```sh
-osmosisd query swap pool-params 1
+joltifyd query swap pool-params 1
 ```
 
 
@@ -93,7 +93,7 @@ osmosisd query swap pool-params 1
 Query parameters and assets of all active pools.
 ### Usage
 ```sh
-osmosisd query swap pools
+joltifyd query swap pools
 ```
 
 
@@ -101,12 +101,12 @@ osmosisd query swap pools
 Query the spot price of a pool asset based on a specific pool it is in.
 ### Usage
 ```sh
-osmosisd query swap spot-price <poolID> <tokenInDenom> <tokenOutDenom> [flags]
+joltifyd query swap spot-price <poolID> <tokenInDenom> <tokenOutDenom> [flags]
 ```
 ### Example
 Query the price of OSMO based on the price of ATOM in pool 1.
 ```sh
-osmosisd query swap spot-price 1 uosmo ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
+joltifyd query swap spot-price 1 uosmo ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2
 ```
 
 
@@ -114,7 +114,7 @@ osmosisd query swap spot-price 1 uosmo ibc/27394FB092D2ECCD56123C74F36E4C1F92600
 Query the total liquidity of all active pools.
 ### Usage
 ```sh
-osmosisd query swap total-liquidity
+joltifyd query swap total-liquidity
 ```
 
 
@@ -122,12 +122,12 @@ osmosisd query swap total-liquidity
 Query the total amount of swap shares of a specific pool.
 ### Usage
 ```sh
-osmosisd query swap total-share <poolID> [flags]
+joltifyd query swap total-share <poolID> [flags]
 ```
 ### Example
 Query the total amount of swap shares of pool 1.
 ```sh
-osmosisd query swap total-share 1
+joltifyd query swap total-share 1
 ```
 
 
@@ -150,7 +150,7 @@ The **Transaction** submodule of the swap module provides the logic to create an
 Create a new liquidity pool and provide the initial liquidity to it. Pool initialization parameters must be provided through a JSON file using the flag *pool-file*.
 #### Usage
 ```sh
-osmosisd tx swap create-pool [flags]
+joltifyd tx swap create-pool [flags]
 ```
 The configuration file *config.json* must specify the following parameters.
 ```sh
@@ -184,12 +184,12 @@ The configuration file contains the following parameters.
 Join a specific pool with a custom amount of tokens. Note that the flags *pool-id*, *max-amounts-in* and *share-amount-out* are required.
 #### Usage
 ```sh
-osmosisd tx swap join-pool [flags]
+joltifyd tx swap join-pool [flags]
 ```
 #### Example
 Join pool 1 with 1 OSMO and the respective amount of ATOM, using myKeyringWallet.
 ```sh
-osmosisd tx swap join-pool --pool-id 2 --max-amounts-in 1000000uosmo --max-amounts-in 1000000uion --share-amount-out 1000000 --from myKeyringWallet
+joltifyd tx swap join-pool --pool-id 2 --max-amounts-in 1000000uosmo --max-amounts-in 1000000uion --share-amount-out 1000000 --from myKeyringWallet
 ```
 
 
@@ -197,12 +197,12 @@ osmosisd tx swap join-pool --pool-id 2 --max-amounts-in 1000000uosmo --max-amoun
 Exit a specific pool with a custom amount of tokens. Note that the flags *pool-id*, *min-amounts-out* and *share-amount-in* are required.
 #### Usage
 ```sh
-osmosisd tx swap exit-pool [flags]
+joltifyd tx swap exit-pool [flags]
 ```
 #### Example
 Exit pool one with 1 OSMO and the respective amount of ATOM using myKeyringWallet.
 ```sh
-osmosisd tx swap exit-pool --pool-id 1 --min-amounts-out 1000000uosmo --share-amount-in 1000000 --from myKeyringWallet
+joltifyd tx swap exit-pool --pool-id 1 --min-amounts-out 1000000uosmo --share-amount-in 1000000 --from myKeyringWallet
 ```
 
 
@@ -210,11 +210,11 @@ osmosisd tx swap exit-pool --pool-id 1 --min-amounts-out 1000000uosmo --share-am
 Note that the flags *pool-id* is required.
 #### Usage
 ```sh
-osmosisd tx swap join-swap-extern-amount-in [token-in] [share-out-min-amount] [flags]
+joltifyd tx swap join-swap-extern-amount-in [token-in] [share-out-min-amount] [flags]
 ```
 #### Example
 ```sh
-osmosisd tx swap join-swap-extern-amount-in 1000000uosmo 1000000 --pool-id 1 --from myKeyringWallet
+joltifyd tx swap join-swap-extern-amount-in 1000000uosmo 1000000 --pool-id 1 --from myKeyringWallet
 ```
 
 
@@ -222,11 +222,11 @@ osmosisd tx swap join-swap-extern-amount-in 1000000uosmo 1000000 --pool-id 1 --f
 Note that the flag *pool-id* is required.
 #### Usage
 ```sh
-osmosisd tx swap exit-swap-extern-amount-out [token-out] [share-in-max-amount] [flags]
+joltifyd tx swap exit-swap-extern-amount-out [token-out] [share-in-max-amount] [flags]
 ```
 #### Example
 ```sh
-osmosisd tx swap exit-swap-extern-amount-out 1000000uosmo 1000000 --pool-id 1 --from myKeyringWallet
+joltifyd tx swap exit-swap-extern-amount-out 1000000uosmo 1000000 --pool-id 1 --from myKeyringWallet
 
 ```
 
@@ -235,11 +235,11 @@ osmosisd tx swap exit-swap-extern-amount-out 1000000uosmo 1000000 --pool-id 1 --
 Note that the flag *pool-id* is required.
 #### Usage
 ```sh
-osmosisd tx swap join-swap-share-amount-out [token-in-denom] [token-in-max-amount] [share-out-amount] [flags]
+joltifyd tx swap join-swap-share-amount-out [token-in-denom] [token-in-max-amount] [share-out-amount] [flags]
 ```
 #### Example
 ```sh
-osmosisd tx swap join-swap-share-amount-out uosmo 1000000 1000000 --pool-id 1 --from myKeyringWallet
+joltifyd tx swap join-swap-share-amount-out uosmo 1000000 1000000 --pool-id 1 --from myKeyringWallet
 ```
 
 
@@ -247,23 +247,23 @@ osmosisd tx swap join-swap-share-amount-out uosmo 1000000 1000000 --pool-id 1 --
 Note that the flag *pool-id* is required.
 #### Usage
 ```sh
-osmosisd tx swap exit-swap-share-amount-in [token-out-denom] [share-in-amount] [token-out-min-amount] [flags]
+joltifyd tx swap exit-swap-share-amount-in [token-out-denom] [share-in-amount] [token-out-min-amount] [flags]
 ```
 #### Example
 ```sh
-osmosisd tx swap exit-swap-share-amount-in uosmo 1000000 1000000 --pool-id 1 --from myKeyringWallet
+joltifyd tx swap exit-swap-share-amount-in uosmo 1000000 1000000 --pool-id 1 --from myKeyringWallet
 ```
 
 ## Swap Exact Amount In
 Swap an exact amount of tokens into a specific pool. Note that the flags *swap-route-pool-ids* and *swap-route-denoms* are required.
 #### Usage
 ```sh
-osmosisd tx swap swap-exact-amount-in [token-in] [token-out-min-amount] [flags]
+joltifyd tx swap swap-exact-amount-in [token-in] [token-out-min-amount] [flags]
 ```
 #### Example
 Swap 1 OSMO through pool 1 into at least 0.3 ATOM using MyKeyringWallet.
 ```sh
-osmosisd tx swap swap-exact-amount-in 1000000uosmo 300000 --swap-route-pool-ids 1 --swap-route-denoms ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 --from MyKeyringWallet
+joltifyd tx swap swap-exact-amount-in 1000000uosmo 300000 --swap-route-pool-ids 1 --swap-route-denoms ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 --from MyKeyringWallet
 ```
 
 
@@ -271,12 +271,12 @@ osmosisd tx swap swap-exact-amount-in 1000000uosmo 300000 --swap-route-pool-ids 
 Swap an exact amount of tokens out of a specific pool. Note that the flags *swap-route-pool-ids* and *swap-route-denoms* are required.
 #### Usage
 ```sh
-osmosisd tx swap swap-exact-amount-out [token-out] [token-out-max-amount] [flags]
+joltifyd tx swap swap-exact-amount-out [token-out] [token-out-max-amount] [flags]
 ```
 #### Example
 Swap 1 ATOM through pool 1 into at most 2.5 OSMO using MyKeyringWallet.
 ```sh
-osmosisd tx swap swap-exact-amount-out 1000000ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 250000 --swap-route-pool-ids 1 --swap-route-denoms uosmo --from MyKeyringWallet
+joltifyd tx swap swap-exact-amount-out 1000000ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2 250000 --swap-route-pool-ids 1 --swap-route-denoms uosmo --from MyKeyringWallet
 ```
 
 # Other resources
