@@ -8,21 +8,21 @@ import (
 )
 
 func (app *App) setupHooks() {
-	app.SwapKeeper.SetHooks(
+	app.SwapKeeper = *app.SwapKeeper.SetHooks(
 		swaptypes.NewMultiSwapHooks(
 			app.PoolIncentivesKeeper.Hooks(),
 		),
 	)
 
-	app.LockupKeeper.SetHooks(
+	app.LockupKeeper = *app.LockupKeeper.SetHooks(
 		lockuptypes.NewMultiLockupHooks())
-	app.MintKeeper.SetHooks(
+	app.MintKeeper = *app.MintKeeper.SetHooks(
 		minttypes.NewMultiMintHooks(
 			app.PoolIncentivesKeeper.Hooks(),
 		),
 	)
 
-	app.EpochsKeeper.SetHooks(
+	app.EpochsKeeper = *app.EpochsKeeper.SetHooks(
 		epochtypes.NewMultiEpochHooks(
 			// insert epoch hooks receivers here
 			app.IncentivesKeeper.Hooks(),
