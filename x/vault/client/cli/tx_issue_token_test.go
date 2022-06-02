@@ -206,6 +206,5 @@ func TestCreateIssue(t *testing.T) {
 	assert.Nil(t, err)
 	var respIssueToken sdk.TxResponse
 	require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &respIssueToken))
-	fmt.Printf(">>>>>>###>>>>%v\n", respIssueToken.RawLog)
 	require.Equal(t, uint32(0), respIssueToken.Code)
 }

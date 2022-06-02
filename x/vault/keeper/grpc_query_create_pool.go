@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -134,7 +133,6 @@ func (k Keeper) GetLastPool(c context.Context, req *types.QueryLatestPoolRequest
 			break
 		}
 	}
-	fmt.Printf(">>>>>>>%v\n", allProposal)
 	return &types.QueryLastPoolResponse{Pools: allProposal}, nil
 }
 

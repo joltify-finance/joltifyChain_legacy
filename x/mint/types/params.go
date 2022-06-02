@@ -51,7 +51,7 @@ func DefaultParams() Params {
 	return Params{
 		MintDenom:               sdk.DefaultBondDenom,
 		GenesisEpochProvisions:  sdk.NewDec(5000000),
-		EpochIdentifier:         "week",                   // 1 week
+		EpochIdentifier:         "minute",                 // 1 minute
 		ReductionPeriodInEpochs: 156,                      // 3 years
 		ReductionFactor:         sdk.NewDecWithPrec(5, 1), // 0.5
 		DistributionProportions: DistributionProportions{
