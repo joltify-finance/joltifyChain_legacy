@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"gitlab.com/joltify/joltifychain/utils"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -27,7 +28,7 @@ func NewParams(mintedDenom string) Params {
 
 // DefaultParams is the default parameter configuration for the pool-incentives module
 func DefaultParams() Params {
-	return NewParams(sdk.DefaultBondDenom)
+	return NewParams(utils.DefaultBondDenom)
 }
 
 func (p Params) Validate() error {

@@ -2,6 +2,7 @@ package network
 
 import (
 	"fmt"
+	"gitlab.com/joltify/joltifychain/utils"
 	"testing"
 	"time"
 
@@ -67,8 +68,8 @@ func DefaultConfig() network.Config {
 		TimeoutCommit:   2 * time.Second,
 		ChainID:         "chain-" + tmrand.NewRand().Str(6),
 		NumValidators:   1,
-		BondDenom:       sdk.DefaultBondDenom,
-		MinGasPrices:    fmt.Sprintf("0.000006%s", sdk.DefaultBondDenom),
+		BondDenom:       utils.DefaultBondDenom,
+		MinGasPrices:    fmt.Sprintf("0.000006%s", utils.DefaultBondDenom),
 		AccountTokens:   sdk.TokensFromConsensusPower(1000, sdk.DefaultPowerReduction),
 		StakingTokens:   sdk.TokensFromConsensusPower(500, sdk.DefaultPowerReduction),
 		BondedTokens:    sdk.TokensFromConsensusPower(100, sdk.DefaultPowerReduction),

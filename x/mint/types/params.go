@@ -7,6 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gitlab.com/joltify/joltifychain/utils"
 	epochtypes "gitlab.com/joltify/joltifychain/x/epochs/types"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -49,16 +50,16 @@ func NewParams(
 // default minting module parameters
 func DefaultParams() Params {
 	return Params{
-		MintDenom:               sdk.DefaultBondDenom,
+		MintDenom:               utils.DefaultBondDenom,
 		GenesisEpochProvisions:  sdk.NewDec(5000000),
 		EpochIdentifier:         "minute",                 // 1 minute
 		ReductionPeriodInEpochs: 156,                      // 3 years
 		ReductionFactor:         sdk.NewDecWithPrec(5, 1), // 0.5
 		DistributionProportions: DistributionProportions{
-			Staking:          sdk.NewDecWithPrec(4, 1), // 0.4
-			PoolIncentives:   sdk.NewDecWithPrec(3, 1), // 0.3
-			DeveloperRewards: sdk.NewDecWithPrec(0, 1), // 0.2
-			CommunityPool:    sdk.NewDecWithPrec(3, 1), // 0.1
+			Staking:          sdk.NewDecWithPrec(54545455, 8), // 0.25
+			PoolIncentives:   sdk.NewDecWithPrec(36363636, 8), // 0.2/0.55=0.3636
+			DeveloperRewards: sdk.NewDecWithPrec(0, 1),        // 0
+			CommunityPool:    sdk.NewDecWithPrec(9090909, 8),  // 0.5
 		},
 		WeightedDeveloperRewardsReceivers:    []WeightedAddress{},
 		MintingRewardsDistributionStartEpoch: 0,

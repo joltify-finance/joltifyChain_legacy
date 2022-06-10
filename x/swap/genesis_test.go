@@ -40,7 +40,7 @@ func TestSwapInitGenesis(t *testing.T) {
 	}, []types.PoolAsset{
 		{
 			Weight: sdk.NewInt(1),
-			Token:  sdk.NewInt64Coin(sdk.DefaultBondDenom, 10),
+			Token:  sdk.NewInt64Coin(utils.DefaultBondDenom, 10),
 		},
 		{
 			Weight: sdk.NewInt(1),
@@ -76,7 +76,7 @@ func TestSwapInitGenesis(t *testing.T) {
 	require.Error(t, err)
 
 	liquidity := app.SwapKeeper.GetTotalLiquidity(ctx)
-	require.Equal(t, liquidity, sdk.Coins{sdk.NewInt64Coin("nodetoken", 10), sdk.NewInt64Coin(sdk.DefaultBondDenom, 10)})
+	require.Equal(t, liquidity, sdk.Coins{sdk.NewInt64Coin("nodetoken", 10), sdk.NewInt64Coin(utils.DefaultBondDenom, 10)})
 }
 
 func TestSwapExportGenesis(t *testing.T) {

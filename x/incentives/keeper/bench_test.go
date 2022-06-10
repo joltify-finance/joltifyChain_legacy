@@ -4,6 +4,7 @@ import (
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	joltifyapp "gitlab.com/joltify/joltifychain/app"
+	"gitlab.com/joltify/joltifychain/utils"
 	"math/rand"
 	"os"
 	path2 "path"
@@ -90,7 +91,7 @@ func benchmarkDistributionLogic(numAccts, numDenoms, numGauges, numLockups, numD
 	addrs := []sdk.AccAddress{}
 	for i := 0; i < numAccts; i++ {
 		addr := sdk.AccAddress(secp256k1.GenPrivKey().PubKey().Address())
-		coins := sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 100000000)}
+		coins := sdk.Coins{sdk.NewInt64Coin(utils.DefaultBondDenom, 100000000)}
 		for j := 0; j < numDenoms; j++ {
 			coins = coins.Add(sdk.NewInt64Coin(fmt.Sprintf("token%d", j), r.Int63n(100000000)))
 		}

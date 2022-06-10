@@ -23,7 +23,7 @@ func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Params: DefaultParams(),
 		LockableDurations: []time.Duration{
-			time.Hour,
+			time.Minute,
 			time.Hour * 3,
 			time.Hour * 7,
 		},

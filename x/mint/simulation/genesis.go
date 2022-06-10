@@ -5,6 +5,7 @@ package simulation
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/joltify/joltifychain/utils"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -28,7 +29,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	// )
 	// Leaving as sample code
 
-	mintDenom := sdk.DefaultBondDenom
+	mintDenom := utils.DefaultBondDenom
 	epochProvisions := sdk.NewDec(500000) // TODO: Randomize this
 	params := types.NewParams(mintDenom, epochProvisions, "week", sdk.NewDecWithPrec(5, 1), 156, types.DistributionProportions{
 		Staking:          sdk.NewDecWithPrec(4, 1), // 0.4

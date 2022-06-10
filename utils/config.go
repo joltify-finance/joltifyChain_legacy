@@ -7,14 +7,15 @@ import (
 )
 
 const (
-	HumanCoinUnit = "jolt"
-	BaseCoinUnit  = "ujolt"
-	JoltExponent  = 6
-
 	DefaultBondDenom = BaseCoinUnit
 
 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
 	Bech32PrefixAccAddr = "jolt"
+
+	HumanCoinUnit = "oppy"
+	BaseCoinUnit  = "poppy"
+
+	JoltExponent = 12
 )
 
 var (

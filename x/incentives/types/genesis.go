@@ -19,7 +19,7 @@ func DefaultGenesis() *GenesisState {
 		},
 		Gauges: []Gauge{},
 		LockableDurations: []time.Duration{
-			time.Second,
+			time.Minute,
 			time.Hour,
 			time.Hour * 3,
 			time.Hour * 7,
